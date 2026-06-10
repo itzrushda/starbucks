@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>The Brew House — Premium Coffee Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+<style>
+  :root{
+    --cream:#F8F5EF;
+    --deep-green:#1E3932;
+    --brand-green:#00704A;
+    --gold:#CBA258;
+    --warm-white:#FDFAF5;
+    --text-dark:#1C1C1C;
+    --text-mid:#4A4A4A;
+    --text-light:#7A7A7A;
+    --border:#E8E0D0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--text-dark);
+    overflow-x:hidden;
+  }
+  body.modal-open,body.drawer-open{overflow:hidden}
+
+  /* ── Typography ── */
+  .font-display{font-family:'Playfair Display',serif}
+  .font-serif-italic{font-family:'DM Serif Display',serif;font-style:italic}
+
+  /* ── Focus visible ── */
+  :focus-visible{outline:2px solid var(--brand-green);outline-offset:3px;border-radius:4px}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--cream)}
+  ::-webkit-scrollbar-thumb{background:var(--brand-green);border-radius:3px}
+
+  /* ── Glassmorphism ── */
+  .glass{
+    background:rgba(255,255,255,0.45);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.55);
+  }
+  .glass-dark{
+    background:rgba(30,57,50,0.65);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.12);
+  }
+
+  /* ── Buttons ── */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 28px;border-radius:50px;
+    font-weight:600;font-size:0.875rem;letter-spacing:0.02em;
+    cursor:pointer;border:none;outline:none;
+    transition:transform 0.18s ease,box-shadow 0.18s ease,background 0.18s ease;
+  }
+  .btn:hover{transform:scale(1.04)}
+  .btn:active{transform:scale(0.98)}
+  .btn-primary{background:var(--brand-green);color:#fff}
+  .btn-primary:hover{background:#005c3b;box-shadow:0 8px 24px rgba(0,112,74,0.35)}
+  .btn-dark{background:var(--deep-green);color:#fff}
+  .btn-dark:hover{box-shadow:0 8px 24px rgba(30,57,50,0.4)}
+  .btn-gold{background:var(--gold);color:var(--deep-green)}
+  .btn-gold:hover{box-shadow:0 8px 24px rgba(203,162,88,0.4)}
+  .btn-outline{background:transparent;color:var(--deep-green);border:2px solid var(--deep-green)}
+  .btn-outline:hover{background:var(--deep-green);color:#fff}
+  .btn-icon{
+    width:44px;height:44px;padding:0;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    cursor:pointer;border:none;background:transparent;
+    transition:background 0.18s ease,transform 0.18s ease;
+  }
+  .btn-icon:hover{background:rgba(0,0,0,0.07);transform:scale(1.08)}
+
+  /* ── Cards ── */
+  .card{
+    background:#fff;border-radius:24px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.06);
+    transition:transform 0.22s ease,box-shadow 0.22s ease;
+    overflow:hidden;
+  }
+  .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.12)}
+  .card-img{overflow:hidden}
+  .card-img img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform 0.4s ease;
+    loading:lazy;
+  }
+  .card:hover .card-img img{transform:scale(1.06)}
+
+  /* ── Navbar ── */
+  #navbar{
+    position:fixed;top:0;left:0;right:0;z-index:900;
+    padding:0 24px;height:68px;
+    display:flex;align-items:center;justify-content:space-between;
+    transition:background 0.3s ease,box-shadow 0.3s ease,backdrop-filter 0.3s ease;
+  }
+  #navbar.scrolled{
+    background:rgba(248,245,239,0.88);
+    backdrop-filter:blur(16px);
+    box-shadow:0 2px 20px rgba(0,0,0,0.08);
+  }
+  .nav-links a{
+    font-size:0.875rem;font-weight:500;
+    color:var(--text-dark);text-decoration:none;
+    padding:6px 14px;border-radius:20px;
+    transition:background 0.15s ease,color 0.15s ease;
+  }
+  .nav-links a:hover{background:rgba(0,112,74,0.1);color:var(--brand-green)}
+
+  /* ── Hero ── */
+  #hero{
+    min-height:100vh;
+    background:linear-gradient(160deg,#0d2b22 0%,#1E3932 45%,#2a4a3e 100%);
+    position:relative;overflow:hidden;
+    display:flex;align-items:center;
+  }
+  #hero::before{
+    content:'';position:absolute;inset:0;
+    background:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&q=80') center/cover no-repeat;
+    opacity:0.18;
+  }
+  .hero-blob{
+    position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;
+  }
+  .search-bar{
+    display:flex;align-items:center;gap:12px;
+    background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+    border-radius:50px;padding:10px 20px;
+    transition:background 0.2s ease,border-color 0.2s ease;
+  }
+  .search-bar:focus-within{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.4)}
+  .search-bar input{
+    background:transparent;border:none;outline:none;
+    color:#fff;font-size:0.9rem;flex:1;
+  }
+  .search-bar input::placeholder{color:rgba(255,255,255,0.55)}
+
+  /* ── Section animations ── */
+  .reveal{
+    opacity:0;transform:translateY(32px);
+    transition:opacity 0.6s ease,transform 0.6s ease;
+  }
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-left{opacity:0;transform:translateX(-32px);transition:opacity 0.6s ease,transform 0.6s ease}
+  .reveal-left.visible{opacity:1;transform:translateX(0)}
+  .reveal-right{opacity:0;transform:translateX(32px);transition:opacity 0.6s ease,transform 0.6s ease}
+  .reveal-right.visible{opacity:1;transform:translateX(0)}
+
+  /* ── Menu grid ── */
+  .menu-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:24px;
+  }
+  .product-card{position:relative;cursor:pointer}
+  .product-card .badge{
+    position:absolute;top:14px;left:14px;
+    background:var(--gold);color:var(--deep-green);
+    font-size:0.7rem;font-weight:700;letter-spacing:0.05em;
+    padding:4px 10px;border-radius:20px;text-transform:uppercase;
+    z-index:2;
+  }
+  .product-card .badge-trending{background:var(--brand-green);color:#fff}
+  .add-btn{
+    position:absolute;bottom:14px;right:14px;
+    width:38px;height:38px;border-radius:50%;
+    background:var(--brand-green);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    border:none;cursor:pointer;
+    transition:transform 0.18s ease,box-shadow 0.18s ease;
+    box-shadow:0 4px 12px rgba(0,112,74,0.35);
+  }
+  .add-btn:hover{transform:scale(1.15);box-shadow:0 6px 18px rgba(0,112,74,0.45)}
+
+  /* ── Filter pills ── */
+  .filter-pill{
+    padding:8px 20px;border-radius:50px;
+    font-size:0.83rem;font-weight:500;
+    border:1.5px solid var(--border);
+    background:#fff;color:var(--text-mid);
+    cursor:pointer;transition:all 0.18s ease;
+    white-space:nowrap;
+  }
+  .filter-pill:hover{border-color:var(--brand-green);color:var(--brand-green)}
+  .filter-pill.active{
+    background:var(--brand-green);border-color:var(--brand-green);
+    color:#fff;box-shadow:0 4px 14px rgba(0,112,74,0.25);
+  }
+
+  /* ── Cart Drawer ── */
+  #cart-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.45);
+    z-index:1000;opacity:0;pointer-events:none;
+    transition:opacity 0.3s ease;
+  }
+  #cart-overlay.open{opacity:1;pointer-events:all}
+  #cart-drawer{
+    position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;
+    background:var(--cream);z-index:1001;
+    transform:translateX(100%);
+    transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    display:flex;flex-direction:column;
+    box-shadow:-8px 0 40px rgba(0,0,0,0.15);
+  }
+  #cart-drawer.open{transform:translateX(0)}
+
+  /* ── Modal ── */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);
+    z-index:1100;opacity:0;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity 0.25s ease;padding:20px;
+  }
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal-box{
+    background:#fff;border-radius:28px;
+    max-width:520px;width:100%;
+    transform:scale(0.92) translateY(20px);
+    transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-height:90vh;overflow-y:auto;
+    box-shadow:0 24px 80px rgba(0,0,0,0.2);
+  }
+  .modal-overlay.open .modal-box{transform:scale(1) translateY(0)}
+
+  /* ── Toast ── */
+  #toast-container{
+    position:fixed;bottom:90px;right:20px;z-index:1200;
+    display:flex;flex-direction:column-reverse;gap:10px;
+    pointer-events:none;
+  }
+  .toast{
+    background:var(--deep-green);color:#fff;
+    padding:12px 20px;border-radius:16px;
+    font-size:0.85rem;font-weight:500;
+    display:flex;align-items:center;gap:10px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+    animation:toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    pointer-events:all;
+    max-width:300px;
+  }
+  @keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(60px)}}
+  .toast.out{animation:toastOut 0.3s ease forwards}
+
+  /* ── Rewards ring ── */
+  .rewards-ring{position:relative;width:100px;height:100px}
+  .rewards-ring svg{transform:rotate(-90deg)}
+  .rewards-ring .ring-bg{fill:none;stroke:#E8E0D0;stroke-width:8}
+  .rewards-ring .ring-fill{
+    fill:none;stroke:var(--gold);stroke-width:8;
+    stroke-linecap:round;
+    stroke-dasharray:283;
+    stroke-dashoffset:283;
+    transition:stroke-dashoffset 1.2s ease;
+  }
+  .rewards-ring .ring-text{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+
+  /* ── Stats counter ── */
+  .stat-counter{font-family:'Playfair Display',serif;font-weight:700}
+
+  /* ── Bottom nav (mobile) ── */
+  #bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;
+    height:72px;background:rgba(248,245,239,0.95);
+    backdrop-filter:blur(16px);
+    border-top:1px solid var(--border);
+    display:none;align-items:center;justify-content:space-around;
+    z-index:800;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .bnav-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:0.65rem;font-weight:500;color:var(--text-light);
+    cursor:pointer;padding:8px 16px;border-radius:12px;
+    transition:color 0.15s ease,background 0.15s ease;
+    border:none;background:transparent;
+    text-decoration:none;
+  }
+  .bnav-item.active,.bnav-item:hover{color:var(--brand-green)}
+  .bnav-item i{font-size:22px}
+
+  /* ── Seasonal card ── */
+  .seasonal-card{
+    background:linear-gradient(135deg,#2d5a45,#1E3932);
+    border-radius:24px;padding:28px;color:#fff;
+    position:relative;overflow:hidden;
+  }
+  .seasonal-card::after{
+    content:'';position:absolute;right:-30px;top:-30px;
+    width:160px;height:160px;border-radius:50%;
+    background:rgba(203,162,88,0.15);
+  }
+
+  /* ── Section header ── */
+  .section-eyebrow{
+    font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--brand-green);font-weight:600;
+  }
+
+  /* ── Community card ── */
+  .community-card{
+    background:var(--deep-green);color:#fff;
+    border-radius:24px;overflow:hidden;
+    transition:transform 0.22s ease,box-shadow 0.22s ease;
+  }
+  .community-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(30,57,50,0.3)}
+
+  /* ── Progress bar ── */
+  .progress-bar{
+    height:8px;background:var(--border);border-radius:4px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;background:linear-gradient(90deg,var(--brand-green),var(--gold));
+    border-radius:4px;transition:width 1s ease;width:0;
+  }
+
+  /* ── Checkout receipt ── */
+  .receipt-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border)}
+  .receipt-line:last-child{border-bottom:none}
+
+  /* ── Empty state ── */
+  .empty-state{
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    padding:60px 20px;color:var(--text-light);text-align:center;
+  }
+
+  /* ── Responsive ── */
+  @media(max-width:768px){
+    #bottom-nav{display:flex}
+    #nav-desktop-links{display:none}
+    #cart-drawer{width:100vw}
+    body{padding-bottom:72px}
+    .menu-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+    #hero{min-height:85vh}
+  }
+  @media(min-width:769px){
+    #bottom-nav{display:none !important}
+  }
+
+  /* ── Misc ── */
+  .gold-text{color:var(--gold)}
+  .green-text{color:var(--brand-green)}
+  .tag{
+    display:inline-flex;align-items:center;gap:4px;
+    background:rgba(0,112,74,0.1);color:var(--brand-green);
+    font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;
+  }
+  .divider{height:1px;background:var(--border);margin:0}
+  .cart-item-img{width:60px;height:60px;border-radius:12px;object-fit:cover}
+  .qty-btn{
+    width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);
+    background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:1rem;transition:all 0.15s ease;color:var(--deep-green);
+  }
+  .qty-btn:hover{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
+
+  /* ── Cart badge ── */
+  .cart-badge{
+    position:absolute;top:-4px;right:-4px;
+    width:18px;height:18px;background:var(--gold);
+    color:var(--deep-green);font-size:0.65rem;font-weight:700;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    opacity:0;transform:scale(0);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .cart-badge.visible{opacity:1;transform:scale(1)}
+
+  /* Staggered reveal delays */
+  .delay-1{transition-delay:0.1s}
+  .delay-2{transition-delay:0.2s}
+  .delay-3{transition-delay:0.3s}
+  .delay-4{transition-delay:0.4s}
+  .delay-5{transition-delay:0.5s}
+
+  /* ── Safe area ── */
+  .safe-bottom{padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<nav id="navbar" aria-label="Main navigation">
+  <a href="#hero" class="flex items-center gap-3" aria-label="The Brew House home">
+    <div style="width:38px;height:38px;background:var(--brand-green);border-radius:50%;display:flex;align-items:center;justify-content:center">
+      <i class="ph-fill ph-coffee" style="color:#fff;font-size:18px"></i>
+    </div>
+    <span class="font-display font-bold text-lg" style="color:var(--deep-green)">The Brew House</span>
+  </a>
+
+  <div id="nav-desktop-links" class="nav-links hidden md:flex items-center gap-1">
+    <a href="#menu">Menu</a>
+    <a href="#trending">Trending</a>
+    <a href="#rewards">Rewards</a>
+    <a href="#community">Our Story</a>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button class="btn-icon" id="nav-search-btn" aria-label="Search">
+      <i class="ph ph-magnifying-glass" style="font-size:20px;color:var(--deep-green)"></i>
+    </button>
+    <button class="btn-icon relative" id="cart-btn" aria-label="Open cart">
+      <i class="ph ph-shopping-cart-simple" style="font-size:22px;color:var(--deep-green)"></i>
+      <span class="cart-badge" id="cart-badge" aria-live="polite"></span>
+    </button>
+    <button class="btn btn-primary hidden md:inline-flex" id="sign-in-btn" aria-label="Sign in or join">
+      <i class="ph ph-star" style="font-size:15px"></i> Join Rewards
+    </button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-blob" style="width:500px;height:500px;background:var(--brand-green);top:-150px;right:-100px"></div>
+  <div class="hero-blob" style="width:300px;height:300px;background:var(--gold);bottom:-80px;left:10%"></div>
+
+  <div class="max-w-6xl mx-auto px-6 w-full relative z-10" style="padding-top:80px">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+
+      <!-- Left content -->
+      <div>
+        <div class="tag mb-5" style="background:rgba(203,162,88,0.2);color:var(--gold)">
+          <i class="ph-fill ph-sun" style="font-size:12px"></i>
+          <span id="greeting-text">Good Morning, Guest</span>
+        </div>
+        <h1 class="font-display text-5xl md:text-6xl font-bold leading-tight mb-5" style="color:#fff">
+          Every Cup<br/><span class="font-serif-italic" style="color:var(--gold)">Tells a Story</span>
+        </h1>
+        <p class="text-base mb-8" style="color:rgba(255,255,255,0.7);max-width:400px;line-height:1.7">
+          Handcrafted beverages brewed with intention. From sunrise espresso to evening wind-downs — we're your third place.
+        </p>
+
+        <!-- Search -->
+        <div class="search-bar mb-8" role="search">
+          <i class="ph ph-magnifying-glass" style="color:rgba(255,255,255,0.6);font-size:18px"></i>
+          <input type="text" id="hero-search" placeholder="Search drinks, pastries..." aria-label="Search menu items"/>
+          <button class="btn btn-primary" style="padding:8px 18px;font-size:0.8rem" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">Go</button>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button class="btn btn-gold" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
+            <i class="ph ph-list-bullets" style="font-size:16px"></i> View Menu
+          </button>
+          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.4)" onclick="openRewardsModal()">
+            <i class="ph ph-star" style="font-size:16px"></i> Join Rewards
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Seasonal spotlight -->
+      <div class="reveal-right">
+        <div class="seasonal-card">
+          <div class="tag mb-3" style="background:rgba(203,162,88,0.3);color:var(--gold)">
+            <i class="ph-fill ph-sparkle" style="font-size:12px"></i> Seasonal Spotlight
+          </div>
+          <h3 class="font-display text-2xl font-bold text-white mb-2">Toasted Maple Oat Latte</h3>
+          <p style="color:rgba(255,255,255,0.65);font-size:0.85rem;margin-bottom:20px;line-height:1.6">
+            Smooth espresso meets velvety oat milk, kissed with house-made toasted maple syrup and a pinch of cinnamon.
+          </p>
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-display text-2xl font-bold text-white">₹520</span>
+              <span style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-left:6px">Hot / Iced</span>
+            </div>
+            <button class="btn btn-gold" onclick="addToCartById('seasonal-1')" aria-label="Add Toasted Maple Oat Latte to cart">
+              <i class="ph ph-plus" style="font-size:15px"></i> Add
+            </button>
+          </div>
+          <div style="position:absolute;right:20px;bottom:-10px;font-size:80px;opacity:0.12">☕</div>
+        </div>
+        <!-- Quick stats -->
+        <div class="grid grid-cols-3 gap-3 mt-4">
+          <div class="glass rounded-2xl p-4 text-center">
+            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">4.9<span class="text-sm">★</span></div>
+            <div style="font-size:0.7rem;color:var(--text-light)">Avg Rating</div>
+          </div>
+          <div class="glass rounded-2xl p-4 text-center">
+            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">120+</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">Menu Items</div>
+          </div>
+          <div class="glass rounded-2xl p-4 text-center">
+            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">18min</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">Avg Pickup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     TRENDING
+════════════════════════════════════════════ -->
+<section id="trending" class="py-20 px-6" aria-label="Trending beverages">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-end justify-between mb-10 reveal">
+      <div>
+        <p class="section-eyebrow mb-2">What's Hot</p>
+        <h2 class="font-display text-4xl font-bold" style="color:var(--deep-green)">Trending Today</h2>
+      </div>
+      <button class="btn btn-outline hidden md:inline-flex" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
+        See All <i class="ph ph-arrow-right" style="font-size:15px"></i>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5" id="trending-grid" role="list">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     MENU
+════════════════════════════════════════════ -->
+<section id="menu" class="py-20 px-6" style="background:var(--warm-white)" aria-label="Menu">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10 reveal">
+      <p class="section-eyebrow mb-2">Crafted With Care</p>
+      <h2 class="font-display text-4xl font-bold mb-3" style="color:var(--deep-green)">Our Menu</h2>
+      <p style="color:var(--text-mid);max-width:480px;margin:0 auto;font-size:0.95rem">
+        Every item made fresh. Every flavour intentional.
+      </p>
+    </div>
+
+    <!-- Search + Filters -->
+    <div class="flex flex-col md:flex-row gap-4 mb-8 reveal">
+      <div class="search-bar flex-1" style="background:#fff;border:1.5px solid var(--border)" role="search">
+        <i class="ph ph-magnifying-glass" style="color:var(--text-light);font-size:18px"></i>
+        <input type="text" id="menu-search" placeholder="Search drinks, pastries..." aria-label="Filter menu items"/>
+      </div>
+    </div>
+    <div class="flex gap-3 overflow-x-auto pb-2 mb-8 reveal" style="-webkit-overflow-scrolling:touch" role="group" aria-label="Category filters">
+      <button class="filter-pill active" data-filter="all" onclick="setFilter(this,'all')">All Items</button>
+      <button class="filter-pill" data-filter="coffee" onclick="setFilter(this,'coffee')">☕ Coffee</button>
+      <button class="filter-pill" data-filter="tea" onclick="setFilter(this,'tea')">🍵 Tea</button>
+      <button class="filter-pill" data-filter="bakery" onclick="setFilter(this,'bakery')">🥐 Bakery</button>
+      <button class="filter-pill" data-filter="refresher" onclick="setFilter(this,'refresher')">🧃 Refreshers</button>
+      <button class="filter-pill" data-filter="dessert" onclick="setFilter(this,'dessert')">🍰 Desserts</button>
+    </div>
+
+    <div class="menu-grid reveal" id="menu-grid" role="list" aria-live="polite">
+      <!-- Populated by JS -->
+    </div>
+    <div id="empty-state" class="empty-state hidden" role="status">
+      <i class="ph ph-magnifying-glass" style="font-size:48px;color:var(--border)"></i>
+      <h3 class="font-display text-xl" style="color:var(--text-mid)">No items found</h3>
+      <p style="font-size:0.85rem">Try a different search or filter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     REWARDS
+════════════════════════════════════════════ -->
+<section id="rewards" class="py-20 px-6" aria-label="Rewards program">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="reveal-left">
+        <p class="section-eyebrow mb-3">Loyalty Programme</p>
+        <h2 class="font-display text-4xl font-bold mb-5" style="color:var(--deep-green)">Every Sip<br/>Earns Stars</h2>
+        <p style="color:var(--text-mid);margin-bottom:28px;line-height:1.7">
+          Collect stars with every order. Redeem for free drinks, exclusive items, and surprise experiences. The more you sip, the sweeter the rewards.
+        </p>
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-center gap-3">
+            <div style="width:32px;height:32px;background:rgba(203,162,88,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center">
+              <i class="ph-fill ph-star" style="color:var(--gold);font-size:16px"></i>
+            </div>
+            <span style="font-size:0.9rem">Earn 1 star per ₹10 spent</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <div style="width:32px;height:32px;background:rgba(0,112,74,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center">
+              <i class="ph-fill ph-gift" style="color:var(--brand-green);font-size:16px"></i>
+            </div>
+            <span style="font-size:0.9rem">Free drink at 150 stars</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <div style="width:32px;height:32px;background:rgba(30,57,50,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center">
+              <i class="ph-fill ph-crown" style="color:var(--deep-green);font-size:16px"></i>
+            </div>
+            <span style="font-size:0.9rem">Gold status unlocked at 500 stars</span>
+          </li>
+        </ul>
+        <button class="btn btn-primary" onclick="openRewardsModal()">
+          <i class="ph ph-rocket-launch" style="font-size:16px"></i> Start Earning
+        </button>
+      </div>
+
+      <!-- Rewards dashboard -->
+      <div class="reveal-right">
+        <div style="background:linear-gradient(135deg,var(--deep-green),#2d5a45);border-radius:28px;padding:32px;color:#fff">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <p style="font-size:0.75rem;opacity:0.65;text-transform:uppercase;letter-spacing:0.1em">Your Stars</p>
+              <h3 class="font-display text-4xl font-bold" id="stars-display">247</h3>
+            </div>
+            <div class="rewards-ring">
+              <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
+                <circle class="ring-bg" cx="50" cy="50" r="45"/>
+                <circle class="ring-fill" id="reward-ring" cx="50" cy="50" r="45"/>
+              </svg>
+              <div class="ring-text">
+                <i class="ph-fill ph-star" style="color:var(--gold);font-size:20px"></i>
+                <span style="font-size:0.65rem;opacity:0.7;margin-top:2px">Gold</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <div class="flex justify-between text-sm mb-2" style="opacity:0.8">
+              <span>Progress to next reward</span>
+              <span>247 / 300 ★</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="reward-progress" style="width:0"></div>
+            </div>
+            <p style="font-size:0.75rem;opacity:0.55;margin-top:6px">53 more stars for a free Signature Latte</p>
+          </div>
+
+          <div class="divider mb-5" style="background:rgba(255,255,255,0.15)"></div>
+
+          <p style="font-size:0.75rem;opacity:0.6;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em">Redeemable Now</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div style="background:rgba(255,255,255,0.1);border-radius:14px;padding:12px">
+              <p style="font-size:0.75rem;opacity:0.7">Hot Americano</p>
+              <p class="font-display font-bold">150 ★</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1);border-radius:14px;padding:12px">
+              <p style="font-size:0.75rem;opacity:0.7">Brownie</p>
+              <p class="font-display font-bold">100 ★</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     COMMUNITY
+════════════════════════════════════════════ -->
+<section id="community" class="py-20 px-6" style="background:var(--warm-white)" aria-label="Community and sustainability">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <p class="section-eyebrow mb-2">Our Community</p>
+      <h2 class="font-display text-4xl font-bold" style="color:var(--deep-green)">More Than Coffee</h2>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-14">
+      <div class="text-center reveal delay-1">
+        <div class="stat-counter text-5xl mb-1" style="color:var(--deep-green)" data-target="12000">0</div>
+        <p style="color:var(--text-mid);font-size:0.85rem">Happy Customers</p>
+      </div>
+      <div class="text-center reveal delay-2">
+        <div class="stat-counter text-5xl mb-1" style="color:var(--brand-green)" data-target="48">0</div>
+        <p style="color:var(--text-mid);font-size:0.85rem">Partner Farms</p>
+      </div>
+      <div class="text-center reveal delay-3">
+        <div class="stat-counter text-5xl mb-1" style="color:var(--gold)" data-target="99">0</div>
+        <p style="color:var(--text-mid);font-size:0.85rem">% Ethically Sourced</p>
+      </div>
+      <div class="text-center reveal delay-4">
+        <div class="stat-counter text-5xl mb-1" style="color:var(--deep-green)" data-target="120">0</div>
+        <p style="color:var(--text-mid);font-size:0.85rem">Menu Items</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="community-card reveal delay-1">
+        <div style="height:180px;background:linear-gradient(135deg,#2d5a45,var(--deep-green));display:flex;align-items:center;justify-content:center">
+          <i class="ph-fill ph-plant" style="font-size:64px;color:rgba(203,162,88,0.6)"></i>
+        </div>
+        <div style="padding:24px">
+          <div class="tag mb-3" style="background:rgba(203,162,88,0.2);color:var(--gold)">Sustainability</div>
+          <h3 class="font-display text-xl font-bold text-white mb-2">Farm-to-Cup Promise</h3>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">We work directly with smallholder farms across Coorg, Chikmagalur, and Wayanad — cutting out middlemen and ensuring fair wages.</p>
+        </div>
+      </div>
+      <div class="community-card reveal delay-2">
+        <div style="height:180px;background:linear-gradient(135deg,#1a3d50,#1E3932);display:flex;align-items:center;justify-content:center">
+          <i class="ph-fill ph-recycle" style="font-size:64px;color:rgba(100,200,150,0.5)"></i>
+        </div>
+        <div style="padding:24px">
+          <div class="tag mb-3" style="background:rgba(0,200,100,0.15);color:#5ecb8e">Green Initiative</div>
+          <h3 class="font-display text-xl font-bold text-white mb-2">Zero Waste by 2027</h3>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">All packaging is compostable. Our coffee grounds are donated to local urban gardens every Sunday morning.</p>
+        </div>
+      </div>
+      <div class="community-card reveal delay-3">
+        <div style="height:180px;background:linear-gradient(135deg,#3d2d1a,#2d1f10);display:flex;align-items:center;justify-content:center">
+          <i class="ph-fill ph-users-three" style="font-size:64px;color:rgba(203,162,88,0.5)"></i>
+        </div>
+        <div style="padding:24px">
+          <div class="tag mb-3" style="background:rgba(203,162,88,0.2);color:var(--gold)">Community</div>
+          <h3 class="font-display text-xl font-bold text-white mb-2">Stories Over Coffee</h3>
+          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">Monthly open-mic nights, local artist showcases, and free barista workshops for neighbourhood youth.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer style="background:var(--deep-green);color:rgba(255,255,255,0.8)" aria-label="Site footer">
+  <div class="max-w-6xl mx-auto px-6 py-16">
+    <div class="grid md:grid-cols-4 gap-10 mb-10">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div style="width:34px;height:34px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center">
+            <i class="ph-fill ph-coffee" style="color:var(--deep-green);font-size:16px"></i>
+          </div>
+          <span class="font-display font-bold text-white text-lg">The Brew House</span>
+        </div>
+        <p style="font-size:0.85rem;line-height:1.7;opacity:0.65">Premium coffee crafted with intention, sourced with integrity, served with heart.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Menu</h4>
+        <ul class="space-y-2" style="font-size:0.85rem">
+          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Coffee</a></li>
+          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Tea & Refreshers</a></li>
+          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Bakery & Desserts</a></li>
+          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Seasonal Specials</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Company</h4>
+        <ul class="space-y-2" style="font-size:0.85rem">
+          <li><a href="#community" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Our Story</a></li>
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Careers</a></li>
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Press</a></li>
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Sustainability</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Connect</h4>
+        <ul class="space-y-2" style="font-size:0.85rem">
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Instagram</a></li>
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Twitter / X</a></li>
+          <li><a href="#" style="opacity:0.65;text-decoration:none">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="divider" style="background:rgba(255,255,255,0.1)"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-4" style="font-size:0.8rem;opacity:0.45">
+      <span>© 2026 The Brew House. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════
+     CART DRAWER
+════════════════════════════════════════════ -->
+<div id="cart-overlay" aria-hidden="true" onclick="closeCart()"></div>
+<aside id="cart-drawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
+  <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <h2 class="font-display text-xl font-bold" style="color:var(--deep-green)">Your Order</h2>
+      <p style="font-size:0.8rem;color:var(--text-light)" id="cart-item-label">0 items</p>
+    </div>
+    <button class="btn-icon" onclick="closeCart()" aria-label="Close cart">
+      <i class="ph ph-x" style="font-size:20px;color:var(--text-dark)"></i>
+    </button>
+  </div>
+
+  <div id="cart-items-list" style="flex:1;overflow-y:auto;padding:16px 24px" role="list">
+    <!-- Populated by JS -->
+  </div>
+
+  <div id="cart-footer" style="padding:20px 24px;border-top:1px solid var(--border);background:var(--warm-white)" hidden>
+    <div class="flex justify-between mb-2" style="font-size:0.9rem;color:var(--text-mid)">
+      <span>Subtotal</span><span id="cart-subtotal" style="font-weight:600">₹0</span>
+    </div>
+    <div class="flex justify-between mb-4" style="font-size:0.9rem;color:var(--text-mid)">
+      <span>Taxes (5%)</span><span id="cart-tax" style="font-weight:600">₹0</span>
+    </div>
+    <div class="flex justify-between mb-5" style="font-size:1rem;font-weight:700;color:var(--deep-green)">
+      <span>Total</span><span id="cart-total">₹0</span>
+    </div>
+    <div class="flex items-center gap-2 mb-4 p-3 rounded-2xl" style="background:rgba(0,112,74,0.08)">
+      <i class="ph-fill ph-star" style="color:var(--gold);font-size:18px"></i>
+      <span style="font-size:0.82rem;color:var(--brand-green)">You'll earn <strong id="cart-stars-preview">0</strong> stars on this order</span>
+    </div>
+    <button class="btn btn-primary w-full justify-center" style="width:100%" onclick="openCheckout()">
+      <i class="ph ph-bag" style="font-size:16px"></i> Proceed to Checkout
+    </button>
+  </div>
+
+  <div id="cart-empty" style="padding:60px 24px;text-align:center">
+    <div style="font-size:64px;margin-bottom:16px">🛒</div>
+    <h3 class="font-display text-xl font-bold mb-2" style="color:var(--deep-green)">Your cart is empty</h3>
+    <p style="color:var(--text-light);font-size:0.875rem;margin-bottom:20px">Add a drink or treat to get started</p>
+    <button class="btn btn-primary" onclick="closeCart();document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
+      Browse Menu
+    </button>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════════
+     PRODUCT MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="product-modal" role="dialog" aria-modal="true" aria-label="Product details" onclick="if(event.target===this)closeProductModal()">
+  <div class="modal-box">
+    <div id="product-modal-content"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     REWARDS MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="rewards-modal" role="dialog" aria-modal="true" aria-label="Join Rewards" onclick="if(event.target===this)closeRewardsModal()">
+  <div class="modal-box" style="padding:40px">
+    <div class="text-center mb-8">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--deep-green),var(--brand-green));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <i class="ph-fill ph-star" style="color:var(--gold);font-size:28px"></i>
+      </div>
+      <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--deep-green)">Join The Brew House Rewards</h2>
+      <p style="color:var(--text-mid);font-size:0.9rem">Start earning stars from your very first order.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="font-size:0.8rem;font-weight:600;color:var(--text-mid);display:block;margin-bottom:6px">Full Name</label>
+        <input type="text" id="rewards-name" placeholder="Rushda Karisma" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:0.9rem;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--brand-green)'" onblur="this.style.borderColor='var(--border)'" aria-label="Full name"/>
+      </div>
+      <div>
+        <label style="font-size:0.8rem;font-weight:600;color:var(--text-mid);display:block;margin-bottom:6px">Email Address</label>
+        <input type="email" id="rewards-email" placeholder="you@example.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:0.9rem;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--brand-green)'" onblur="this.style.borderColor='var(--border)'" aria-label="Email address"/>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="joinRewards()">
+        <i class="ph ph-rocket-launch" style="font-size:16px"></i> Create My Account
+      </button>
+      <button class="btn btn-outline" style="width:100%;justify-content:center;padding:14px" onclick="closeRewardsModal()">
+        Maybe Later
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     CHECKOUT MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="checkout-modal" role="dialog" aria-modal="true" aria-label="Checkout" onclick="if(event.target===this)closeCheckout()">
+  <div class="modal-box" style="padding:36px">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-display text-2xl font-bold" style="color:var(--deep-green)">Checkout</h2>
+      <button class="btn-icon" onclick="closeCheckout()" aria-label="Close checkout">
+        <i class="ph ph-x" style="font-size:20px"></i>
+      </button>
+    </div>
+
+    <!-- Order summary -->
+    <div style="background:var(--cream);border-radius:16px;padding:20px;margin-bottom:20px">
+      <p class="section-eyebrow mb-3">Order Summary</p>
+      <div id="checkout-items" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <div class="flex justify-between mb-3" style="font-size:0.9rem;color:var(--text-mid)">
+      <span>Subtotal</span><span id="checkout-subtotal">₹0</span>
+    </div>
+    <div class="flex justify-between mb-3" style="font-size:0.9rem;color:var(--text-mid)">
+      <span>Taxes (5%)</span><span id="checkout-tax">₹0</span>
+    </div>
+    <div class="flex justify-between mb-5" style="font-size:1.1rem;font-weight:700;color:var(--deep-green)">
+      <span>Total</span><span id="checkout-total">₹0</span>
+    </div>
+
+    <div style="background:rgba(0,112,74,0.06);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <i class="ph ph-clock" style="color:var(--brand-green);font-size:22px"></i>
+      <div>
+        <p style="font-size:0.82rem;font-weight:600;color:var(--deep-green)">Estimated Pickup: <span id="pickup-time">18–22 minutes</span></p>
+        <p style="font-size:0.75rem;color:var(--text-light)">Your order will be ready at the counter</p>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:1rem" onclick="placeOrder()">
+      <i class="ph ph-check-circle" style="font-size:18px"></i> Place Order & Pay
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     ORDER SUCCESS MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="success-modal" role="dialog" aria-modal="true" aria-label="Order confirmed">
+  <div class="modal-box" style="padding:44px;text-align:center">
+    <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--brand-green),#00a86b);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 32px rgba(0,112,74,0.35)">
+      <i class="ph ph-check" style="color:#fff;font-size:36px"></i>
+    </div>
+    <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--deep-green)">Order Confirmed! 🎉</h2>
+    <p style="color:var(--text-mid);margin-bottom:20px;font-size:0.9rem">Your order is being prepared with love.</p>
+
+    <div style="background:var(--cream);border-radius:16px;padding:20px;text-align:left;margin-bottom:20px">
+      <div class="receipt-line">
+        <span style="font-size:0.85rem;color:var(--text-mid)">Order Number</span>
+        <span style="font-weight:700;color:var(--deep-green);font-family:'Playfair Display',serif" id="order-number">#BH-00000</span>
+      </div>
+      <div class="receipt-line">
+        <span style="font-size:0.85rem;color:var(--text-mid)">Estimated Ready</span>
+        <span style="font-weight:600" id="success-pickup">18 min</span>
+      </div>
+      <div class="receipt-line">
+        <span style="font-size:0.85rem;color:var(--text-mid)">Stars Earned</span>
+        <span style="font-weight:700;color:var(--gold)" id="stars-earned">+0 ★</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="closeSuccessModal()">
+      <i class="ph ph-coffee" style="font-size:16px"></i> Back to Brew House
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     TOAST CONTAINER
+════════════════════════════════════════════ -->
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<!-- ════════════════════════════════════════════
+     BOTTOM NAV (MOBILE)
+════════════════════════════════════════════ -->
+<nav id="bottom-nav" aria-label="Mobile navigation">
+  <a href="#hero" class="bnav-item active" aria-label="Home">
+    <i class="ph ph-house"></i><span>Home</span>
+  </a>
+  <a href="#menu" class="bnav-item" aria-label="Menu">
+    <i class="ph ph-fork-knife"></i><span>Menu</span>
+  </a>
+  <a href="#rewards" class="bnav-item" aria-label="Rewards">
+    <i class="ph ph-star"></i><span>Rewards</span>
+  </a>
+  <button class="bnav-item" onclick="openCart()" aria-label="Cart">
+    <div style="position:relative;display:inline-block">
+      <i class="ph ph-shopping-cart-simple"></i>
+      <span class="cart-badge" id="cart-badge-mobile" style="position:absolute;top:-8px;right:-8px"></span>
+    </div>
+    <span>Cart</span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────
+// MODULE: State Management
+// ─────────────────────────────────────────
+const State = (() => {
+  let _cart = [];
+  let _user = null;
+  let _stars = 247;
+  let _filter = 'all';
+  let _searchQuery = '';
+
+  const subscribers = {};
+
+  function emit(event, data) {
+    (subscribers[event] || []).forEach(fn => fn(data));
+  }
+  function on(event, fn) {
+    if (!subscribers[event]) subscribers[event] = [];
+    subscribers[event].push(fn);
+  }
+
+  function loadCart() {
+    try {
+      const saved = localStorage.getItem('brewhouse_cart');
+      if (saved) _cart = JSON.parse(saved);
+    } catch(e) { _cart = []; }
+  }
+  function saveCart() {
+    try { localStorage.setItem('brewhouse_cart', JSON.stringify(_cart)); } catch(e) {}
+  }
+  function loadUser() {
+    try {
+      const saved = localStorage.getItem('brewhouse_user');
+      if (saved) _user = JSON.parse(saved);
+    } catch(e) {}
+  }
+  function saveUser() {
+    try { localStorage.setItem('brewhouse_user', JSON.stringify(_user)); } catch(e) {}
+  }
+
+  return {
+    get cart() { return [..._cart]; },
+    get user() { return _user; },
+    get stars() { return _stars; },
+    get filter() { return _filter; },
+    get searchQuery() { return _searchQuery; },
+
+    setFilter(f) { _filter = f; emit('filterChange', f); },
+    setSearchQuery(q) { _searchQuery = q; emit('searchChange', q); },
+
+    addToCart(product, qty=1) {
+      const idx = _cart.findIndex(i => i.id === product.id);
+      if (idx > -1) { _cart[idx].qty += qty; }
+      else { _cart.push({...product, qty}); }
+      saveCart(); emit('cartChange', _cart);
+    },
+    removeFromCart(id) {
+      _cart = _cart.filter(i => i.id !== id);
+      saveCart(); emit('cartChange', _cart);
+    },
+    updateQty(id, delta) {
+      const idx = _cart.findIndex(i => i.id === id);
+      if (idx === -1) return;
+      _cart[idx].qty = Math.max(0, _cart[idx].qty + delta);
+      if (_cart[idx].qty === 0) _cart.splice(idx, 1);
+      saveCart(); emit('cartChange', _cart);
+    },
+    clearCart() { _cart = []; saveCart(); emit('cartChange', _cart); },
+
+    cartTotal() {
+      return _cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    },
+    cartCount() {
+      return _cart.reduce((sum, i) => sum + i.qty, 0);
+    },
+
+    setUser(u) { _user = u; saveUser(); emit('userChange', u); },
+    addStars(n) { _stars += n; emit('starsChange', _stars); },
+
+    init() { loadCart(); loadUser(); }
+  };
+})();
+
+// ─────────────────────────────────────────
+// DATA: Products
+// ─────────────────────────────────────────
+const PRODUCTS = [
+  // Coffee
+  { id:'c1', name:'Classic Espresso', category:'coffee', price:240, emoji:'☕', tag:'Bestseller', desc:'Double shot of rich, aromatic espresso with a velvety crema layer.' },
+  { id:'c2', name:'Signature Caramel Latte', category:'coffee', price:420, emoji:'🍮', tag:'Popular', desc:'Silky espresso and steamed milk topped with house caramel drizzle.', trending:true },
+  { id:'c3', name:'Cold Brew Concentrate', category:'coffee', price:380, emoji:'🧊', tag:'Summer', desc:'Slow-steeped 20-hour cold brew, smooth and never bitter.' },
+  { id:'c4', name:'Mocha Frappuccino', category:'coffee', price:460, emoji:'🥤', tag:'Trending', desc:'Blended espresso, chocolate sauce, milk, and ice — topped with cream.', trending:true },
+  { id:'c5', name:'Flat White', category:'coffee', price:310, emoji:'☕', desc:'Ristretto shots with velvety microfoam milk. Intense and smooth.' },
+  { id:'c6', name:'Vanilla Bean Latte', category:'coffee', price:390, emoji:'🌿', desc:'Espresso with real vanilla bean and whole milk. Subtly sweet.' },
+  { id:'seasonal-1', name:'Toasted Maple Oat Latte', category:'coffee', price:520, emoji:'🍁', tag:'Seasonal', desc:'Smooth espresso meets velvety oat milk kissed with toasted maple syrup.', trending:true },
+  // Tea
+  { id:'t1', name:'Matcha Oat Latte', category:'tea', price:360, emoji:'🍵', tag:'Trending', desc:'Ceremonial-grade matcha whisked with oat milk and a touch of honey.', trending:true },
+  { id:'t2', name:'Masala Chai', category:'tea', price:180, emoji:'🫖', tag:'Classic', desc:'House-brewed spiced chai with ginger, cardamom, cinnamon, and clove.' },
+  { id:'t3', name:'London Fog', category:'tea', price:290, emoji:'🌫️', desc:'Earl Grey steeped in steamed milk with lavender vanilla foam.' },
+  { id:'t4', name:'Hibiscus Iced Tea', category:'tea', price:220, emoji:'🌺', desc:'Tartly floral, caffeine-free. Served over ice with a squeeze of lime.' },
+  // Bakery
+  { id:'b1', name:'Butter Croissant', category:'bakery', price:180, emoji:'🥐', tag:'Fresh Daily', desc:'Laminated, flaky, golden. Baked fresh every morning by our pastry team.' },
+  { id:'b2', name:'Sourdough Toast', category:'bakery', price:200, emoji:'🍞', desc:'House-fermented sourdough with cultured butter and local honey.' },
+  { id:'b3', name:'Almond Danish', category:'bakery', price:220, emoji:'🥐', desc:'Flaky pastry with frangipane filling, topped with toasted almonds.' },
+  // Refreshers
+  { id:'r1', name:'Mango Dragonfruit', category:'refresher', price:320, emoji:'🥭', tag:'New', desc:'Mango juice, dragon fruit pieces, coconut water, over ice.' },
+  { id:'r2', name:'Passion Tango Tea', category:'refresher', price:280, emoji:'🌿', desc:'Hibiscus-infused iced tea with passion fruit and a splash of lemonade.' },
+  // Desserts
+  { id:'d1', name:'Dark Chocolate Brownie', category:'dessert', price:240, emoji:'🍫', tag:'Fan Fave', desc:'Dense, fudgy, and intense. Baked with 72% cacao and a pinch of sea salt.', trending:true },
+  { id:'d2', name:'Cheesecake Slice', category:'dessert', price:320, emoji:'🍰', desc:'New York–style baked cheesecake on a graham cracker crust.' },
+  { id:'d3', name:'Tiramisu Cup', category:'dessert', price:350, emoji:'🍮', desc:'Classic Italian tiramisu in a jar — mascarpone, espresso, cocoa.' },
+];
+
+const TRENDING = PRODUCTS.filter(p => p.trending);
+
+// ─────────────────────────────────────────
+// MODULE: Toast System
+// ─────────────────────────────────────────
+const Toast = (() => {
+  const container = () => document.getElementById('toast-container');
+  return {
+    show(msg, icon='ph-check-circle', duration=3000) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.setAttribute('role','status');
+      el.innerHTML = `<i class="ph-fill ${icon}" style="font-size:18px;flex-shrink:0"></i><span>${msg}</span>`;
+      container().appendChild(el);
+      setTimeout(() => {
+        el.classList.add('out');
+        setTimeout(() => el.remove(), 320);
+      }, duration);
+    }
+  };
+})();
+
+// ─────────────────────────────────────────
+// MODULE: Cart Functions
+// ─────────────────────────────────────────
+const Cart = (() => {
+  function renderItems() {
+    const list = document.getElementById('cart-items-list');
+    const emptyEl = document.getElementById('cart-empty');
+    const footerEl = document.getElementById('cart-footer');
+    const items = State.cart;
+
+    if (items.length === 0) {
+      emptyEl.hidden = false; footerEl.hidden = true;
+      list.innerHTML = '';
+      return;
+    }
+    emptyEl.hidden = true; footerEl.hidden = false;
+
+    list.innerHTML = items.map(item => `
+      <div class="flex items-center gap-3 py-3" style="border-bottom:1px solid var(--border)" role="listitem">
+        <div style="width:52px;height:52px;border-radius:12px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${item.emoji}</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-weight:600;font-size:0.875rem;color:var(--deep-green);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</p>
+          <p style="font-size:0.82rem;color:var(--brand-green);font-weight:600">₹${item.price}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="qty-btn" onclick="Cart.updateQty('${item.id}',-1)" aria-label="Decrease quantity">−</button>
+          <span style="font-size:0.9rem;font-weight:600;min-width:20px;text-align:center">${item.qty}</span>
+          <button class="qty-btn" onclick="Cart.updateQty('${item.id}',1)" aria-label="Increase quantity">+</button>
+          <button class="btn-icon" onclick="Cart.removeItem('${item.id}')" aria-label="Remove ${item.name}" style="color:var(--text-light)">
+            <i class="ph ph-trash" style="font-size:16px"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    updateTotals();
+  }
+
+  function updateTotals() {
+    const subtotal = State.cartTotal();
+    const tax = Math.round(subtotal * 0.05);
+    const total = subtotal + tax;
+    const stars = Math.floor(subtotal / 10);
+
+    const s = v => `₹${v.toLocaleString('en-IN')}`;
+    document.getElementById('cart-subtotal').textContent = s(subtotal);
+    document.getElementById('cart-tax').textContent = s(tax);
+    document.getElementById('cart-total').textContent = s(total);
+    document.getElementById('cart-stars-preview').textContent = stars;
+    document.getElementById('cart-item-label').textContent = `${State.cartCount()} item${State.cartCount()!==1?'s':''}`;
+  }
+
+  function updateBadge() {
+    const count = State.cartCount();
+    ['cart-badge','cart-badge-mobile'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = count > 9 ? '9+' : count;
+      el.classList.toggle('visible', count > 0);
+    });
+  }
+
+  return {
+    render: renderItems,
+    updateBadge,
+    updateQty(id, delta) { State.updateQty(id, delta); renderItems(); updateBadge(); },
+    removeItem(id) { State.removeFromCart(id); renderItems(); updateBadge(); Toast.show('Item removed','ph-minus-circle'); },
+    add(product) {
+      State.addToCart(product);
+      renderItems(); updateBadge();
+      Toast.show(`${product.name} added to cart`, 'ph-shopping-cart-simple');
+    }
+  };
+})();
+
+// ─────────────────────────────────────────
+// MODULE: Modal Functions
+// ─────────────────────────────────────────
+function openCart() {
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-overlay').setAttribute('aria-hidden','false');
+  document.body.classList.add('drawer-open');
+  document.getElementById('cart-drawer').focus();
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-overlay').setAttribute('aria-hidden','true');
+  document.body.classList.remove('drawer-open');
+}
+function openProductModal(product) {
+  const modal = document.getElementById('product-modal');
+  const content = document.getElementById('product-modal-content');
+  content.innerHTML = `
+    <div style="padding:32px">
+      <div style="width:100%;height:180px;background:linear-gradient(135deg,var(--cream),#ede8e0);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:72px">${product.emoji}</div>
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          ${product.tag ? `<span class="tag mb-2" style="display:inline-flex">${product.tag}</span>` : ''}
+          <h2 class="font-display text-2xl font-bold" style="color:var(--deep-green)">${product.name}</h2>
+        </div>
+        <span class="font-display text-2xl font-bold" style="color:var(--brand-green)">₹${product.price}</span>
+      </div>
+      <p style="color:var(--text-mid);font-size:0.9rem;line-height:1.7;margin-bottom:24px">${product.desc}</p>
+      <div class="flex gap-3">
+        <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="Cart.add(PRODUCTS.find(p=>p.id==='${product.id}'));closeProductModal()">
+          <i class="ph ph-shopping-cart-simple" style="font-size:16px"></i> Add to Cart
+        </button>
+        <button class="btn btn-outline" onclick="closeProductModal()">Close</button>
+      </div>
+    </div>
+  `;
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+function closeProductModal() {
+  document.getElementById('product-modal').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+function openRewardsModal() {
+  document.getElementById('rewards-modal').classList.add('open');
+  document.body.classList.add('modal-open');
+  setTimeout(() => document.getElementById('rewards-name').focus(), 300);
+}
+function closeRewardsModal() {
+  document.getElementById('rewards-modal').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+function openCheckout() {
+  closeCart();
+  const items = State.cart;
+  const subtotal = State.cartTotal();
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + tax;
+  const s = v => `₹${v.toLocaleString('en-IN')}`;
+  document.getElementById('checkout-subtotal').textContent = s(subtotal);
+  document.getElementById('checkout-tax').textContent = s(tax);
+  document.getElementById('checkout-total').textContent = s(total);
+  document.getElementById('checkout-items').innerHTML = items.map(i => `
+    <div class="flex justify-between" style="font-size:0.85rem">
+      <span style="color:var(--text-mid)">${i.emoji} ${i.name} × ${i.qty}</span>
+      <span style="font-weight:600">₹${(i.price*i.qty).toLocaleString('en-IN')}</span>
+    </div>
+  `).join('');
+  const minutes = 18 + Math.floor(Math.random()*10);
+  document.getElementById('pickup-time').textContent = `${minutes}–${minutes+5} minutes`;
+  document.getElementById('checkout-modal').classList.add('open');
+  document.body.classList.add('modal-open');
+}
+function closeCheckout() {
+  document.getElementById('checkout-modal').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+function closeSuccessModal() {
+  document.getElementById('success-modal').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+// ─────────────────────────────────────────
+// MODULE: Checkout System
+// ─────────────────────────────────────────
+function placeOrder() {
+  const subtotal = State.cartTotal();
+  const starsEarned = Math.floor(subtotal / 10);
+  const orderNum = '#BH-' + String(Math.floor(10000 + Math.random()*90000));
+  const minutes = 18 + Math.floor(Math.random()*8);
+
+  document.getElementById('order-number').textContent = orderNum;
+  document.getElementById('success-pickup').textContent = `${minutes} min`;
+  document.getElementById('stars-earned').textContent = `+${starsEarned} ★`;
+
+  closeCheckout();
+  document.getElementById('success-modal').classList.add('open');
+  document.body.classList.add('modal-open');
+
+  State.addStars(starsEarned);
+  Rewards.updateDisplay();
+  State.clearCart();
+  Cart.render();
+  Cart.updateBadge();
+  Toast.show(`Order placed! Earning ${starsEarned} stars 🌟`, 'ph-check-circle');
+}
+
+// ─────────────────────────────────────────
+// MODULE: Rewards System
+// ─────────────────────────────────────────
+const Rewards = {
+  updateDisplay() {
+    document.getElementById('stars-display').textContent = State.stars;
+    const progress = Math.min(State.stars / 300, 1);
+    const ring = document.getElementById('reward-ring');
+    const progressBar = document.getElementById('reward-progress');
+    ring.style.strokeDashoffset = 283 * (1 - progress);
+    progressBar.style.width = (progress * 100) + '%';
+  }
+};
+
+function joinRewards() {
+  const name = document.getElementById('rewards-name').value.trim();
+  const email = document.getElementById('rewards-email').value.trim();
+  if (!name) { Toast.show('Please enter your name', 'ph-warning'); return; }
+  if (!email || !email.includes('@')) { Toast.show('Please enter a valid email', 'ph-warning'); return; }
+  State.setUser({ name, email });
+  closeRewardsModal();
+  updateGreeting();
+  Toast.show(`Welcome, ${name}! Your rewards journey begins. 🌟`, 'ph-star', 4000);
+}
+
+function updateGreeting() {
+  const hour = new Date().getHours();
+  let tod = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
+  const user = State.user;
+  const name = user ? user.name.split(' ')[0] : 'Guest';
+  document.getElementById('greeting-text').textContent = `Good ${tod}, ${name}`;
+}
+
+// ─────────────────────────────────────────
+// MODULE: Menu Rendering
+// ─────────────────────────────────────────
+const Menu = {
+  render() {
+    const grid = document.getElementById('menu-grid');
+    const empty = document.getElementById('empty-state');
+    const q = State.searchQuery.toLowerCase();
+    const f = State.filter;
+
+    let items = PRODUCTS.filter(p => {
+      const matchFilter = f === 'all' || p.category === f;
+      const matchSearch = !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+      return matchFilter && matchSearch;
+    });
+
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = items.map(p => `
+      <article class="card product-card" role="listitem" tabindex="0"
+        onclick="openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
+        onkeydown="if(event.key==='Enter')openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
+        aria-label="${p.name}, ₹${p.price}">
+        ${p.tag ? `<span class="badge ${p.trending?'badge-trending':''}" aria-label="${p.tag}">${p.tag}</span>` : ''}
+        <div class="card-img" style="height:160px;background:linear-gradient(135deg,#f0ebe3,#e8e0d0);display:flex;align-items:center;justify-content:center">
+          <span style="font-size:64px" role="img" aria-hidden="true">${p.emoji}</span>
+        </div>
+        <div style="padding:16px">
+          <h3 style="font-weight:600;font-size:0.9rem;color:var(--deep-green);margin-bottom:4px">${p.name}</h3>
+          <p style="font-size:0.78rem;color:var(--text-light);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.desc}</p>
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold" style="color:var(--brand-green);font-size:1rem">₹${p.price}</span>
+            <button class="add-btn" onclick="event.stopPropagation();Cart.add(PRODUCTS.find(x=>x.id==='${p.id}'))" aria-label="Add ${p.name} to cart">
+              <i class="ph ph-plus" style="font-size:16px"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  }
+};
+
+function setFilter(el, value) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  State.setFilter(value);
+  Menu.render();
+}
+
+function addToCartById(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (p) Cart.add(p);
+}
+
+// ─────────────────────────────────────────
+// Trending Section Render
+// ─────────────────────────────────────────
+function renderTrending() {
+  const grid = document.getElementById('trending-grid');
+  grid.innerHTML = TRENDING.slice(0,4).map((p,i) => `
+    <article class="card product-card reveal delay-${i+1}" role="listitem" tabindex="0"
+      onclick="openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
+      onkeydown="if(event.key==='Enter')openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
+      aria-label="${p.name}">
+      ${i===0 ? '<span class="badge badge-trending" aria-label="Most Ordered Today">🔥 Most Ordered</span>' : ''}
+      <div class="card-img" style="height:140px;background:linear-gradient(135deg,#f0ebe3,#e8e0d0);display:flex;align-items:center;justify-content:center">
+        <span style="font-size:56px" role="img" aria-hidden="true">${p.emoji}</span>
+      </div>
+      <div style="padding:14px">
+        <h3 style="font-weight:600;font-size:0.875rem;color:var(--deep-green);margin-bottom:6px">${p.name}</h3>
+        <div class="flex items-center justify-between">
+          <span class="font-display font-bold" style="color:var(--brand-green)">₹${p.price}</span>
+          <button class="add-btn" onclick="event.stopPropagation();Cart.add(PRODUCTS.find(x=>x.id==='${p.id}'))" aria-label="Add ${p.name}">
+            <i class="ph ph-plus" style="font-size:15px"></i>
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+// ─────────────────────────────────────────
+// Intersection Observer — Reveal Animations
+// ─────────────────────────────────────────
+function initReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => observer.observe(el));
+}
+
+// ─────────────────────────────────────────
+// Animated Counters
+// ─────────────────────────────────────────
+function initCounters() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.target;
+      const duration = 1800;
+      const step = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current).toLocaleString('en-IN');
+        if (current >= target) clearInterval(timer);
+      }, 16);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-counter[data-target]').forEach(el => observer.observe(el));
+}
+
+// ─────────────────────────────────────────
+// Navbar scroll effect
+// ─────────────────────────────────────────
+function initNavbar() {
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+}
+
+// ─────────────────────────────────────────
+// Search syncing
+// ─────────────────────────────────────────
+function initSearch() {
+  const heroSearch = document.getElementById('hero-search');
+  const menuSearch = document.getElementById('menu-search');
+
+  function syncSearch(q) {
+    State.setSearchQuery(q);
+    heroSearch.value = q;
+    menuSearch.value = q;
+    Menu.render();
+  }
+
+  heroSearch.addEventListener('input', e => syncSearch(e.target.value));
+  menuSearch.addEventListener('input', e => syncSearch(e.target.value));
+
+  heroSearch.addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.querySelector('#menu').scrollIntoView({ behavior: 'smooth' });
+  });
+}
+
+// ─────────────────────────────────────────
+// Keyboard: ESC closes all modals/drawers
+// ─────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  closeCart();
+  closeProductModal();
+  closeRewardsModal();
+  closeCheckout();
+  closeSuccessModal();
+});
+
+// ─────────────────────────────────────────
+// Cart button listeners
+// ─────────────────────────────────────────
+document.getElementById('cart-btn').addEventListener('click', openCart);
+document.getElementById('sign-in-btn').addEventListener('click', openRewardsModal);
+document.getElementById('nav-search-btn').addEventListener('click', () => {
+  document.querySelector('#menu').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => document.getElementById('menu-search').focus(), 600);
+});
+
+// ─────────────────────────────────────────
+// Rewards ring animation on load
+// ─────────────────────────────────────────
+function initRewardsRing() {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      setTimeout(() => Rewards.updateDisplay(), 300);
+      observer.disconnect();
+    }
+  }, { threshold: 0.3 });
+  const rewardsSection = document.getElementById('rewards');
+  if (rewardsSection) observer.observe(rewardsSection);
+}
+
+// ─────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  State.init();
+  updateGreeting();
+  renderTrending();
+  Menu.render();
+  Cart.render();
+  Cart.updateBadge();
+  initNavbar();
+  initReveal();
+  initCounters();
+  initSearch();
+  initRewardsRing();
+
+  // Restore hero-search from state
+  if (State.searchQuery) {
+    document.getElementById('hero-search').value = State.searchQuery;
+    document.getElementById('menu-search').value = State.searchQuery;
+  }
+});
+</script>
+</body>
+</html>
