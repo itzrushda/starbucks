@@ -1,1526 +1,1864 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>The Brew House — Premium Coffee Experience</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
-<style>
-  :root{
-    --cream:#F8F5EF;
-    --deep-green:#1E3932;
-    --brand-green:#00704A;
-    --gold:#CBA258;
-    --warm-white:#FDFAF5;
-    --text-dark:#1C1C1C;
-    --text-mid:#4A4A4A;
-    --text-light:#7A7A7A;
-    --border:#E8E0D0;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',sans-serif;
-    background:var(--cream);
-    color:var(--text-dark);
-    overflow-x:hidden;
-  }
-  body.modal-open,body.drawer-open{overflow:hidden}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aroma Home | Crafted Moments. Exceptional Coffee.</title>
+    <meta name="description"
+        content="Discover handcrafted beverages, artisan bakery delights, and a rewards experience designed for coffee lovers at Aroma Home.">
+    <meta property="og:title" content="Aroma Home Premium Coffeehouse">
+    <meta property="og:description" content="Crafted Moments. Exceptional Coffee.">
+    <meta property="og:type" content="website">
 
-  /* ── Typography ── */
-  .font-display{font-family:'Playfair Display',serif}
-  .font-serif-italic{font-family:'DM Serif Display',serif;font-style:italic}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-  /* ── Focus visible ── */
-  :focus-visible{outline:2px solid var(--brand-green);outline-offset:3px;border-radius:4px}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        aroma: {
+                            green: '#1a3622',
+                            'green-light': '#2c5a38',
+                            cream: '#fdfbf7',
+                            brown: '#6f4e37',
+                            beige: '#e6d5c3',
+                            charcoal: '#2d2d2d',
+                            'dark-base': '#0f1115',
+                            'dark-card': '#1a1d24',
+                            'gold': '#c5a059'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar{width:6px}
-  ::-webkit-scrollbar-track{background:var(--cream)}
-  ::-webkit-scrollbar-thumb{background:var(--brand-green);border-radius:3px}
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
 
-  /* ── Glassmorphism ── */
-  .glass{
-    background:rgba(255,255,255,0.45);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    border:1px solid rgba(255,255,255,0.55);
-  }
-  .glass-dark{
-    background:rgba(30,57,50,0.65);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    border:1px solid rgba(255,255,255,0.12);
-  }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
 
-  /* ── Buttons ── */
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:12px 28px;border-radius:50px;
-    font-weight:600;font-size:0.875rem;letter-spacing:0.02em;
-    cursor:pointer;border:none;outline:none;
-    transition:transform 0.18s ease,box-shadow 0.18s ease,background 0.18s ease;
-  }
-  .btn:hover{transform:scale(1.04)}
-  .btn:active{transform:scale(0.98)}
-  .btn-primary{background:var(--brand-green);color:#fff}
-  .btn-primary:hover{background:#005c3b;box-shadow:0 8px 24px rgba(0,112,74,0.35)}
-  .btn-dark{background:var(--deep-green);color:#fff}
-  .btn-dark:hover{box-shadow:0 8px 24px rgba(30,57,50,0.4)}
-  .btn-gold{background:var(--gold);color:var(--deep-green)}
-  .btn-gold:hover{box-shadow:0 8px 24px rgba(203,162,88,0.4)}
-  .btn-outline{background:transparent;color:var(--deep-green);border:2px solid var(--deep-green)}
-  .btn-outline:hover{background:var(--deep-green);color:#fff}
-  .btn-icon{
-    width:44px;height:44px;padding:0;border-radius:50%;
-    display:inline-flex;align-items:center;justify-content:center;
-    cursor:pointer;border:none;background:transparent;
-    transition:background 0.18s ease,transform 0.18s ease;
-  }
-  .btn-icon:hover{background:rgba(0,0,0,0.07);transform:scale(1.08)}
+        .dark ::-webkit-scrollbar-track {
+            background: #0f1115;
+        }
 
-  /* ── Cards ── */
-  .card{
-    background:#fff;border-radius:24px;
-    box-shadow:0 2px 12px rgba(0,0,0,0.06);
-    transition:transform 0.22s ease,box-shadow 0.22s ease;
-    overflow:hidden;
-  }
-  .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.12)}
-  .card-img{overflow:hidden}
-  .card-img img{
-    width:100%;height:100%;object-fit:cover;
-    transition:transform 0.4s ease;
-    loading:lazy;
-  }
-  .card:hover .card-img img{transform:scale(1.06)}
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
 
-  /* ── Navbar ── */
-  #navbar{
-    position:fixed;top:0;left:0;right:0;z-index:900;
-    padding:0 24px;height:68px;
-    display:flex;align-items:center;justify-content:space-between;
-    transition:background 0.3s ease,box-shadow 0.3s ease,backdrop-filter 0.3s ease;
-  }
-  #navbar.scrolled{
-    background:rgba(248,245,239,0.88);
-    backdrop-filter:blur(16px);
-    box-shadow:0 2px 20px rgba(0,0,0,0.08);
-  }
-  .nav-links a{
-    font-size:0.875rem;font-weight:500;
-    color:var(--text-dark);text-decoration:none;
-    padding:6px 14px;border-radius:20px;
-    transition:background 0.15s ease,color 0.15s ease;
-  }
-  .nav-links a:hover{background:rgba(0,112,74,0.1);color:var(--brand-green)}
+        .dark ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+        }
 
-  /* ── Hero ── */
-  #hero{
-    min-height:100vh;
-    background:linear-gradient(160deg,#0d2b22 0%,#1E3932 45%,#2a4a3e 100%);
-    position:relative;overflow:hidden;
-    display:flex;align-items:center;
-  }
-  #hero::before{
-    content:'';position:absolute;inset:0;
-    background:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&q=80') center/cover no-repeat;
-    opacity:0.18;
-  }
-  .hero-blob{
-    position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;
-  }
-  .search-bar{
-    display:flex;align-items:center;gap:12px;
-    background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-    border-radius:50px;padding:10px 20px;
-    transition:background 0.2s ease,border-color 0.2s ease;
-  }
-  .search-bar:focus-within{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.4)}
-  .search-bar input{
-    background:transparent;border:none;outline:none;
-    color:#fff;font-size:0.9rem;flex:1;
-  }
-  .search-bar input::placeholder{color:rgba(255,255,255,0.55)}
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
 
-  /* ── Section animations ── */
-  .reveal{
-    opacity:0;transform:translateY(32px);
-    transition:opacity 0.6s ease,transform 0.6s ease;
-  }
-  .reveal.visible{opacity:1;transform:translateY(0)}
-  .reveal-left{opacity:0;transform:translateX(-32px);transition:opacity 0.6s ease,transform 0.6s ease}
-  .reveal-left.visible{opacity:1;transform:translateX(0)}
-  .reveal-right{opacity:0;transform:translateX(32px);transition:opacity 0.6s ease,transform 0.6s ease}
-  .reveal-right.visible{opacity:1;transform:translateX(0)}
+        /* Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
 
-  /* ── Menu grid ── */
-  .menu-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-    gap:24px;
-  }
-  .product-card{position:relative;cursor:pointer}
-  .product-card .badge{
-    position:absolute;top:14px;left:14px;
-    background:var(--gold);color:var(--deep-green);
-    font-size:0.7rem;font-weight:700;letter-spacing:0.05em;
-    padding:4px 10px;border-radius:20px;text-transform:uppercase;
-    z-index:2;
-  }
-  .product-card .badge-trending{background:var(--brand-green);color:#fff}
-  .add-btn{
-    position:absolute;bottom:14px;right:14px;
-    width:38px;height:38px;border-radius:50%;
-    background:var(--brand-green);color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    border:none;cursor:pointer;
-    transition:transform 0.18s ease,box-shadow 0.18s ease;
-    box-shadow:0 4px 12px rgba(0,112,74,0.35);
-  }
-  .add-btn:hover{transform:scale(1.15);box-shadow:0 6px 18px rgba(0,112,74,0.45)}
+        .dark .glass {
+            background: rgba(26, 29, 36, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-  /* ── Filter pills ── */
-  .filter-pill{
-    padding:8px 20px;border-radius:50px;
-    font-size:0.83rem;font-weight:500;
-    border:1.5px solid var(--border);
-    background:#fff;color:var(--text-mid);
-    cursor:pointer;transition:all 0.18s ease;
-    white-space:nowrap;
-  }
-  .filter-pill:hover{border-color:var(--brand-green);color:var(--brand-green)}
-  .filter-pill.active{
-    background:var(--brand-green);border-color:var(--brand-green);
-    color:#fff;box-shadow:0 4px 14px rgba(0,112,74,0.25);
-  }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
 
-  /* ── Cart Drawer ── */
-  #cart-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,0.45);
-    z-index:1000;opacity:0;pointer-events:none;
-    transition:opacity 0.3s ease;
-  }
-  #cart-overlay.open{opacity:1;pointer-events:all}
-  #cart-drawer{
-    position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;
-    background:var(--cream);z-index:1001;
-    transform:translateX(100%);
-    transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    display:flex;flex-direction:column;
-    box-shadow:-8px 0 40px rgba(0,0,0,0.15);
-  }
-  #cart-drawer.open{transform:translateX(0)}
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-  /* ── Modal ── */
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,0.5);
-    z-index:1100;opacity:0;pointer-events:none;
-    display:flex;align-items:center;justify-content:center;
-    transition:opacity 0.25s ease;padding:20px;
-  }
-  .modal-overlay.open{opacity:1;pointer-events:all}
-  .modal-box{
-    background:#fff;border-radius:28px;
-    max-width:520px;width:100%;
-    transform:scale(0.92) translateY(20px);
-    transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    max-height:90vh;overflow-y:auto;
-    box-shadow:0 24px 80px rgba(0,0,0,0.2);
-  }
-  .modal-overlay.open .modal-box{transform:scale(1) translateY(0)}
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
 
-  /* ── Toast ── */
-  #toast-container{
-    position:fixed;bottom:90px;right:20px;z-index:1200;
-    display:flex;flex-direction:column-reverse;gap:10px;
-    pointer-events:none;
-  }
-  .toast{
-    background:var(--deep-green);color:#fff;
-    padding:12px 20px;border-radius:16px;
-    font-size:0.85rem;font-weight:500;
-    display:flex;align-items:center;gap:10px;
-    box-shadow:0 8px 24px rgba(0,0,0,0.2);
-    animation:toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    pointer-events:all;
-    max-width:300px;
-  }
-  @keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
-  @keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(60px)}}
-  .toast.out{animation:toastOut 0.3s ease forwards}
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-  /* ── Rewards ring ── */
-  .rewards-ring{position:relative;width:100px;height:100px}
-  .rewards-ring svg{transform:rotate(-90deg)}
-  .rewards-ring .ring-bg{fill:none;stroke:#E8E0D0;stroke-width:8}
-  .rewards-ring .ring-fill{
-    fill:none;stroke:var(--gold);stroke-width:8;
-    stroke-linecap:round;
-    stroke-dasharray:283;
-    stroke-dashoffset:283;
-    transition:stroke-dashoffset 1.2s ease;
-  }
-  .rewards-ring .ring-text{
-    position:absolute;inset:0;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-  }
+        /* Loader */
+        #loader {
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
 
-  /* ── Stats counter ── */
-  .stat-counter{font-family:'Playfair Display',serif;font-weight:700}
+        /* Progress Bar */
+        #scroll-progress {
+            transform-origin: left;
+            transform: scaleX(0);
+        }
 
-  /* ── Bottom nav (mobile) ── */
-  #bottom-nav{
-    position:fixed;bottom:0;left:0;right:0;
-    height:72px;background:rgba(248,245,239,0.95);
-    backdrop-filter:blur(16px);
-    border-top:1px solid var(--border);
-    display:none;align-items:center;justify-content:space-around;
-    z-index:800;
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  .bnav-item{
-    display:flex;flex-direction:column;align-items:center;gap:3px;
-    font-size:0.65rem;font-weight:500;color:var(--text-light);
-    cursor:pointer;padding:8px 16px;border-radius:12px;
-    transition:color 0.15s ease,background 0.15s ease;
-    border:none;background:transparent;
-    text-decoration:none;
-  }
-  .bnav-item.active,.bnav-item:hover{color:var(--brand-green)}
-  .bnav-item i{font-size:22px}
+        /* Map Container */
+        .map-container iframe {
+            filter: grayscale(20%) contrast(1.1);
+        }
 
-  /* ── Seasonal card ── */
-  .seasonal-card{
-    background:linear-gradient(135deg,#2d5a45,#1E3932);
-    border-radius:24px;padding:28px;color:#fff;
-    position:relative;overflow:hidden;
-  }
-  .seasonal-card::after{
-    content:'';position:absolute;right:-30px;top:-30px;
-    width:160px;height:160px;border-radius:50%;
-    background:rgba(203,162,88,0.15);
-  }
-
-  /* ── Section header ── */
-  .section-eyebrow{
-    font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;
-    color:var(--brand-green);font-weight:600;
-  }
-
-  /* ── Community card ── */
-  .community-card{
-    background:var(--deep-green);color:#fff;
-    border-radius:24px;overflow:hidden;
-    transition:transform 0.22s ease,box-shadow 0.22s ease;
-  }
-  .community-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(30,57,50,0.3)}
-
-  /* ── Progress bar ── */
-  .progress-bar{
-    height:8px;background:var(--border);border-radius:4px;overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;background:linear-gradient(90deg,var(--brand-green),var(--gold));
-    border-radius:4px;transition:width 1s ease;width:0;
-  }
-
-  /* ── Checkout receipt ── */
-  .receipt-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border)}
-  .receipt-line:last-child{border-bottom:none}
-
-  /* ── Empty state ── */
-  .empty-state{
-    display:flex;flex-direction:column;align-items:center;gap:12px;
-    padding:60px 20px;color:var(--text-light);text-align:center;
-  }
-
-  /* ── Responsive ── */
-  @media(max-width:768px){
-    #bottom-nav{display:flex}
-    #nav-desktop-links{display:none}
-    #cart-drawer{width:100vw}
-    body{padding-bottom:72px}
-    .menu-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
-    #hero{min-height:85vh}
-  }
-  @media(min-width:769px){
-    #bottom-nav{display:none !important}
-  }
-
-  /* ── Misc ── */
-  .gold-text{color:var(--gold)}
-  .green-text{color:var(--brand-green)}
-  .tag{
-    display:inline-flex;align-items:center;gap:4px;
-    background:rgba(0,112,74,0.1);color:var(--brand-green);
-    font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;
-  }
-  .divider{height:1px;background:var(--border);margin:0}
-  .cart-item-img{width:60px;height:60px;border-radius:12px;object-fit:cover}
-  .qty-btn{
-    width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);
-    background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    font-size:1rem;transition:all 0.15s ease;color:var(--deep-green);
-  }
-  .qty-btn:hover{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
-
-  /* ── Cart badge ── */
-  .cart-badge{
-    position:absolute;top:-4px;right:-4px;
-    width:18px;height:18px;background:var(--gold);
-    color:var(--deep-green);font-size:0.65rem;font-weight:700;
-    border-radius:50%;display:flex;align-items:center;justify-content:center;
-    opacity:0;transform:scale(0);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  .cart-badge.visible{opacity:1;transform:scale(1)}
-
-  /* Staggered reveal delays */
-  .delay-1{transition-delay:0.1s}
-  .delay-2{transition-delay:0.2s}
-  .delay-3{transition-delay:0.3s}
-  .delay-4{transition-delay:0.4s}
-  .delay-5{transition-delay:0.5s}
-
-  /* ── Safe area ── */
-  .safe-bottom{padding-bottom:env(safe-area-inset-bottom,0px)}
-</style>
+        .dark .map-container iframe {
+            filter: invert(90%) hue-rotate(180deg) grayscale(20%) contrast(1.1);
+        }
+    </style>
 </head>
-<body>
 
-<!-- ════════════════════════════════════════════
-     NAVBAR
-════════════════════════════════════════════ -->
-<nav id="navbar" aria-label="Main navigation">
-  <a href="#hero" class="flex items-center gap-3" aria-label="The Brew House home">
-    <div style="width:38px;height:38px;background:var(--brand-green);border-radius:50%;display:flex;align-items:center;justify-content:center">
-      <i class="ph-fill ph-coffee" style="color:#fff;font-size:18px"></i>
-    </div>
-    <span class="font-display font-bold text-lg" style="color:var(--deep-green)">The Brew House</span>
-  </a>
+<body
+    class="font-sans text-aroma-charcoal bg-aroma-cream dark:bg-aroma-dark-base dark:text-gray-200 antialiased overflow-x-hidden transition-colors duration-300">
 
-  <div id="nav-desktop-links" class="nav-links hidden md:flex items-center gap-1">
-    <a href="#menu">Menu</a>
-    <a href="#trending">Trending</a>
-    <a href="#rewards">Rewards</a>
-    <a href="#community">Our Story</a>
-  </div>
-
-  <div class="flex items-center gap-2">
-    <button class="btn-icon" id="nav-search-btn" aria-label="Search">
-      <i class="ph ph-magnifying-glass" style="font-size:20px;color:var(--deep-green)"></i>
-    </button>
-    <button class="btn-icon relative" id="cart-btn" aria-label="Open cart">
-      <i class="ph ph-shopping-cart-simple" style="font-size:22px;color:var(--deep-green)"></i>
-      <span class="cart-badge" id="cart-badge" aria-live="polite"></span>
-    </button>
-    <button class="btn btn-primary hidden md:inline-flex" id="sign-in-btn" aria-label="Sign in or join">
-      <i class="ph ph-star" style="font-size:15px"></i> Join Rewards
-    </button>
-  </div>
-</nav>
-
-<!-- ════════════════════════════════════════════
-     HERO
-════════════════════════════════════════════ -->
-<section id="hero" aria-label="Hero">
-  <div class="hero-blob" style="width:500px;height:500px;background:var(--brand-green);top:-150px;right:-100px"></div>
-  <div class="hero-blob" style="width:300px;height:300px;background:var(--gold);bottom:-80px;left:10%"></div>
-
-  <div class="max-w-6xl mx-auto px-6 w-full relative z-10" style="padding-top:80px">
-    <div class="grid md:grid-cols-2 gap-16 items-center">
-
-      <!-- Left content -->
-      <div>
-        <div class="tag mb-5" style="background:rgba(203,162,88,0.2);color:var(--gold)">
-          <i class="ph-fill ph-sun" style="font-size:12px"></i>
-          <span id="greeting-text">Good Morning, Guest</span>
-        </div>
-        <h1 class="font-display text-5xl md:text-6xl font-bold leading-tight mb-5" style="color:#fff">
-          Every Cup<br/><span class="font-serif-italic" style="color:var(--gold)">Tells a Story</span>
-        </h1>
-        <p class="text-base mb-8" style="color:rgba(255,255,255,0.7);max-width:400px;line-height:1.7">
-          Handcrafted beverages brewed with intention. From sunrise espresso to evening wind-downs — we're your third place.
-        </p>
-
-        <!-- Search -->
-        <div class="search-bar mb-8" role="search">
-          <i class="ph ph-magnifying-glass" style="color:rgba(255,255,255,0.6);font-size:18px"></i>
-          <input type="text" id="hero-search" placeholder="Search drinks, pastries..." aria-label="Search menu items"/>
-          <button class="btn btn-primary" style="padding:8px 18px;font-size:0.8rem" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">Go</button>
-        </div>
-
-        <div class="flex flex-wrap gap-3">
-          <button class="btn btn-gold" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
-            <i class="ph ph-list-bullets" style="font-size:16px"></i> View Menu
-          </button>
-          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.4)" onclick="openRewardsModal()">
-            <i class="ph ph-star" style="font-size:16px"></i> Join Rewards
-          </button>
-        </div>
-      </div>
-
-      <!-- Right: Seasonal spotlight -->
-      <div class="reveal-right">
-        <div class="seasonal-card">
-          <div class="tag mb-3" style="background:rgba(203,162,88,0.3);color:var(--gold)">
-            <i class="ph-fill ph-sparkle" style="font-size:12px"></i> Seasonal Spotlight
-          </div>
-          <h3 class="font-display text-2xl font-bold text-white mb-2">Toasted Maple Oat Latte</h3>
-          <p style="color:rgba(255,255,255,0.65);font-size:0.85rem;margin-bottom:20px;line-height:1.6">
-            Smooth espresso meets velvety oat milk, kissed with house-made toasted maple syrup and a pinch of cinnamon.
-          </p>
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="font-display text-2xl font-bold text-white">₹520</span>
-              <span style="color:rgba(255,255,255,0.5);font-size:0.8rem;margin-left:6px">Hot / Iced</span>
+    <!-- Loading Screen -->
+    <div id="loader"
+        class="fixed inset-0 z-[100] bg-aroma-cream dark:bg-aroma-dark-base flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 border-4 border-aroma-brown/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-aroma-brown rounded-full border-t-transparent animate-spin">
             </div>
-            <button class="btn btn-gold" onclick="addToCartById('seasonal-1')" aria-label="Add Toasted Maple Oat Latte to cart">
-              <i class="ph ph-plus" style="font-size:15px"></i> Add
+            <i
+                class="ph ph-coffee absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-aroma-brown"></i>
+        </div>
+        <h2 class="font-serif text-2xl tracking-widest text-aroma-brown dark:text-aroma-gold animate-pulse">AROMA HOME
+        </h2>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="fixed top-0 left-0 h-1 w-full bg-transparent z-[60]">
+        <div id="scroll-progress"
+            class="h-full bg-aroma-brown dark:bg-aroma-gold transition-transform duration-100 ease-out"></div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-3"></div>
+
+    <!-- Navigation -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 glass border-b-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="scrollToTop()">
+                    <h1
+                        class="font-serif text-2xl font-bold text-aroma-green dark:text-white tracking-wider flex items-center gap-2">
+                        <i class="ph-fill ph-coffee text-aroma-brown"></i>
+                        AROMA <span class="font-normal italic text-aroma-brown">HOME</span>
+                    </h1>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home"
+                        class="text-sm font-medium hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Home</a>
+                    <a href="#menu"
+                        class="text-sm font-medium hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Menu</a>
+                    <a href="#rewards"
+                        class="text-sm font-medium hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Rewards</a>
+                    <a href="#about"
+                        class="text-sm font-medium hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Story</a>
+                    <a href="#stores"
+                        class="text-sm font-medium hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Stores</a>
+                </nav>
+
+                <!-- Icons -->
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <button id="theme-toggle" class="text-xl hover:text-aroma-brown transition-colors"
+                        aria-label="Toggle Theme">
+                        <i class="ph ph-moon dark:hidden"></i>
+                        <i class="ph ph-sun hidden dark:block"></i>
+                    </button>
+
+                    <button class="text-xl hover:text-aroma-brown transition-colors relative"
+                        onclick="toggleWishlistDrawer()" aria-label="Wishlist">
+                        <i class="ph ph-heart"></i>
+                        <span id="nav-wishlist-count"
+                            class="absolute -top-1.5 -right-2 bg-aroma-brown text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
+                    </button>
+
+                    <button class="text-xl hover:text-aroma-brown transition-colors relative" onclick="toggleCart()"
+                        aria-label="Cart">
+                        <i class="ph ph-shopping-bag"></i>
+                        <span id="nav-cart-count"
+                            class="absolute -top-1.5 -right-2 bg-aroma-green dark:bg-aroma-gold text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center opacity-0 transition-opacity">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-2xl focus:outline-none" aria-label="Open Menu">
+                        <i class="ph ph-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu"
+            class="fixed inset-0 bg-aroma-cream dark:bg-aroma-dark-base z-40 transform translate-x-full transition-transform duration-300 flex flex-col pt-24 px-6 pb-6">
+            <button id="close-mobile-menu" class="absolute top-6 right-6 text-3xl hover:text-aroma-brown">
+                <i class="ph ph-x"></i>
             </button>
-          </div>
-          <div style="position:absolute;right:20px;bottom:-10px;font-size:80px;opacity:0.12">☕</div>
-        </div>
-        <!-- Quick stats -->
-        <div class="grid grid-cols-3 gap-3 mt-4">
-          <div class="glass rounded-2xl p-4 text-center">
-            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">4.9<span class="text-sm">★</span></div>
-            <div style="font-size:0.7rem;color:var(--text-light)">Avg Rating</div>
-          </div>
-          <div class="glass rounded-2xl p-4 text-center">
-            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">120+</div>
-            <div style="font-size:0.7rem;color:var(--text-light)">Menu Items</div>
-          </div>
-          <div class="glass rounded-2xl p-4 text-center">
-            <div class="font-display font-bold text-xl" style="color:var(--deep-green)">18min</div>
-            <div style="font-size:0.7rem;color:var(--text-light)">Avg Pickup</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════
-     TRENDING
-════════════════════════════════════════════ -->
-<section id="trending" class="py-20 px-6" aria-label="Trending beverages">
-  <div class="max-w-6xl mx-auto">
-    <div class="flex items-end justify-between mb-10 reveal">
-      <div>
-        <p class="section-eyebrow mb-2">What's Hot</p>
-        <h2 class="font-display text-4xl font-bold" style="color:var(--deep-green)">Trending Today</h2>
-      </div>
-      <button class="btn btn-outline hidden md:inline-flex" onclick="document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
-        See All <i class="ph ph-arrow-right" style="font-size:15px"></i>
-      </button>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-5" id="trending-grid" role="list">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════
-     MENU
-════════════════════════════════════════════ -->
-<section id="menu" class="py-20 px-6" style="background:var(--warm-white)" aria-label="Menu">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-10 reveal">
-      <p class="section-eyebrow mb-2">Crafted With Care</p>
-      <h2 class="font-display text-4xl font-bold mb-3" style="color:var(--deep-green)">Our Menu</h2>
-      <p style="color:var(--text-mid);max-width:480px;margin:0 auto;font-size:0.95rem">
-        Every item made fresh. Every flavour intentional.
-      </p>
-    </div>
-
-    <!-- Search + Filters -->
-    <div class="flex flex-col md:flex-row gap-4 mb-8 reveal">
-      <div class="search-bar flex-1" style="background:#fff;border:1.5px solid var(--border)" role="search">
-        <i class="ph ph-magnifying-glass" style="color:var(--text-light);font-size:18px"></i>
-        <input type="text" id="menu-search" placeholder="Search drinks, pastries..." aria-label="Filter menu items"/>
-      </div>
-    </div>
-    <div class="flex gap-3 overflow-x-auto pb-2 mb-8 reveal" style="-webkit-overflow-scrolling:touch" role="group" aria-label="Category filters">
-      <button class="filter-pill active" data-filter="all" onclick="setFilter(this,'all')">All Items</button>
-      <button class="filter-pill" data-filter="coffee" onclick="setFilter(this,'coffee')">☕ Coffee</button>
-      <button class="filter-pill" data-filter="tea" onclick="setFilter(this,'tea')">🍵 Tea</button>
-      <button class="filter-pill" data-filter="bakery" onclick="setFilter(this,'bakery')">🥐 Bakery</button>
-      <button class="filter-pill" data-filter="refresher" onclick="setFilter(this,'refresher')">🧃 Refreshers</button>
-      <button class="filter-pill" data-filter="dessert" onclick="setFilter(this,'dessert')">🍰 Desserts</button>
-    </div>
-
-    <div class="menu-grid reveal" id="menu-grid" role="list" aria-live="polite">
-      <!-- Populated by JS -->
-    </div>
-    <div id="empty-state" class="empty-state hidden" role="status">
-      <i class="ph ph-magnifying-glass" style="font-size:48px;color:var(--border)"></i>
-      <h3 class="font-display text-xl" style="color:var(--text-mid)">No items found</h3>
-      <p style="font-size:0.85rem">Try a different search or filter.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════
-     REWARDS
-════════════════════════════════════════════ -->
-<section id="rewards" class="py-20 px-6" aria-label="Rewards program">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="reveal-left">
-        <p class="section-eyebrow mb-3">Loyalty Programme</p>
-        <h2 class="font-display text-4xl font-bold mb-5" style="color:var(--deep-green)">Every Sip<br/>Earns Stars</h2>
-        <p style="color:var(--text-mid);margin-bottom:28px;line-height:1.7">
-          Collect stars with every order. Redeem for free drinks, exclusive items, and surprise experiences. The more you sip, the sweeter the rewards.
-        </p>
-        <ul class="space-y-3 mb-8">
-          <li class="flex items-center gap-3">
-            <div style="width:32px;height:32px;background:rgba(203,162,88,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center">
-              <i class="ph-fill ph-star" style="color:var(--gold);font-size:16px"></i>
+            <nav class="flex flex-col space-y-6 text-center mt-10">
+                <a href="#home"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Home</a>
+                <a href="#menu"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Menu</a>
+                <a href="#rewards"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Rewards</a>
+                <a href="#about"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Story</a>
+                <a href="#stores"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Stores</a>
+                <a href="#contact"
+                    class="mobile-link text-2xl font-serif hover:text-aroma-brown dark:hover:text-aroma-gold transition-colors">Contact</a>
+            </nav>
+            <div class="mt-auto flex justify-center space-x-6 text-2xl">
+                <a href="#" class="hover:text-aroma-brown"><i class="ph-fill ph-instagram-logo"></i></a>
+                <a href="#" class="hover:text-aroma-brown"><i class="ph-fill ph-twitter-logo"></i></a>
             </div>
-            <span style="font-size:0.9rem">Earn 1 star per ₹10 spent</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <div style="width:32px;height:32px;background:rgba(0,112,74,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center">
-              <i class="ph-fill ph-gift" style="color:var(--brand-green);font-size:16px"></i>
-            </div>
-            <span style="font-size:0.9rem">Free drink at 150 stars</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <div style="width:32px;height:32px;background:rgba(30,57,50,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center">
-              <i class="ph-fill ph-crown" style="color:var(--deep-green);font-size:16px"></i>
-            </div>
-            <span style="font-size:0.9rem">Gold status unlocked at 500 stars</span>
-          </li>
-        </ul>
-        <button class="btn btn-primary" onclick="openRewardsModal()">
-          <i class="ph ph-rocket-launch" style="font-size:16px"></i> Start Earning
-        </button>
-      </div>
-
-      <!-- Rewards dashboard -->
-      <div class="reveal-right">
-        <div style="background:linear-gradient(135deg,var(--deep-green),#2d5a45);border-radius:28px;padding:32px;color:#fff">
-          <div class="flex items-center justify-between mb-6">
-            <div>
-              <p style="font-size:0.75rem;opacity:0.65;text-transform:uppercase;letter-spacing:0.1em">Your Stars</p>
-              <h3 class="font-display text-4xl font-bold" id="stars-display">247</h3>
-            </div>
-            <div class="rewards-ring">
-              <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
-                <circle class="ring-bg" cx="50" cy="50" r="45"/>
-                <circle class="ring-fill" id="reward-ring" cx="50" cy="50" r="45"/>
-              </svg>
-              <div class="ring-text">
-                <i class="ph-fill ph-star" style="color:var(--gold);font-size:20px"></i>
-                <span style="font-size:0.65rem;opacity:0.7;margin-top:2px">Gold</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-5">
-            <div class="flex justify-between text-sm mb-2" style="opacity:0.8">
-              <span>Progress to next reward</span>
-              <span>247 / 300 ★</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="reward-progress" style="width:0"></div>
-            </div>
-            <p style="font-size:0.75rem;opacity:0.55;margin-top:6px">53 more stars for a free Signature Latte</p>
-          </div>
-
-          <div class="divider mb-5" style="background:rgba(255,255,255,0.15)"></div>
-
-          <p style="font-size:0.75rem;opacity:0.6;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em">Redeemable Now</p>
-          <div class="grid grid-cols-2 gap-3">
-            <div style="background:rgba(255,255,255,0.1);border-radius:14px;padding:12px">
-              <p style="font-size:0.75rem;opacity:0.7">Hot Americano</p>
-              <p class="font-display font-bold">150 ★</p>
-            </div>
-            <div style="background:rgba(255,255,255,0.1);border-radius:14px;padding:12px">
-              <p style="font-size:0.75rem;opacity:0.7">Brownie</p>
-              <p class="font-display font-bold">100 ★</p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </header>
 
-<!-- ════════════════════════════════════════════
-     COMMUNITY
-════════════════════════════════════════════ -->
-<section id="community" class="py-20 px-6" style="background:var(--warm-white)" aria-label="Community and sustainability">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-12 reveal">
-      <p class="section-eyebrow mb-2">Our Community</p>
-      <h2 class="font-display text-4xl font-bold" style="color:var(--deep-green)">More Than Coffee</h2>
-    </div>
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1920&q=80"
+                    alt="Coffee Pour" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/60 dark:bg-black/70"></div>
+            </div>
 
-    <!-- Stats row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-14">
-      <div class="text-center reveal delay-1">
-        <div class="stat-counter text-5xl mb-1" style="color:var(--deep-green)" data-target="12000">0</div>
-        <p style="color:var(--text-mid);font-size:0.85rem">Happy Customers</p>
-      </div>
-      <div class="text-center reveal delay-2">
-        <div class="stat-counter text-5xl mb-1" style="color:var(--brand-green)" data-target="48">0</div>
-        <p style="color:var(--text-mid);font-size:0.85rem">Partner Farms</p>
-      </div>
-      <div class="text-center reveal delay-3">
-        <div class="stat-counter text-5xl mb-1" style="color:var(--gold)" data-target="99">0</div>
-        <p style="color:var(--text-mid);font-size:0.85rem">% Ethically Sourced</p>
-      </div>
-      <div class="text-center reveal delay-4">
-        <div class="stat-counter text-5xl mb-1" style="color:var(--deep-green)" data-target="120">0</div>
-        <p style="color:var(--text-mid);font-size:0.85rem">Menu Items</p>
-      </div>
-    </div>
+            <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+                <span class="block text-aroma-beige font-medium tracking-[0.2em] uppercase text-sm mb-4 animate-fade-in"
+                    style="animation-delay: 0.2s; opacity: 0;">Welcome to Aroma</span>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight animate-slide-up"
+                    style="animation-delay: 0.4s; opacity: 0;">
+                    Crafted Moments.<br>
+                    <span class="italic font-light">Exceptional Coffee.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light animate-slide-up"
+                    style="animation-delay: 0.6s; opacity: 0;">
+                    Discover handcrafted beverages, artisan bakery delights, and a rewards experience designed for true
+                    coffee lovers.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up"
+                    style="animation-delay: 0.8s; opacity: 0;">
+                    <a href="#menu"
+                        class="w-full sm:w-auto px-8 py-4 bg-aroma-brown hover:bg-aroma-brown/90 text-white rounded-full font-medium transition-all transform hover:-translate-y-1 hover:shadow-lg shadow-aroma-brown/30">
+                        Explore Menu
+                    </a>
+                    <a href="#rewards"
+                        class="w-full sm:w-auto px-8 py-4 bg-transparent border-2 border-white text-white hover:bg-white hover:text-black rounded-full font-medium transition-all backdrop-blur-sm">
+                        Join Rewards
+                    </a>
+                </div>
+            </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="community-card reveal delay-1">
-        <div style="height:180px;background:linear-gradient(135deg,#2d5a45,var(--deep-green));display:flex;align-items:center;justify-content:center">
-          <i class="ph-fill ph-plant" style="font-size:64px;color:rgba(203,162,88,0.6)"></i>
-        </div>
-        <div style="padding:24px">
-          <div class="tag mb-3" style="background:rgba(203,162,88,0.2);color:var(--gold)">Sustainability</div>
-          <h3 class="font-display text-xl font-bold text-white mb-2">Farm-to-Cup Promise</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">We work directly with smallholder farms across Coorg, Chikmagalur, and Wayanad — cutting out middlemen and ensuring fair wages.</p>
-        </div>
-      </div>
-      <div class="community-card reveal delay-2">
-        <div style="height:180px;background:linear-gradient(135deg,#1a3d50,#1E3932);display:flex;align-items:center;justify-content:center">
-          <i class="ph-fill ph-recycle" style="font-size:64px;color:rgba(100,200,150,0.5)"></i>
-        </div>
-        <div style="padding:24px">
-          <div class="tag mb-3" style="background:rgba(0,200,100,0.15);color:#5ecb8e">Green Initiative</div>
-          <h3 class="font-display text-xl font-bold text-white mb-2">Zero Waste by 2027</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">All packaging is compostable. Our coffee grounds are donated to local urban gardens every Sunday morning.</p>
-        </div>
-      </div>
-      <div class="community-card reveal delay-3">
-        <div style="height:180px;background:linear-gradient(135deg,#3d2d1a,#2d1f10);display:flex;align-items:center;justify-content:center">
-          <i class="ph-fill ph-users-three" style="font-size:64px;color:rgba(203,162,88,0.5)"></i>
-        </div>
-        <div style="padding:24px">
-          <div class="tag mb-3" style="background:rgba(203,162,88,0.2);color:var(--gold)">Community</div>
-          <h3 class="font-display text-xl font-bold text-white mb-2">Stories Over Coffee</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;line-height:1.6">Monthly open-mic nights, local artist showcases, and free barista workshops for neighbourhood youth.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center animate-fade-in"
+                style="animation-delay: 1.2s; opacity: 0;">
+                <span class="text-white/70 text-xs tracking-widest uppercase mb-2">Scroll</span>
+                <div class="w-[1px] h-12 bg-white/30 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1/2 bg-white animate-[slideDown_2s_ease-in-out_infinite]">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- ════════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════════ -->
-<footer style="background:var(--deep-green);color:rgba(255,255,255,0.8)" aria-label="Site footer">
-  <div class="max-w-6xl mx-auto px-6 py-16">
-    <div class="grid md:grid-cols-4 gap-10 mb-10">
-      <div>
-        <div class="flex items-center gap-2 mb-4">
-          <div style="width:34px;height:34px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center">
-            <i class="ph-fill ph-coffee" style="color:var(--deep-green);font-size:16px"></i>
-          </div>
-          <span class="font-display font-bold text-white text-lg">The Brew House</span>
-        </div>
-        <p style="font-size:0.85rem;line-height:1.7;opacity:0.65">Premium coffee crafted with intention, sourced with integrity, served with heart.</p>
-      </div>
-      <div>
-        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Menu</h4>
-        <ul class="space-y-2" style="font-size:0.85rem">
-          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Coffee</a></li>
-          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Tea & Refreshers</a></li>
-          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Bakery & Desserts</a></li>
-          <li><a href="#menu" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Seasonal Specials</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Company</h4>
-        <ul class="space-y-2" style="font-size:0.85rem">
-          <li><a href="#community" style="opacity:0.65;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.65">Our Story</a></li>
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Careers</a></li>
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Press</a></li>
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Sustainability</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-widest">Connect</h4>
-        <ul class="space-y-2" style="font-size:0.85rem">
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Instagram</a></li>
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Twitter / X</a></li>
-          <li><a href="#" style="opacity:0.65;text-decoration:none">Contact Us</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="divider" style="background:rgba(255,255,255,0.1)"></div>
-    <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-4" style="font-size:0.8rem;opacity:0.45">
-      <span>© 2026 The Brew House. All rights reserved.</span>
-      <span>Privacy Policy · Terms of Service</span>
-    </div>
-  </div>
-</footer>
+        <style>
+            @keyframes slideDown {
+                0% {
+                    transform: translateY(-100%);
+                }
 
-<!-- ════════════════════════════════════════════
-     CART DRAWER
-════════════════════════════════════════════ -->
-<div id="cart-overlay" aria-hidden="true" onclick="closeCart()"></div>
-<aside id="cart-drawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
-  <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-    <div>
-      <h2 class="font-display text-xl font-bold" style="color:var(--deep-green)">Your Order</h2>
-      <p style="font-size:0.8rem;color:var(--text-light)" id="cart-item-label">0 items</p>
-    </div>
-    <button class="btn-icon" onclick="closeCart()" aria-label="Close cart">
-      <i class="ph ph-x" style="font-size:20px;color:var(--text-dark)"></i>
+                100% {
+                    transform: translateY(200%);
+                }
+            }
+        </style>
+
+        <!-- Best Sellers Section -->
+        <section id="featured" class="py-24 bg-white dark:bg-aroma-dark-base relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-serif mb-4 text-aroma-green dark:text-white">Customer Favorites
+                    </h2>
+                    <div class="w-16 h-1 bg-aroma-brown mx-auto rounded"></div>
+                    <p class="mt-4 text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">Experience our most loved,
+                        meticulously crafted beverages.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="featured-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section id="menu"
+            class="py-24 bg-aroma-cream dark:bg-aroma-dark-card border-t border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                    <div>
+                        <h2 class="text-3xl md:text-5xl font-serif mb-4 text-aroma-green dark:text-white">Our Menu</h2>
+                        <p class="text-gray-600 dark:text-gray-400">Handcrafted with passion, poured with precision.</p>
+                    </div>
+
+                    <div class="mt-6 md:mt-0 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <!-- Search -->
+                        <div class="relative w-full sm:w-64">
+                            <i
+                                class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="menu-search" placeholder="Search menu..."
+                                class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-aroma-dark-base focus:outline-none focus:ring-2 focus:ring-aroma-brown transition-shadow text-sm">
+                        </div>
+                        <!-- Sort -->
+                        <div class="relative w-full sm:w-48">
+                            <select id="menu-sort"
+                                class="w-full appearance-none pl-4 pr-10 py-2.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-aroma-dark-base focus:outline-none focus:ring-2 focus:ring-aroma-brown transition-shadow text-sm cursor-pointer">
+                                <option value="popularity">Sort by Popularity</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Top Rated</option>
+                            </select>
+                            <i
+                                class="ph ph-caret-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="flex overflow-x-auto hide-scrollbar space-x-2 mb-10 pb-2 reveal" id="category-filters">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Menu Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal" id="menu-grid">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="menu-empty" class="hidden text-center py-20">
+                    <i class="ph ph-coffee text-6xl text-gray-300 dark:text-gray-600 mb-4 inline-block"></i>
+                    <h3 class="text-xl font-medium text-gray-500 dark:text-gray-400">No items found matching your
+                        criteria.</h3>
+                    <button onclick="resetFilters()" class="mt-4 text-aroma-brown hover:underline">Clear
+                        filters</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rewards Program -->
+        <section id="rewards" class="py-24 bg-aroma-green text-white relative overflow-hidden">
+            <!-- Decorative Background Element -->
+            <div class="absolute -top-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div
+                class="absolute -bottom-40 -left-40 w-96 h-96 bg-aroma-brown/20 rounded-full blur-3xl pointer-events-none">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="reveal">
+                        <span class="text-aroma-gold font-medium tracking-widest uppercase text-sm mb-2 block">Aroma
+                            Rewards</span>
+                        <h2 class="text-3xl md:text-5xl font-serif mb-6">Sip, Earn, Enjoy.</h2>
+                        <p class="text-gray-300 mb-8 text-lg">Join our rewards program to earn stars on every purchase.
+                            Unlock free drinks, exclusive bakery items, and special birthday treats.</p>
+
+                        <div class="space-y-6 mb-8">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-white/10 p-3 rounded-full text-aroma-gold shrink-0">
+                                    <i class="ph-fill ph-star text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg">Earn Stars</h4>
+                                    <p class="text-sm text-gray-400">Get 2 stars for every $1 spent.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-white/10 p-3 rounded-full text-aroma-gold shrink-0">
+                                    <i class="ph-fill ph-gift text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg">Free Rewards</h4>
+                                    <p class="text-sm text-gray-400">Redeem stars for free coffee & food.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="px-8 py-4 bg-aroma-gold hover:bg-yellow-500 text-aroma-green font-bold rounded-full transition-transform transform hover:-translate-y-1">
+                            Join Now for Free
+                        </button>
+                    </div>
+
+                    <!-- Interactive Demo Card -->
+                    <div class="reveal">
+                        <div
+                            class="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                            <div
+                                class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-aroma-brown via-aroma-gold to-aroma-brown">
+                            </div>
+
+                            <div class="flex justify-between items-center mb-8">
+                                <div>
+                                    <p class="text-sm text-gray-300">Welcome back,</p>
+                                    <h3 class="text-2xl font-serif">Coffee Lover</h3>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-300">Available Stars</p>
+                                    <p class="text-4xl font-bold text-aroma-gold flex items-center justify-end gap-1"
+                                        id="demo-stars">
+                                        <i class="ph-fill ph-star text-2xl"></i> 124
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-300">Gold Tier</span>
+                                    <span class="text-gray-300">26 stars to Platinum</span>
+                                </div>
+                                <div class="w-full bg-black/40 rounded-full h-3">
+                                    <div class="bg-aroma-gold h-3 rounded-full w-[80%] transition-all duration-1000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-black/20 rounded-xl p-4 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+                                        <i class="ph ph-coffee text-2xl text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Free Handcrafted Drink</p>
+                                        <p class="text-xs text-gray-400">150 Stars</p>
+                                    </div>
+                                </div>
+                                <button
+                                    class="text-sm px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story & Process Section -->
+        <section id="about" class="py-24 bg-white dark:bg-aroma-dark-base">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Story -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24 reveal">
+                    <div class="relative h-[500px] rounded-2xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
+                            alt="Cafe Interior"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div
+                            class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500">
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-5xl font-serif mb-6 text-aroma-green dark:text-white">Our Coffee
+                            Philosophy</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                            At Aroma Home, we believe that coffee is more than just a beverage; it's an experience, a
+                            ritual, a moment of pause in a busy world. Founded with a passion for excellence, we
+                            traverse the globe to source the finest, ethically grown beans.
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                            Our master roasters treat every batch as a work of art, coaxing out unique flavor profiles.
+                            Whether it's a simple espresso or an intricate latte, our baristas pour their heart into
+                            every cup.
+                        </p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Signature_of_John_Hancock.svg"
+                            alt="Founder Signature" class="h-12 opacity-80 dark:invert">
+                        <p class="text-sm text-gray-500 mt-2 font-serif italic">Elena Rossi, Master Roaster & Founder
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Process Timeline -->
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl font-serif mb-4 text-aroma-green dark:text-white">The Journey to Your Cup</h2>
+                </div>
+
+                <div class="relative reveal">
+                    <!-- Line -->
+                    <div
+                        class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 z-0">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                        <!-- Step 1 -->
+                        <div class="text-center relative">
+                            <div
+                                class="w-16 h-16 mx-auto bg-white dark:bg-aroma-dark-card border-4 border-aroma-brown rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                <i class="ph ph-plant text-2xl text-aroma-brown"></i>
+                            </div>
+                            <h3 class="text-lg font-serif font-bold mb-2 dark:text-white">1. Sourcing</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Ethically partnering with farmers for
+                                premium beans.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="text-center relative md:mt-12">
+                            <div
+                                class="w-16 h-16 mx-auto bg-white dark:bg-aroma-dark-card border-4 border-aroma-brown rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                <i class="ph ph-fire text-2xl text-aroma-brown"></i>
+                            </div>
+                            <h3 class="text-lg font-serif font-bold mb-2 dark:text-white">2. Roasting</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Small-batch roasting to unlock distinct
+                                flavors.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="text-center relative">
+                            <div
+                                class="w-16 h-16 mx-auto bg-white dark:bg-aroma-dark-card border-4 border-aroma-brown rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                <i class="ph ph-coffee-bean text-2xl text-aroma-brown"></i>
+                            </div>
+                            <h3 class="text-lg font-serif font-bold mb-2 dark:text-white">3. Grinding</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Ground fresh for every single order,
+                                never before.</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="text-center relative md:mt-12">
+                            <div
+                                class="w-16 h-16 mx-auto bg-white dark:bg-aroma-dark-card border-4 border-aroma-brown rounded-full flex items-center justify-center mb-4 shadow-lg">
+                                <i class="ph ph-drop text-2xl text-aroma-brown"></i>
+                            </div>
+                            <h3 class="text-lg font-serif font-bold mb-2 dark:text-white">4. Brewing</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Expertly crafted using precise
+                                temperatures and timing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-24 bg-aroma-cream dark:bg-aroma-dark-card overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <i class="ph-fill ph-quotes text-4xl text-aroma-brown/50 mb-4 block"></i>
+                    <h2 class="text-3xl font-serif text-aroma-green dark:text-white">Community Love</h2>
+                </div>
+
+                <!-- Carousel Container -->
+                <div class="relative max-w-4xl mx-auto reveal" id="testimonial-carousel">
+                    <div class="overflow-hidden">
+                        <div class="flex transition-transform duration-500 ease-in-out" id="testimonial-track"
+                            style="transform: translateX(0%);">
+                            <!-- Slides (JS will clone for infinite feel if needed, but simple slide for now) -->
+                            <div class="w-full flex-shrink-0 px-4">
+                                <div class="bg-white dark:bg-aroma-dark-base p-8 rounded-2xl shadow-sm text-center">
+                                    <div class="flex justify-center text-aroma-gold mb-4">
+                                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star"></i>
+                                    </div>
+                                    <p class="text-lg italic text-gray-600 dark:text-gray-300 mb-6">"The absolute best
+                                        latte I've had in the city. The ambiance is perfect for remote work, and the
+                                        staff remembers my name. A true hidden gem."</p>
+                                    <div class="flex items-center justify-center gap-4">
+                                        <img src="https://i.pravatar.cc/150?img=32" alt="Sarah J."
+                                            class="w-12 h-12 rounded-full object-cover">
+                                        <div class="text-left">
+                                            <h4 class="font-bold dark:text-white">Sarah Jenkins</h4>
+                                            <p class="text-xs text-gray-500">Local Guide</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full flex-shrink-0 px-4">
+                                <div class="bg-white dark:bg-aroma-dark-base p-8 rounded-2xl shadow-sm text-center">
+                                    <div class="flex justify-center text-aroma-gold mb-4">
+                                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star"></i>
+                                    </div>
+                                    <p class="text-lg italic text-gray-600 dark:text-gray-300 mb-6">"Their pour-over
+                                        changed my mind about black coffee. You can taste the quality of the beans and
+                                        the care in the brewing process."</p>
+                                    <div class="flex items-center justify-center gap-4">
+                                        <img src="https://i.pravatar.cc/150?img=11" alt="Michael T."
+                                            class="w-12 h-12 rounded-full object-cover">
+                                        <div class="text-left">
+                                            <h4 class="font-bold dark:text-white">Michael Torres</h4>
+                                            <p class="text-xs text-gray-500">Coffee Enthusiast</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full flex-shrink-0 px-4">
+                                <div class="bg-white dark:bg-aroma-dark-base p-8 rounded-2xl shadow-sm text-center">
+                                    <div class="flex justify-center text-aroma-gold mb-4">
+                                        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i
+                                            class="ph-fill ph-star-half"></i>
+                                    </div>
+                                    <p class="text-lg italic text-gray-600 dark:text-gray-300 mb-6">"The rewards app
+                                        makes ordering ahead a breeze. The Almond Croissant paired with an Iced
+                                        Americano is my go-to morning fuel."</p>
+                                    <div class="flex items-center justify-center gap-4">
+                                        <img src="https://i.pravatar.cc/150?img=47" alt="Priya P."
+                                            class="w-12 h-12 rounded-full object-cover">
+                                        <div class="text-left">
+                                            <h4 class="font-bold dark:text-white">Priya Patel</h4>
+                                            <p class="text-xs text-gray-500">Daily Customer</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex justify-center gap-2 mt-8">
+                        <button onclick="moveTestimonial(0)"
+                            class="w-3 h-3 rounded-full bg-aroma-brown transition-all test-dot"></button>
+                        <button onclick="moveTestimonial(1)"
+                            class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-700 transition-all test-dot"></button>
+                        <button onclick="moveTestimonial(2)"
+                            class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-700 transition-all test-dot"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store Locator & FAQ -->
+        <section id="stores"
+            class="py-24 bg-white dark:bg-aroma-dark-base border-t border-gray-100 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <!-- Stores -->
+                <div class="mb-24 reveal">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-serif text-aroma-green dark:text-white mb-4">Find a Store
+                        </h2>
+                        <p class="text-gray-500 dark:text-gray-400">Experience Aroma Home in your neighborhood.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Locations List -->
+                        <div class="lg:col-span-1 space-y-4 max-h-[500px] overflow-y-auto pr-2 hide-scrollbar">
+                            <!-- Store 1 -->
+                            <div
+                                class="p-6 bg-aroma-cream dark:bg-aroma-dark-card rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-aroma-brown transition-colors">
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Bandra West</h3>
+                                <p class="text-sm text-gray-500 mb-3">Linking Road, Mumbai</p>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                    <i class="ph ph-clock"></i> 7:00 AM - 11:00 PM
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <i class="ph ph-phone"></i> +91 98765 43210
+                                </div>
+                                <button class="mt-4 text-sm font-medium text-aroma-brown hover:underline">Get
+                                    Directions</button>
+                            </div>
+                            <!-- Store 2 -->
+                            <div
+                                class="p-6 bg-white dark:bg-aroma-dark-base rounded-xl border border-gray-100 dark:border-gray-800 cursor-pointer hover:border-aroma-brown transition-colors opacity-70 hover:opacity-100">
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Andheri Lokhandwala</h3>
+                                <p class="text-sm text-gray-500 mb-3">Complex Road, Mumbai</p>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                    <i class="ph ph-clock"></i> 8:00 AM - 10:30 PM
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <i class="ph ph-phone"></i> +91 98765 43211
+                                </div>
+                            </div>
+                            <!-- Store 3 -->
+                            <div
+                                class="p-6 bg-white dark:bg-aroma-dark-base rounded-xl border border-gray-100 dark:border-gray-800 cursor-pointer hover:border-aroma-brown transition-colors opacity-70 hover:opacity-100">
+                                <h3 class="font-bold text-lg mb-1 dark:text-white">Malad Inorbit</h3>
+                                <p class="text-sm text-gray-500 mb-3">Ground Floor, Mumbai</p>
+                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                    <i class="ph ph-clock"></i> 10:00 AM - 10:00 PM
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map -->
+                        <div
+                            class="lg:col-span-2 h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-sm map-container relative bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                            <!-- Placeholder for real map iframe to keep single file light, using a styled div instead -->
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d120653.12353325608!2d72.77524945417937!3d19.088686616428784!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            <div
+                                class="absolute top-4 right-4 bg-white dark:bg-aroma-dark-card p-2 rounded shadow text-xs dark:text-gray-300">
+                                Map Demo View
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ & Newsletter -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 reveal">
+                    <!-- FAQ -->
+                    <div>
+                        <h2 class="text-3xl font-serif text-aroma-green dark:text-white mb-8">Frequently Asked Questions
+                        </h2>
+                        <div class="space-y-4" id="faq-accordion">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Newsletter -->
+                    <div class="bg-aroma-green text-white p-10 rounded-3xl h-fit">
+                        <h3 class="text-2xl font-serif mb-4">Join the Inner Circle</h3>
+                        <p class="text-gray-300 mb-8">Subscribe to receive early access to seasonal menus, exclusive
+                            brewing tips, and special offers.</p>
+
+                        <form id="newsletter-form" onsubmit="handleNewsletter(event)" class="space-y-4">
+                            <div>
+                                <input type="email" id="nl-email" required placeholder="Your email address"
+                                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-aroma-gold transition-colors">
+                            </div>
+                            <button type="submit"
+                                class="w-full py-3 bg-aroma-gold text-aroma-green font-bold rounded-lg hover:bg-yellow-500 transition-colors flex justify-center items-center gap-2">
+                                Subscribe <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+                        </form>
+                        <p class="text-xs text-gray-400 mt-4 text-center">By subscribing, you agree to our Terms &
+                            Privacy Policy.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-aroma-dark-card text-gray-300 py-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div>
+                    <h2 class="font-serif text-2xl font-bold text-white tracking-wider flex items-center gap-2 mb-6">
+                        <i class="ph-fill ph-coffee text-aroma-brown"></i>
+                        AROMA <span class="font-normal italic text-aroma-brown">HOME</span>
+                    </h2>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                        Crafting exceptional moments through premium, ethically sourced coffee and artisanal treats
+                        since 2018.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-aroma-brown text-white transition-colors"><i
+                                class="ph-fill ph-instagram-logo"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-aroma-brown text-white transition-colors"><i
+                                class="ph-fill ph-facebook-logo"></i></a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-aroma-brown text-white transition-colors"><i
+                                class="ph-fill ph-twitter-logo"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-medium mb-6 uppercase tracking-wider text-sm">Explore</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#menu" class="hover:text-aroma-gold transition-colors">Our Menu</a></li>
+                        <li><a href="#rewards" class="hover:text-aroma-gold transition-colors">Aroma Rewards</a></li>
+                        <li><a href="#about" class="hover:text-aroma-gold transition-colors">Our Story</a></li>
+                        <li><a href="#stores" class="hover:text-aroma-gold transition-colors">Locations</a></li>
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">Gift Cards</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h4 class="text-white font-medium mb-6 uppercase tracking-wider text-sm">Support</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">Shipping Returns</a></li>
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-aroma-gold transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-white font-medium mb-6 uppercase tracking-wider text-sm">Contact</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start gap-3">
+                            <i class="ph ph-map-pin text-xl text-aroma-brown shrink-0"></i>
+                            <span>123 Coffee Lane, Barista District<br>Mumbai, MH 400050</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="ph ph-phone text-xl text-aroma-brown shrink-0"></i>
+                            <span>+91 1800 123 4567</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="ph ph-envelope-simple text-xl text-aroma-brown shrink-0"></i>
+                            <span>hello@aromahome.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>&copy; <span id="year"></span> Aroma Home Coffeehouse. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <i class="ph-fill ph-stripe-logo text-2xl"></i>
+                    <i class="ph-fill ph-visa-logo text-2xl"></i>
+                    <i class="ph-fill ph-mastercard-logo text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" onclick="scrollToTop()"
+        class="fixed bottom-8 left-8 w-12 h-12 bg-aroma-brown text-white rounded-full flex items-center justify-center shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 hover:bg-aroma-green hover:-translate-y-1">
+        <i class="ph-bold ph-arrow-up"></i>
     </button>
-  </div>
 
-  <div id="cart-items-list" style="flex:1;overflow-y:auto;padding:16px 24px" role="list">
-    <!-- Populated by JS -->
-  </div>
 
-  <div id="cart-footer" style="padding:20px 24px;border-top:1px solid var(--border);background:var(--warm-white)" hidden>
-    <div class="flex justify-between mb-2" style="font-size:0.9rem;color:var(--text-mid)">
-      <span>Subtotal</span><span id="cart-subtotal" style="font-weight:600">₹0</span>
-    </div>
-    <div class="flex justify-between mb-4" style="font-size:0.9rem;color:var(--text-mid)">
-      <span>Taxes (5%)</span><span id="cart-tax" style="font-weight:600">₹0</span>
-    </div>
-    <div class="flex justify-between mb-5" style="font-size:1rem;font-weight:700;color:var(--deep-green)">
-      <span>Total</span><span id="cart-total">₹0</span>
-    </div>
-    <div class="flex items-center gap-2 mb-4 p-3 rounded-2xl" style="background:rgba(0,112,74,0.08)">
-      <i class="ph-fill ph-star" style="color:var(--gold);font-size:18px"></i>
-      <span style="font-size:0.82rem;color:var(--brand-green)">You'll earn <strong id="cart-stars-preview">0</strong> stars on this order</span>
-    </div>
-    <button class="btn btn-primary w-full justify-center" style="width:100%" onclick="openCheckout()">
-      <i class="ph ph-bag" style="font-size:16px"></i> Proceed to Checkout
-    </button>
-  </div>
+    <!-- Modals & Drawers -->
 
-  <div id="cart-empty" style="padding:60px 24px;text-align:center">
-    <div style="font-size:64px;margin-bottom:16px">🛒</div>
-    <h3 class="font-display text-xl font-bold mb-2" style="color:var(--deep-green)">Your cart is empty</h3>
-    <p style="color:var(--text-light);font-size:0.875rem;margin-bottom:20px">Add a drink or treat to get started</p>
-    <button class="btn btn-primary" onclick="closeCart();document.querySelector('#menu').scrollIntoView({behavior:'smooth'})">
-      Browse Menu
-    </button>
-  </div>
-</aside>
-
-<!-- ════════════════════════════════════════════
-     PRODUCT MODAL
-════════════════════════════════════════════ -->
-<div class="modal-overlay" id="product-modal" role="dialog" aria-modal="true" aria-label="Product details" onclick="if(event.target===this)closeProductModal()">
-  <div class="modal-box">
-    <div id="product-modal-content"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     REWARDS MODAL
-════════════════════════════════════════════ -->
-<div class="modal-overlay" id="rewards-modal" role="dialog" aria-modal="true" aria-label="Join Rewards" onclick="if(event.target===this)closeRewardsModal()">
-  <div class="modal-box" style="padding:40px">
-    <div class="text-center mb-8">
-      <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--deep-green),var(--brand-green));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
-        <i class="ph-fill ph-star" style="color:var(--gold);font-size:28px"></i>
-      </div>
-      <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--deep-green)">Join The Brew House Rewards</h2>
-      <p style="color:var(--text-mid);font-size:0.9rem">Start earning stars from your very first order.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div>
-        <label style="font-size:0.8rem;font-weight:600;color:var(--text-mid);display:block;margin-bottom:6px">Full Name</label>
-        <input type="text" id="rewards-name" placeholder="Rushda Karisma" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:0.9rem;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--brand-green)'" onblur="this.style.borderColor='var(--border)'" aria-label="Full name"/>
-      </div>
-      <div>
-        <label style="font-size:0.8rem;font-weight:600;color:var(--text-mid);display:block;margin-bottom:6px">Email Address</label>
-        <input type="email" id="rewards-email" placeholder="you@example.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:0.9rem;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--brand-green)'" onblur="this.style.borderColor='var(--border)'" aria-label="Email address"/>
-      </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="joinRewards()">
-        <i class="ph ph-rocket-launch" style="font-size:16px"></i> Create My Account
-      </button>
-      <button class="btn btn-outline" style="width:100%;justify-content:center;padding:14px" onclick="closeRewardsModal()">
-        Maybe Later
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     CHECKOUT MODAL
-════════════════════════════════════════════ -->
-<div class="modal-overlay" id="checkout-modal" role="dialog" aria-modal="true" aria-label="Checkout" onclick="if(event.target===this)closeCheckout()">
-  <div class="modal-box" style="padding:36px">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="font-display text-2xl font-bold" style="color:var(--deep-green)">Checkout</h2>
-      <button class="btn-icon" onclick="closeCheckout()" aria-label="Close checkout">
-        <i class="ph ph-x" style="font-size:20px"></i>
-      </button>
-    </div>
-
-    <!-- Order summary -->
-    <div style="background:var(--cream);border-radius:16px;padding:20px;margin-bottom:20px">
-      <p class="section-eyebrow mb-3">Order Summary</p>
-      <div id="checkout-items" style="display:flex;flex-direction:column;gap:8px"></div>
-    </div>
-
-    <div class="flex justify-between mb-3" style="font-size:0.9rem;color:var(--text-mid)">
-      <span>Subtotal</span><span id="checkout-subtotal">₹0</span>
-    </div>
-    <div class="flex justify-between mb-3" style="font-size:0.9rem;color:var(--text-mid)">
-      <span>Taxes (5%)</span><span id="checkout-tax">₹0</span>
-    </div>
-    <div class="flex justify-between mb-5" style="font-size:1.1rem;font-weight:700;color:var(--deep-green)">
-      <span>Total</span><span id="checkout-total">₹0</span>
-    </div>
-
-    <div style="background:rgba(0,112,74,0.06);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;margin-bottom:20px">
-      <i class="ph ph-clock" style="color:var(--brand-green);font-size:22px"></i>
-      <div>
-        <p style="font-size:0.82rem;font-weight:600;color:var(--deep-green)">Estimated Pickup: <span id="pickup-time">18–22 minutes</span></p>
-        <p style="font-size:0.75rem;color:var(--text-light)">Your order will be ready at the counter</p>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:1rem" onclick="placeOrder()">
-      <i class="ph ph-check-circle" style="font-size:18px"></i> Place Order & Pay
-    </button>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     ORDER SUCCESS MODAL
-════════════════════════════════════════════ -->
-<div class="modal-overlay" id="success-modal" role="dialog" aria-modal="true" aria-label="Order confirmed">
-  <div class="modal-box" style="padding:44px;text-align:center">
-    <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--brand-green),#00a86b);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 32px rgba(0,112,74,0.35)">
-      <i class="ph ph-check" style="color:#fff;font-size:36px"></i>
-    </div>
-    <h2 class="font-display text-3xl font-bold mb-2" style="color:var(--deep-green)">Order Confirmed! 🎉</h2>
-    <p style="color:var(--text-mid);margin-bottom:20px;font-size:0.9rem">Your order is being prepared with love.</p>
-
-    <div style="background:var(--cream);border-radius:16px;padding:20px;text-align:left;margin-bottom:20px">
-      <div class="receipt-line">
-        <span style="font-size:0.85rem;color:var(--text-mid)">Order Number</span>
-        <span style="font-weight:700;color:var(--deep-green);font-family:'Playfair Display',serif" id="order-number">#BH-00000</span>
-      </div>
-      <div class="receipt-line">
-        <span style="font-size:0.85rem;color:var(--text-mid)">Estimated Ready</span>
-        <span style="font-weight:600" id="success-pickup">18 min</span>
-      </div>
-      <div class="receipt-line">
-        <span style="font-size:0.85rem;color:var(--text-mid)">Stars Earned</span>
-        <span style="font-weight:700;color:var(--gold)" id="stars-earned">+0 ★</span>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="closeSuccessModal()">
-      <i class="ph ph-coffee" style="font-size:16px"></i> Back to Brew House
-    </button>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     TOAST CONTAINER
-════════════════════════════════════════════ -->
-<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
-
-<!-- ════════════════════════════════════════════
-     BOTTOM NAV (MOBILE)
-════════════════════════════════════════════ -->
-<nav id="bottom-nav" aria-label="Mobile navigation">
-  <a href="#hero" class="bnav-item active" aria-label="Home">
-    <i class="ph ph-house"></i><span>Home</span>
-  </a>
-  <a href="#menu" class="bnav-item" aria-label="Menu">
-    <i class="ph ph-fork-knife"></i><span>Menu</span>
-  </a>
-  <a href="#rewards" class="bnav-item" aria-label="Rewards">
-    <i class="ph ph-star"></i><span>Rewards</span>
-  </a>
-  <button class="bnav-item" onclick="openCart()" aria-label="Cart">
-    <div style="position:relative;display:inline-block">
-      <i class="ph ph-shopping-cart-simple"></i>
-      <span class="cart-badge" id="cart-badge-mobile" style="position:absolute;top:-8px;right:-8px"></span>
-    </div>
-    <span>Cart</span>
-  </button>
-</nav>
-
-<!-- ════════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════════ -->
-<script>
-// ─────────────────────────────────────────
-// MODULE: State Management
-// ─────────────────────────────────────────
-const State = (() => {
-  let _cart = [];
-  let _user = null;
-  let _stars = 247;
-  let _filter = 'all';
-  let _searchQuery = '';
-
-  const subscribers = {};
-
-  function emit(event, data) {
-    (subscribers[event] || []).forEach(fn => fn(data));
-  }
-  function on(event, fn) {
-    if (!subscribers[event]) subscribers[event] = [];
-    subscribers[event].push(fn);
-  }
-
-  function loadCart() {
-    try {
-      const saved = localStorage.getItem('brewhouse_cart');
-      if (saved) _cart = JSON.parse(saved);
-    } catch(e) { _cart = []; }
-  }
-  function saveCart() {
-    try { localStorage.setItem('brewhouse_cart', JSON.stringify(_cart)); } catch(e) {}
-  }
-  function loadUser() {
-    try {
-      const saved = localStorage.getItem('brewhouse_user');
-      if (saved) _user = JSON.parse(saved);
-    } catch(e) {}
-  }
-  function saveUser() {
-    try { localStorage.setItem('brewhouse_user', JSON.stringify(_user)); } catch(e) {}
-  }
-
-  return {
-    get cart() { return [..._cart]; },
-    get user() { return _user; },
-    get stars() { return _stars; },
-    get filter() { return _filter; },
-    get searchQuery() { return _searchQuery; },
-
-    setFilter(f) { _filter = f; emit('filterChange', f); },
-    setSearchQuery(q) { _searchQuery = q; emit('searchChange', q); },
-
-    addToCart(product, qty=1) {
-      const idx = _cart.findIndex(i => i.id === product.id);
-      if (idx > -1) { _cart[idx].qty += qty; }
-      else { _cart.push({...product, qty}); }
-      saveCart(); emit('cartChange', _cart);
-    },
-    removeFromCart(id) {
-      _cart = _cart.filter(i => i.id !== id);
-      saveCart(); emit('cartChange', _cart);
-    },
-    updateQty(id, delta) {
-      const idx = _cart.findIndex(i => i.id === id);
-      if (idx === -1) return;
-      _cart[idx].qty = Math.max(0, _cart[idx].qty + delta);
-      if (_cart[idx].qty === 0) _cart.splice(idx, 1);
-      saveCart(); emit('cartChange', _cart);
-    },
-    clearCart() { _cart = []; saveCart(); emit('cartChange', _cart); },
-
-    cartTotal() {
-      return _cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-    },
-    cartCount() {
-      return _cart.reduce((sum, i) => sum + i.qty, 0);
-    },
-
-    setUser(u) { _user = u; saveUser(); emit('userChange', u); },
-    addStars(n) { _stars += n; emit('starsChange', _stars); },
-
-    init() { loadCart(); loadUser(); }
-  };
-})();
-
-// ─────────────────────────────────────────
-// DATA: Products
-// ─────────────────────────────────────────
-const PRODUCTS = [
-  // Coffee
-  { id:'c1', name:'Classic Espresso', category:'coffee', price:240, emoji:'☕', tag:'Bestseller', desc:'Double shot of rich, aromatic espresso with a velvety crema layer.' },
-  { id:'c2', name:'Signature Caramel Latte', category:'coffee', price:420, emoji:'🍮', tag:'Popular', desc:'Silky espresso and steamed milk topped with house caramel drizzle.', trending:true },
-  { id:'c3', name:'Cold Brew Concentrate', category:'coffee', price:380, emoji:'🧊', tag:'Summer', desc:'Slow-steeped 20-hour cold brew, smooth and never bitter.' },
-  { id:'c4', name:'Mocha Frappuccino', category:'coffee', price:460, emoji:'🥤', tag:'Trending', desc:'Blended espresso, chocolate sauce, milk, and ice — topped with cream.', trending:true },
-  { id:'c5', name:'Flat White', category:'coffee', price:310, emoji:'☕', desc:'Ristretto shots with velvety microfoam milk. Intense and smooth.' },
-  { id:'c6', name:'Vanilla Bean Latte', category:'coffee', price:390, emoji:'🌿', desc:'Espresso with real vanilla bean and whole milk. Subtly sweet.' },
-  { id:'seasonal-1', name:'Toasted Maple Oat Latte', category:'coffee', price:520, emoji:'🍁', tag:'Seasonal', desc:'Smooth espresso meets velvety oat milk kissed with toasted maple syrup.', trending:true },
-  // Tea
-  { id:'t1', name:'Matcha Oat Latte', category:'tea', price:360, emoji:'🍵', tag:'Trending', desc:'Ceremonial-grade matcha whisked with oat milk and a touch of honey.', trending:true },
-  { id:'t2', name:'Masala Chai', category:'tea', price:180, emoji:'🫖', tag:'Classic', desc:'House-brewed spiced chai with ginger, cardamom, cinnamon, and clove.' },
-  { id:'t3', name:'London Fog', category:'tea', price:290, emoji:'🌫️', desc:'Earl Grey steeped in steamed milk with lavender vanilla foam.' },
-  { id:'t4', name:'Hibiscus Iced Tea', category:'tea', price:220, emoji:'🌺', desc:'Tartly floral, caffeine-free. Served over ice with a squeeze of lime.' },
-  // Bakery
-  { id:'b1', name:'Butter Croissant', category:'bakery', price:180, emoji:'🥐', tag:'Fresh Daily', desc:'Laminated, flaky, golden. Baked fresh every morning by our pastry team.' },
-  { id:'b2', name:'Sourdough Toast', category:'bakery', price:200, emoji:'🍞', desc:'House-fermented sourdough with cultured butter and local honey.' },
-  { id:'b3', name:'Almond Danish', category:'bakery', price:220, emoji:'🥐', desc:'Flaky pastry with frangipane filling, topped with toasted almonds.' },
-  // Refreshers
-  { id:'r1', name:'Mango Dragonfruit', category:'refresher', price:320, emoji:'🥭', tag:'New', desc:'Mango juice, dragon fruit pieces, coconut water, over ice.' },
-  { id:'r2', name:'Passion Tango Tea', category:'refresher', price:280, emoji:'🌿', desc:'Hibiscus-infused iced tea with passion fruit and a splash of lemonade.' },
-  // Desserts
-  { id:'d1', name:'Dark Chocolate Brownie', category:'dessert', price:240, emoji:'🍫', tag:'Fan Fave', desc:'Dense, fudgy, and intense. Baked with 72% cacao and a pinch of sea salt.', trending:true },
-  { id:'d2', name:'Cheesecake Slice', category:'dessert', price:320, emoji:'🍰', desc:'New York–style baked cheesecake on a graham cracker crust.' },
-  { id:'d3', name:'Tiramisu Cup', category:'dessert', price:350, emoji:'🍮', desc:'Classic Italian tiramisu in a jar — mascarpone, espresso, cocoa.' },
-];
-
-const TRENDING = PRODUCTS.filter(p => p.trending);
-
-// ─────────────────────────────────────────
-// MODULE: Toast System
-// ─────────────────────────────────────────
-const Toast = (() => {
-  const container = () => document.getElementById('toast-container');
-  return {
-    show(msg, icon='ph-check-circle', duration=3000) {
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.setAttribute('role','status');
-      el.innerHTML = `<i class="ph-fill ${icon}" style="font-size:18px;flex-shrink:0"></i><span>${msg}</span>`;
-      container().appendChild(el);
-      setTimeout(() => {
-        el.classList.add('out');
-        setTimeout(() => el.remove(), 320);
-      }, duration);
-    }
-  };
-})();
-
-// ─────────────────────────────────────────
-// MODULE: Cart Functions
-// ─────────────────────────────────────────
-const Cart = (() => {
-  function renderItems() {
-    const list = document.getElementById('cart-items-list');
-    const emptyEl = document.getElementById('cart-empty');
-    const footerEl = document.getElementById('cart-footer');
-    const items = State.cart;
-
-    if (items.length === 0) {
-      emptyEl.hidden = false; footerEl.hidden = true;
-      list.innerHTML = '';
-      return;
-    }
-    emptyEl.hidden = true; footerEl.hidden = false;
-
-    list.innerHTML = items.map(item => `
-      <div class="flex items-center gap-3 py-3" style="border-bottom:1px solid var(--border)" role="listitem">
-        <div style="width:52px;height:52px;border-radius:12px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${item.emoji}</div>
-        <div style="flex:1;min-width:0">
-          <p style="font-weight:600;font-size:0.875rem;color:var(--deep-green);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</p>
-          <p style="font-size:0.82rem;color:var(--brand-green);font-weight:600">₹${item.price}</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button class="qty-btn" onclick="Cart.updateQty('${item.id}',-1)" aria-label="Decrease quantity">−</button>
-          <span style="font-size:0.9rem;font-weight:600;min-width:20px;text-align:center">${item.qty}</span>
-          <button class="qty-btn" onclick="Cart.updateQty('${item.id}',1)" aria-label="Increase quantity">+</button>
-          <button class="btn-icon" onclick="Cart.removeItem('${item.id}')" aria-label="Remove ${item.name}" style="color:var(--text-light)">
-            <i class="ph ph-trash" style="font-size:16px"></i>
-          </button>
-        </div>
-      </div>
-    `).join('');
-
-    updateTotals();
-  }
-
-  function updateTotals() {
-    const subtotal = State.cartTotal();
-    const tax = Math.round(subtotal * 0.05);
-    const total = subtotal + tax;
-    const stars = Math.floor(subtotal / 10);
-
-    const s = v => `₹${v.toLocaleString('en-IN')}`;
-    document.getElementById('cart-subtotal').textContent = s(subtotal);
-    document.getElementById('cart-tax').textContent = s(tax);
-    document.getElementById('cart-total').textContent = s(total);
-    document.getElementById('cart-stars-preview').textContent = stars;
-    document.getElementById('cart-item-label').textContent = `${State.cartCount()} item${State.cartCount()!==1?'s':''}`;
-  }
-
-  function updateBadge() {
-    const count = State.cartCount();
-    ['cart-badge','cart-badge-mobile'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.textContent = count > 9 ? '9+' : count;
-      el.classList.toggle('visible', count > 0);
-    });
-  }
-
-  return {
-    render: renderItems,
-    updateBadge,
-    updateQty(id, delta) { State.updateQty(id, delta); renderItems(); updateBadge(); },
-    removeItem(id) { State.removeFromCart(id); renderItems(); updateBadge(); Toast.show('Item removed','ph-minus-circle'); },
-    add(product) {
-      State.addToCart(product);
-      renderItems(); updateBadge();
-      Toast.show(`${product.name} added to cart`, 'ph-shopping-cart-simple');
-    }
-  };
-})();
-
-// ─────────────────────────────────────────
-// MODULE: Modal Functions
-// ─────────────────────────────────────────
-function openCart() {
-  document.getElementById('cart-drawer').classList.add('open');
-  document.getElementById('cart-overlay').classList.add('open');
-  document.getElementById('cart-overlay').setAttribute('aria-hidden','false');
-  document.body.classList.add('drawer-open');
-  document.getElementById('cart-drawer').focus();
-}
-function closeCart() {
-  document.getElementById('cart-drawer').classList.remove('open');
-  document.getElementById('cart-overlay').classList.remove('open');
-  document.getElementById('cart-overlay').setAttribute('aria-hidden','true');
-  document.body.classList.remove('drawer-open');
-}
-function openProductModal(product) {
-  const modal = document.getElementById('product-modal');
-  const content = document.getElementById('product-modal-content');
-  content.innerHTML = `
-    <div style="padding:32px">
-      <div style="width:100%;height:180px;background:linear-gradient(135deg,var(--cream),#ede8e0);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:72px">${product.emoji}</div>
-      <div class="flex items-start justify-between mb-3">
-        <div>
-          ${product.tag ? `<span class="tag mb-2" style="display:inline-flex">${product.tag}</span>` : ''}
-          <h2 class="font-display text-2xl font-bold" style="color:var(--deep-green)">${product.name}</h2>
-        </div>
-        <span class="font-display text-2xl font-bold" style="color:var(--brand-green)">₹${product.price}</span>
-      </div>
-      <p style="color:var(--text-mid);font-size:0.9rem;line-height:1.7;margin-bottom:24px">${product.desc}</p>
-      <div class="flex gap-3">
-        <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="Cart.add(PRODUCTS.find(p=>p.id==='${product.id}'));closeProductModal()">
-          <i class="ph ph-shopping-cart-simple" style="font-size:16px"></i> Add to Cart
-        </button>
-        <button class="btn btn-outline" onclick="closeProductModal()">Close</button>
-      </div>
-    </div>
-  `;
-  modal.classList.add('open');
-  document.body.classList.add('modal-open');
-}
-function closeProductModal() {
-  document.getElementById('product-modal').classList.remove('open');
-  document.body.classList.remove('modal-open');
-}
-function openRewardsModal() {
-  document.getElementById('rewards-modal').classList.add('open');
-  document.body.classList.add('modal-open');
-  setTimeout(() => document.getElementById('rewards-name').focus(), 300);
-}
-function closeRewardsModal() {
-  document.getElementById('rewards-modal').classList.remove('open');
-  document.body.classList.remove('modal-open');
-}
-function openCheckout() {
-  closeCart();
-  const items = State.cart;
-  const subtotal = State.cartTotal();
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + tax;
-  const s = v => `₹${v.toLocaleString('en-IN')}`;
-  document.getElementById('checkout-subtotal').textContent = s(subtotal);
-  document.getElementById('checkout-tax').textContent = s(tax);
-  document.getElementById('checkout-total').textContent = s(total);
-  document.getElementById('checkout-items').innerHTML = items.map(i => `
-    <div class="flex justify-between" style="font-size:0.85rem">
-      <span style="color:var(--text-mid)">${i.emoji} ${i.name} × ${i.qty}</span>
-      <span style="font-weight:600">₹${(i.price*i.qty).toLocaleString('en-IN')}</span>
-    </div>
-  `).join('');
-  const minutes = 18 + Math.floor(Math.random()*10);
-  document.getElementById('pickup-time').textContent = `${minutes}–${minutes+5} minutes`;
-  document.getElementById('checkout-modal').classList.add('open');
-  document.body.classList.add('modal-open');
-}
-function closeCheckout() {
-  document.getElementById('checkout-modal').classList.remove('open');
-  document.body.classList.remove('modal-open');
-}
-function closeSuccessModal() {
-  document.getElementById('success-modal').classList.remove('open');
-  document.body.classList.remove('modal-open');
-}
-
-// ─────────────────────────────────────────
-// MODULE: Checkout System
-// ─────────────────────────────────────────
-function placeOrder() {
-  const subtotal = State.cartTotal();
-  const starsEarned = Math.floor(subtotal / 10);
-  const orderNum = '#BH-' + String(Math.floor(10000 + Math.random()*90000));
-  const minutes = 18 + Math.floor(Math.random()*8);
-
-  document.getElementById('order-number').textContent = orderNum;
-  document.getElementById('success-pickup').textContent = `${minutes} min`;
-  document.getElementById('stars-earned').textContent = `+${starsEarned} ★`;
-
-  closeCheckout();
-  document.getElementById('success-modal').classList.add('open');
-  document.body.classList.add('modal-open');
-
-  State.addStars(starsEarned);
-  Rewards.updateDisplay();
-  State.clearCart();
-  Cart.render();
-  Cart.updateBadge();
-  Toast.show(`Order placed! Earning ${starsEarned} stars 🌟`, 'ph-check-circle');
-}
-
-// ─────────────────────────────────────────
-// MODULE: Rewards System
-// ─────────────────────────────────────────
-const Rewards = {
-  updateDisplay() {
-    document.getElementById('stars-display').textContent = State.stars;
-    const progress = Math.min(State.stars / 300, 1);
-    const ring = document.getElementById('reward-ring');
-    const progressBar = document.getElementById('reward-progress');
-    ring.style.strokeDashoffset = 283 * (1 - progress);
-    progressBar.style.width = (progress * 100) + '%';
-  }
-};
-
-function joinRewards() {
-  const name = document.getElementById('rewards-name').value.trim();
-  const email = document.getElementById('rewards-email').value.trim();
-  if (!name) { Toast.show('Please enter your name', 'ph-warning'); return; }
-  if (!email || !email.includes('@')) { Toast.show('Please enter a valid email', 'ph-warning'); return; }
-  State.setUser({ name, email });
-  closeRewardsModal();
-  updateGreeting();
-  Toast.show(`Welcome, ${name}! Your rewards journey begins. 🌟`, 'ph-star', 4000);
-}
-
-function updateGreeting() {
-  const hour = new Date().getHours();
-  let tod = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
-  const user = State.user;
-  const name = user ? user.name.split(' ')[0] : 'Guest';
-  document.getElementById('greeting-text').textContent = `Good ${tod}, ${name}`;
-}
-
-// ─────────────────────────────────────────
-// MODULE: Menu Rendering
-// ─────────────────────────────────────────
-const Menu = {
-  render() {
-    const grid = document.getElementById('menu-grid');
-    const empty = document.getElementById('empty-state');
-    const q = State.searchQuery.toLowerCase();
-    const f = State.filter;
-
-    let items = PRODUCTS.filter(p => {
-      const matchFilter = f === 'all' || p.category === f;
-      const matchSearch = !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
-      return matchFilter && matchSearch;
-    });
-
-    if (items.length === 0) {
-      grid.innerHTML = '';
-      empty.classList.remove('hidden');
-      return;
-    }
-    empty.classList.add('hidden');
-
-    grid.innerHTML = items.map(p => `
-      <article class="card product-card" role="listitem" tabindex="0"
-        onclick="openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
-        onkeydown="if(event.key==='Enter')openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
-        aria-label="${p.name}, ₹${p.price}">
-        ${p.tag ? `<span class="badge ${p.trending?'badge-trending':''}" aria-label="${p.tag}">${p.tag}</span>` : ''}
-        <div class="card-img" style="height:160px;background:linear-gradient(135deg,#f0ebe3,#e8e0d0);display:flex;align-items:center;justify-content:center">
-          <span style="font-size:64px" role="img" aria-hidden="true">${p.emoji}</span>
-        </div>
-        <div style="padding:16px">
-          <h3 style="font-weight:600;font-size:0.9rem;color:var(--deep-green);margin-bottom:4px">${p.name}</h3>
-          <p style="font-size:0.78rem;color:var(--text-light);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.desc}</p>
-          <div class="flex items-center justify-between">
-            <span class="font-display font-bold" style="color:var(--brand-green);font-size:1rem">₹${p.price}</span>
-            <button class="add-btn" onclick="event.stopPropagation();Cart.add(PRODUCTS.find(x=>x.id==='${p.id}'))" aria-label="Add ${p.name} to cart">
-              <i class="ph ph-plus" style="font-size:16px"></i>
+    <!-- Cart Drawer -->
+    <div id="cart-overlay"
+        class="fixed inset-0 bg-black/50 z-[100] hidden backdrop-blur-sm transition-opacity opacity-0"
+        onclick="toggleCart()"></div>
+    <div id="cart-drawer"
+        class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white dark:bg-aroma-dark-card z-[101] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h2 class="text-xl font-serif font-bold dark:text-white flex items-center gap-2">
+                <i class="ph ph-shopping-bag"></i> Your Order
+            </h2>
+            <button onclick="toggleCart()"
+                class="text-2xl text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors">
+                <i class="ph ph-x"></i>
             </button>
-          </div>
         </div>
-      </article>
-    `).join('');
-  }
-};
 
-function setFilter(el, value) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  State.setFilter(value);
-  Menu.render();
-}
-
-function addToCartById(id) {
-  const p = PRODUCTS.find(x => x.id === id);
-  if (p) Cart.add(p);
-}
-
-// ─────────────────────────────────────────
-// Trending Section Render
-// ─────────────────────────────────────────
-function renderTrending() {
-  const grid = document.getElementById('trending-grid');
-  grid.innerHTML = TRENDING.slice(0,4).map((p,i) => `
-    <article class="card product-card reveal delay-${i+1}" role="listitem" tabindex="0"
-      onclick="openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
-      onkeydown="if(event.key==='Enter')openProductModal(PRODUCTS.find(x=>x.id==='${p.id}'))"
-      aria-label="${p.name}">
-      ${i===0 ? '<span class="badge badge-trending" aria-label="Most Ordered Today">🔥 Most Ordered</span>' : ''}
-      <div class="card-img" style="height:140px;background:linear-gradient(135deg,#f0ebe3,#e8e0d0);display:flex;align-items:center;justify-content:center">
-        <span style="font-size:56px" role="img" aria-hidden="true">${p.emoji}</span>
-      </div>
-      <div style="padding:14px">
-        <h3 style="font-weight:600;font-size:0.875rem;color:var(--deep-green);margin-bottom:6px">${p.name}</h3>
-        <div class="flex items-center justify-between">
-          <span class="font-display font-bold" style="color:var(--brand-green)">₹${p.price}</span>
-          <button class="add-btn" onclick="event.stopPropagation();Cart.add(PRODUCTS.find(x=>x.id==='${p.id}'))" aria-label="Add ${p.name}">
-            <i class="ph ph-plus" style="font-size:15px"></i>
-          </button>
+        <!-- Cart Items -->
+        <div class="flex-1 overflow-y-auto p-6" id="cart-items-container">
+            <!-- Populated by JS -->
+            <div id="cart-empty"
+                class="h-full flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hidden">
+                <i class="ph ph-shopping-cart text-6xl mb-4 opacity-50"></i>
+                <p class="text-lg">Your cart is empty.</p>
+                <button onclick="toggleCart(); window.location.href='#menu'"
+                    class="mt-4 px-6 py-2 bg-aroma-brown text-white rounded-full text-sm hover:bg-aroma-green transition-colors">Browse
+                    Menu</button>
+            </div>
         </div>
-      </div>
-    </article>
-  `).join('');
-}
 
-// ─────────────────────────────────────────
-// Intersection Observer — Reveal Animations
-// ─────────────────────────────────────────
-function initReveal() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => observer.observe(el));
-}
+        <!-- Footer / Checkout -->
+        <div class="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-aroma-dark-base">
+            <div class="flex justify-between text-sm mb-2 text-gray-600 dark:text-gray-400">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm mb-4 text-gray-600 dark:text-gray-400">
+                <span>Tax (5%)</span>
+                <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold mb-6 dark:text-white">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button onclick="openCheckout()" id="checkout-btn"
+                class="w-full py-4 bg-aroma-green hover:bg-aroma-brown text-white font-bold rounded-xl transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                Proceed to Checkout <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+    </div>
 
-// ─────────────────────────────────────────
-// Animated Counters
-// ─────────────────────────────────────────
-function initCounters() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const el = e.target;
-      const target = +el.dataset.target;
-      const duration = 1800;
-      const step = target / (duration / 16);
-      let current = 0;
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = Math.floor(current).toLocaleString('en-IN');
-        if (current >= target) clearInterval(timer);
-      }, 16);
-      observer.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('.stat-counter[data-target]').forEach(el => observer.observe(el));
-}
+    <!-- Wishlist Drawer (Similar to Cart) -->
+    <div id="wishlist-overlay"
+        class="fixed inset-0 bg-black/50 z-[100] hidden backdrop-blur-sm transition-opacity opacity-0"
+        onclick="toggleWishlistDrawer()"></div>
+    <div id="wishlist-drawer"
+        class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white dark:bg-aroma-dark-card z-[101] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h2 class="text-xl font-serif font-bold dark:text-white flex items-center gap-2">
+                <i class="ph-fill ph-heart text-aroma-brown"></i> Wishlist
+            </h2>
+            <button onclick="toggleWishlistDrawer()"
+                class="text-2xl text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6" id="wishlist-items-container">
+            <!-- Populated by JS -->
+            <div id="wishlist-empty"
+                class="h-full flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hidden">
+                <i class="ph ph-heart text-6xl mb-4 opacity-50"></i>
+                <p class="text-lg">No favorites yet.</p>
+            </div>
+        </div>
+    </div>
 
-// ─────────────────────────────────────────
-// Navbar scroll effect
-// ─────────────────────────────────────────
-function initNavbar() {
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
-}
+    <!-- Quick View Modal -->
+    <div id="qv-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeQuickView()"></div>
+        <div class="relative bg-white dark:bg-aroma-dark-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl transform scale-95 opacity-0 transition-all duration-300"
+            id="qv-content-box">
+            <button onclick="closeQuickView()"
+                class="absolute top-4 right-4 z-10 w-8 h-8 bg-white/50 dark:bg-black/50 rounded-full flex items-center justify-center hover:bg-white dark:hover:bg-black transition-colors">
+                <i class="ph ph-x text-lg dark:text-white"></i>
+            </button>
 
-// ─────────────────────────────────────────
-// Search syncing
-// ─────────────────────────────────────────
-function initSearch() {
-  const heroSearch = document.getElementById('hero-search');
-  const menuSearch = document.getElementById('menu-search');
+            <!-- Image Side -->
+            <div class="w-full md:w-1/2 h-64 md:h-auto relative bg-gray-100 dark:bg-gray-800">
+                <img id="qv-img" src="" alt="" class="w-full h-full object-cover">
+                <div class="absolute top-4 left-4 bg-white/90 dark:bg-black/90 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm dark:text-white"
+                    id="qv-category"></div>
+            </div>
 
-  function syncSearch(q) {
-    State.setSearchQuery(q);
-    heroSearch.value = q;
-    menuSearch.value = q;
-    Menu.render();
-  }
+            <!-- Details Side -->
+            <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto hide-scrollbar">
+                <div class="flex justify-between items-start mb-2">
+                    <h2 id="qv-title" class="text-2xl font-serif font-bold dark:text-white"></h2>
+                    <span id="qv-price" class="text-xl text-aroma-brown font-bold"></span>
+                </div>
 
-  heroSearch.addEventListener('input', e => syncSearch(e.target.value));
-  menuSearch.addEventListener('input', e => syncSearch(e.target.value));
+                <div class="flex items-center gap-2 mb-6 text-sm">
+                    <div class="flex text-aroma-gold" id="qv-rating"></div>
+                    <span class="text-gray-500 dark:text-gray-400" id="qv-reviews"></span>
+                </div>
 
-  heroSearch.addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.querySelector('#menu').scrollIntoView({ behavior: 'smooth' });
-  });
-}
+                <p id="qv-desc" class="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed"></p>
 
-// ─────────────────────────────────────────
-// Keyboard: ESC closes all modals/drawers
-// ─────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-  if (e.key !== 'Escape') return;
-  closeCart();
-  closeProductModal();
-  closeRewardsModal();
-  closeCheckout();
-  closeSuccessModal();
-});
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-2 dark:text-white">Ingredients</h4>
+                    <p id="qv-ingredients" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                </div>
 
-// ─────────────────────────────────────────
-// Cart button listeners
-// ─────────────────────────────────────────
-document.getElementById('cart-btn').addEventListener('click', openCart);
-document.getElementById('sign-in-btn').addEventListener('click', openRewardsModal);
-document.getElementById('nav-search-btn').addEventListener('click', () => {
-  document.querySelector('#menu').scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => document.getElementById('menu-search').focus(), 600);
-});
+                <div class="mb-8">
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-2 dark:text-white">Nutrition</h4>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded p-2">
+                            <span class="block text-xs text-gray-500">Calories</span>
+                            <strong class="dark:text-white" id="qv-cal"></strong>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded p-2">
+                            <span class="block text-xs text-gray-500">Sugar</span>
+                            <strong class="dark:text-white" id="qv-sugar"></strong>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded p-2">
+                            <span class="block text-xs text-gray-500">Fat</span>
+                            <strong class="dark:text-white" id="qv-fat"></strong>
+                        </div>
+                    </div>
+                </div>
 
-// ─────────────────────────────────────────
-// Rewards ring animation on load
-// ─────────────────────────────────────────
-function initRewardsRing() {
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      setTimeout(() => Rewards.updateDisplay(), 300);
-      observer.disconnect();
-    }
-  }, { threshold: 0.3 });
-  const rewardsSection = document.getElementById('rewards');
-  if (rewardsSection) observer.observe(rewardsSection);
-}
+                <div class="mt-auto flex gap-4">
+                    <div
+                        class="flex border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden h-12 w-32 shrink-0">
+                        <button onclick="updateQvQty(-1)"
+                            class="w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">-</button>
+                        <input type="number" id="qv-qty" value="1" min="1"
+                            class="w-12 text-center border-none focus:ring-0 bg-transparent dark:text-white" readonly>
+                        <button onclick="updateQvQty(1)"
+                            class="w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">+</button>
+                    </div>
+                    <button id="qv-add-btn"
+                        class="flex-1 bg-aroma-green hover:bg-aroma-brown text-white font-bold rounded-xl transition-colors h-12">
+                        Add to Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// ─────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  State.init();
-  updateGreeting();
-  renderTrending();
-  Menu.render();
-  Cart.render();
-  Cart.updateBadge();
-  initNavbar();
-  initReveal();
-  initCounters();
-  initSearch();
-  initRewardsRing();
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
 
-  // Restore hero-search from state
-  if (State.searchQuery) {
-    document.getElementById('hero-search').value = State.searchQuery;
-    document.getElementById('menu-search').value = State.searchQuery;
-  }
-});
-</script>
+        <div class="relative bg-white dark:bg-aroma-dark-base rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar shadow-2xl p-8"
+            id="checkout-content">
+            <button onclick="closeCheckout()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-black dark:hover:text-white">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+
+            <!-- Progress -->
+            <div class="flex justify-between mb-8 relative">
+                <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 z-0">
+                </div>
+                <div class="absolute top-1/2 left-0 h-0.5 bg-aroma-brown -translate-y-1/2 z-0 transition-all duration-300"
+                    id="checkout-progress-bar" style="width: 0%;"></div>
+
+                <div class="relative z-10 flex flex-col items-center step-dot" data-step="1">
+                    <div
+                        class="w-8 h-8 rounded-full bg-aroma-brown text-white flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base">
+                        1</div>
+                    <span class="text-xs mt-1 dark:text-gray-300">Details</span>
+                </div>
+                <div class="relative z-10 flex flex-col items-center step-dot" data-step="2">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base transition-colors"
+                        id="dot-2">2</div>
+                    <span class="text-xs mt-1 dark:text-gray-300">Payment</span>
+                </div>
+                <div class="relative z-10 flex flex-col items-center step-dot" data-step="3">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base transition-colors"
+                        id="dot-3">3</div>
+                    <span class="text-xs mt-1 dark:text-gray-300">Done</span>
+                </div>
+            </div>
+
+            <!-- Step 1: Details -->
+            <div id="checkout-step-1" class="checkout-step block">
+                <h2 class="text-2xl font-serif mb-6 dark:text-white">Pickup Details</h2>
+                <form id="details-form" onsubmit="nextCheckoutStep(event, 2)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">First Name</label>
+                            <input type="text" required
+                                class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Last Name</label>
+                            <input type="text" required
+                                class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Email</label>
+                        <input type="email" required value="customer@example.com"
+                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Pickup Store</label>
+                        <select
+                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-aroma-dark-card dark:text-white focus:outline-none focus:border-aroma-brown">
+                            <option>Bandra West</option>
+                            <option>Andheri Lokhandwala</option>
+                            <option>Malad Inorbit</option>
+                        </select>
+                    </div>
+                    <button type="submit"
+                        class="w-full py-3 mt-6 bg-aroma-green text-white rounded font-bold hover:bg-aroma-brown transition-colors">Continue
+                        to Payment</button>
+                </form>
+            </div>
+
+            <!-- Step 2: Payment (Demo) -->
+            <div id="checkout-step-2" class="checkout-step hidden">
+                <h2 class="text-2xl font-serif mb-6 dark:text-white">Payment Method</h2>
+                <div class="space-y-3 mb-6">
+                    <label
+                        class="flex items-center justify-between p-4 border border-aroma-brown rounded cursor-pointer bg-aroma-brown/5">
+                        <div class="flex items-center gap-3 dark:text-white">
+                            <input type="radio" name="payment" checked class="text-aroma-brown focus:ring-aroma-brown">
+                            <span>Credit / Debit Card</span>
+                        </div>
+                        <i class="ph ph-credit-card text-2xl text-gray-400"></i>
+                    </label>
+                    <label
+                        class="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:border-gray-300">
+                        <div class="flex items-center gap-3 dark:text-white">
+                            <input type="radio" name="payment" class="text-aroma-brown focus:ring-aroma-brown">
+                            <span>UPI (Google Pay, PhonePe)</span>
+                        </div>
+                        <i class="ph ph-qr-code text-2xl text-gray-400"></i>
+                    </label>
+                </div>
+
+                <!-- Fake Card Input -->
+                <div
+                    class="space-y-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-aroma-dark-card mb-6">
+                    <div class="text-xs text-red-500 mb-2"><i class="ph ph-warning-circle"></i> This is a demo. Do not
+                        enter real card details.</div>
+                    <input type="text" placeholder="Card Number (Demo: 4242 4242 4242 4242)"
+                        class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="MM/YY"
+                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
+                        <input type="text" placeholder="CVC"
+                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
+                    <span class="dark:text-white">Total to Pay:</span>
+                    <strong class="text-xl dark:text-white" id="checkout-final-total">$0.00</strong>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="setCheckoutStep(1)"
+                        class="w-1/3 py-3 border border-gray-300 dark:border-gray-700 rounded dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Back</button>
+                    <button onclick="processPayment()" id="pay-btn"
+                        class="w-2/3 py-3 bg-aroma-green text-white rounded font-bold hover:bg-aroma-brown transition-colors flex justify-center items-center gap-2">
+                        <span>Pay Now</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div id="checkout-step-3" class="checkout-step hidden text-center py-8">
+                <div
+                    class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500 text-4xl">
+                    <i class="ph-bold ph-check"></i>
+                </div>
+                <h2 class="text-3xl font-serif mb-2 dark:text-white">Order Confirmed!</h2>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Your order #<span id="order-id"
+                        class="font-bold"></span> has been received and is being prepared.</p>
+                <div
+                    class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-8 text-sm dark:text-gray-300 text-left max-w-sm mx-auto">
+                    <p class="mb-1"><i class="ph ph-clock"></i> Estimated pickup time: <strong>10-15 mins</strong></p>
+                    <p><i class="ph ph-map-pin"></i> You will receive an email receipt shortly.</p>
+                </div>
+                <button onclick="closeCheckoutAndReset()"
+                    class="px-8 py-3 bg-aroma-brown text-white rounded-full font-medium hover:bg-aroma-green transition-colors">
+                    Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- 1. Data & State ---
+        const productsData = [
+            // Hot Coffee
+            { id: 1, name: "Signature Caramel Macchiato", category: "Hot Coffee", price: 5.50, rating: 4.8, reviews: 124, img: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80", desc: "Our signature espresso combined with vanilla-flavored syrup, milk and caramel drizzle over ice.", ingredients: "Espresso, Steamed Milk, Vanilla Syrup, Caramel Drizzle", cal: 250, sugar: "33g", fat: "7g", isFeatured: true },
+            { id: 2, name: "Classic Cappuccino", category: "Hot Coffee", price: 4.50, rating: 4.6, reviews: 89, img: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80", desc: "Dark, rich espresso lies in wait under a smoothed and stretched layer of thick milk foam.", ingredients: "Espresso, Steamed Milk, Milk Foam", cal: 140, sugar: "12g", fat: "5g" },
+            { id: 3, name: "Hazelnut Latte", category: "Hot Coffee", price: 5.00, rating: 4.7, reviews: 210, img: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80", desc: "Our dark, rich espresso balanced with hazelnut syrup and steamed milk, topped with a light layer of foam.", ingredients: "Espresso, Steamed Milk, Hazelnut Syrup", cal: 210, sugar: "28g", fat: "6g" },
+            { id: 4, name: "Flat White", category: "Hot Coffee", price: 4.75, rating: 4.9, reviews: 156, img: "https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?auto=format&fit=crop&w=600&q=80", desc: "Smooth ristretto shots of espresso get the perfect amount of steamed whole milk to create a not-too-strong, not-too-creamy flavor.", ingredients: "Ristretto Espresso, Steamed Whole Milk", cal: 170, sugar: "13g", fat: "9g" },
+            { id: 5, name: "Cafe Americano", category: "Hot Coffee", price: 3.50, rating: 4.5, reviews: 320, img: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80", desc: "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup.", ingredients: "Espresso, Hot Water", cal: 15, sugar: "0g", fat: "0g" },
+
+            // Cold Coffee
+            { id: 6, name: "Vanilla Sweet Cream Cold Brew", category: "Cold Coffee", price: 4.95, rating: 4.8, reviews: 412, img: "https://i.pinimg.com/736x/55/78/d5/5578d5f2a3f1dd7cfdf48adf16e14b1a.jpg", desc: "Our slow-steeped custom blend of cold brew coffee accented with vanilla and topped with a delicate float of house-made vanilla sweet cream.", ingredients: "Cold Brew Coffee, Vanilla Syrup, Sweet Cream", cal: 110, sugar: "14g", fat: "5g", isFeatured: true },
+            { id: 7, name: "Iced Caramel Macchiato", category: "Cold Coffee", price: 5.50, rating: 4.7, reviews: 280, img: "https://i.pinimg.com/736x/71/59/18/7159184a8a17d407cc760413909b12d2.jpg", desc: "We combine our rich, full-bodied espresso with vanilla-flavored syrup, milk and ice, then top it off with a caramel drizzle.", ingredients: "Espresso, Milk, Ice, Vanilla, Caramel", cal: 250, sugar: "34g", fat: "7g" },
+            { id: 8, name: "Nitro Cold Brew", category: "Cold Coffee", price: 5.25, rating: 4.9, reviews: 195, img: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?auto=format&fit=crop&w=600&q=80", desc: "Our signature cold brew, infused with nitrogen to create a sweet flavor without sugar and a cascading, velvety crema.", ingredients: "Cold Brew Coffee, Nitrogen", cal: 5, sugar: "0g", fat: "0g" },
+            { id: 9, name: "Iced Brown Sugar Oat Espresso", category: "Cold Coffee", price: 5.95, rating: 4.8, reviews: 310, img: "https://images.unsplash.com/photo-1557142046-c704a3adf364?auto=format&fit=crop&w=600&q=80", desc: "Espresso, brown sugar and cinnamon shaken together and topped off with oatmilk and ice.", ingredients: "Espresso, Oatmilk, Brown Sugar Syrup, Cinnamon", cal: 120, sugar: "13g", fat: "3g" },
+
+            // Espresso
+            { id: 10, name: "Espresso Con Panna", category: "Espresso", price: 3.25, rating: 4.5, reviews: 65, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80", desc: "Espresso meets a dollop of whipped cream to enhance the rich and caramelly flavors of a straight shot.", ingredients: "Espresso, Whipped Cream", cal: 35, sugar: "1g", fat: "2.5g" },
+            { id: 11, name: "Double Espresso", category: "Espresso", price: 2.95, rating: 4.7, reviews: 180, img: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80", desc: "Two shots of our signature espresso roast. Rich, robust, and full-bodied.", ingredients: "Espresso", cal: 10, sugar: "0g", fat: "0g" },
+
+            // Tea & Refreshers
+            { id: 12, name: "Matcha Green Tea Latte", category: "Tea", price: 4.95, rating: 4.6, reviews: 245, img: "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=600&q=80", desc: "Smooth and creamy matcha sweetened just right and served with steamed milk.", ingredients: "Matcha Green Tea Blend, Milk", cal: 240, sugar: "32g", fat: "7g", isFeatured: true },
+            { id: 13, name: "Iced Peach Green Tea", category: "Tea", price: 3.95, rating: 4.5, reviews: 120, img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80", desc: "Green tea blended with peach juice and lemonade, served over ice.", ingredients: "Green Tea, Peach Juice Blend, Lemonade, Ice", cal: 130, sugar: "29g", fat: "0g" },
+            { id: 14, name: "Earl Grey Tea", category: "Tea", price: 3.25, rating: 4.4, reviews: 90, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80", desc: "A robust black tea with rich notes of bergamot.", ingredients: "Earl Grey Black Tea, Hot Water", cal: 0, sugar: "0g", fat: "0g" },
+            { id: 15, name: "Berry Hibiscus Refresher", category: "Tea", price: 4.50, rating: 4.7, reviews: 175, img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80", desc: "Real fruit juice and whole blackberries shaken with green coffee extract for a refreshing boost.", ingredients: "Water, Sugar, White Grape Juice, Blackberries, Green Coffee Extract", cal: 70, sugar: "15g", fat: "0g" },
+
+            // Bakery
+            { id: 16, name: "Butter Croissant", category: "Bakery", price: 3.25, rating: 4.8, reviews: 310, img: "https://i.pinimg.com/1200x/fb/5a/7b/fb5a7b4a04fe90e7ad03b98c79d6e836.jpg", desc: "A classic, flaky, butter croissant. Baked fresh every morning.", ingredients: "Flour, Butter, Water, Sugar, Yeast, Salt", cal: 250, sugar: "5g", fat: "14g" },
+            { id: 17, name: "Blueberry Muffin", category: "Bakery", price: 3.50, rating: 4.6, reviews: 205, img: "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80", desc: "A delicious muffin dotted throughout with sweet, juicy blueberries.", ingredients: "Flour, Sugar, Blueberries, Eggs, Butter", cal: 380, sugar: "30g", fat: "16g" },
+            { id: 18, name: "Chocolate Croissant", category: "Bakery", price: 3.75, rating: 4.9, reviews: 420, img: "https://i.pinimg.com/736x/79/12/ef/7912efc647eb47244b1cff9adcd2b573.jpg", desc: "Two pieces of rich, dark chocolate wrapped in our flaky, buttery croissant dough.", ingredients: "Flour, Butter, Dark Chocolate, Sugar", cal: 300, sugar: "11g", fat: "17g" },
+            { id: 19, name: "Banana Walnut Bread", category: "Bakery", price: 3.25, rating: 4.7, reviews: 150, img: "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?auto=format&fit=crop&w=600&q=80", desc: "A classic sweet bread filled with mashed bananas and chopped walnuts.", ingredients: "Bananas, Flour, Sugar, Walnuts, Eggs", cal: 410, sugar: "30g", fat: "20g" },
+            { id: 20, name: "Cheese Danish", category: "Bakery", price: 3.50, rating: 4.5, reviews: 110, img: "https://images.unsplash.com/photo-1614145121029-83a9f7b68bf4?auto=format&fit=crop&w=600&q=80", desc: "Flaky pastry dough with a sweet cheese filling.", ingredients: "Flour, Butter, Cream Cheese, Sugar, Vanilla", cal: 290, sugar: "13g", fat: "16g" },
+
+            // Desserts
+            { id: 21, name: "New York Cheesecake", category: "Desserts", price: 5.95, rating: 4.9, reviews: 280, img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80", desc: "A rich and creamy New York-style cheesecake with a graham cracker crust.", ingredients: "Cream Cheese, Sugar, Graham Cracker, Eggs", cal: 450, sugar: "35g", fat: "28g" },
+            { id: 22, name: "Dark Chocolate Truffle", category: "Desserts", price: 2.50, rating: 4.8, reviews: 190, img: "https://i.pinimg.com/736x/51/a5/55/51a5555db625738c69c61de88b54fb68.jpg", desc: "Bite-sized indulgence made with premium dark chocolate ganache dusted with cocoa.", ingredients: "Dark Chocolate, Heavy Cream, Cocoa Powder", cal: 120, sugar: "10g", fat: "8g" },
+            { id: 23, name: "Tiramisu", category: "Desserts", price: 6.50, rating: 4.7, reviews: 145, img: "https://i.pinimg.com/736x/0e/c2/89/0ec289492947872976c5c52215280faa.jpg", desc: "Classic Italian dessert with espresso-soaked ladyfingers and mascarpone cream.", ingredients: "Mascarpone, Espresso, Ladyfingers, Cocoa", cal: 380, sugar: "25g", fat: "22g" },
+            { id: 24, name: "Macaron Set (3 pcs)", category: "Desserts", price: 6.00, rating: 4.6, reviews: 110, img: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80", desc: "Assorted French macarons: Pistachio, Raspberry, and Vanilla.", ingredients: "Almond Flour, Sugar, Egg Whites, Buttercream", cal: 210, sugar: "24g", fat: "10g" },
+            { id: 25, name: "Affogato", category: "Desserts", price: 5.50, rating: 4.9, reviews: 305, img: "https://i.pinimg.com/1200x/2c/26/0e/2c260ec2de65ff933fa6123e50e11912.jpg", desc: "A scoop of vanilla bean ice cream \"drowned\" with a shot of hot espresso.", ingredients: "Vanilla Ice Cream, Espresso", cal: 200, sugar: "18g", fat: "10g" }
+        ];
+
+        const state = {
+            cart: JSON.parse(localStorage.getItem('aroma_cart')) || [],
+            wishlist: JSON.parse(localStorage.getItem('aroma_wishlist')) || [],
+            theme: localStorage.getItem('aroma_theme') || 'light',
+            activeCategory: 'All',
+            searchQuery: '',
+            sortBy: 'popularity', // popularity, price-low, price-high, rating
+            qvId: null, // Quick View ID
+            qvQty: 1
+        };
+
+        const categories = ['All', 'Hot Coffee', 'Cold Coffee', 'Espresso', 'Tea', 'Bakery', 'Desserts'];
+
+        // --- 2. Initialization & Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Loader
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                initScrollAnimations();
+            }, 1000);
+
+            // Set Year
+            document.getElementById('year').innerText = new Date().getFullYear();
+
+            // Theme Init
+            if (state.theme === 'dark' || (!localStorage.getItem('aroma_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                state.theme = 'dark';
+            }
+
+            // Render
+            renderFeatured();
+            renderCategoryFilters();
+            renderMenu();
+            updateCartUI();
+            updateWishlistUI();
+            renderFAQ();
+
+            // Setup Event Listeners
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Theme Toggle
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                state.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                localStorage.setItem('aroma_theme', state.theme);
+            });
+
+            // Mobile Menu
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const closeMobileBtn = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileBtn.addEventListener('click', () => mobileMenu.classList.remove('translate-x-full'));
+            closeMobileBtn.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+            });
+
+            // Scroll Progress & Navbar styling
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.transform = `scaleX(${scrolled / 100})`;
+
+                // Navbar sticky glass effect
+                const navbar = document.getElementById('navbar');
+                if (winScroll > 50) {
+                    navbar.classList.add('shadow-md', 'dark:border-gray-800');
+                    navbar.classList.remove('border-b-transparent');
+                } else {
+                    navbar.classList.remove('shadow-md', 'dark:border-gray-800');
+                    navbar.classList.add('border-b-transparent');
+                }
+
+                // Back to top
+                const btt = document.getElementById('back-to-top');
+                if (winScroll > 500) {
+                    btt.classList.remove('translate-y-20', 'opacity-0');
+                } else {
+                    btt.classList.add('translate-y-20', 'opacity-0');
+                }
+            });
+
+            // Menu Search & Sort
+            document.getElementById('menu-search').addEventListener('input', (e) => {
+                state.searchQuery = e.target.value.toLowerCase();
+                renderMenu();
+            });
+
+            document.getElementById('menu-sort').addEventListener('change', (e) => {
+                state.sortBy = e.target.value;
+                renderMenu();
+            });
+        }
+
+        // --- 3. Render Functions ---
+
+        function renderFeatured() {
+            const featuredGrid = document.getElementById('featured-grid');
+            const featuredItems = productsData.filter(p => p.isFeatured).slice(0, 3);
+
+            featuredGrid.innerHTML = featuredItems.map(p => createProductCard(p)).join('');
+        }
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-filters');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat}')" 
+                        class="px-5 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors border ${state.activeCategory === cat ? 'bg-aroma-brown text-white border-aroma-brown' : 'bg-transparent border-gray-300 dark:border-gray-700 hover:border-aroma-brown dark:hover:border-aroma-gold dark:text-gray-300'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(cat) {
+            state.activeCategory = cat;
+            renderCategoryFilters();
+            renderMenu();
+        }
+
+        function resetFilters() {
+            state.activeCategory = 'All';
+            state.searchQuery = '';
+            document.getElementById('menu-search').value = '';
+            document.getElementById('menu-sort').value = 'popularity';
+            state.sortBy = 'popularity';
+            renderCategoryFilters();
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            const emptyState = document.getElementById('menu-empty');
+
+            let filtered = productsData.filter(p => {
+                const matchCat = state.activeCategory === 'All' || p.category === state.activeCategory;
+                const matchSearch = p.name.toLowerCase().includes(state.searchQuery) || p.desc.toLowerCase().includes(state.searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            // Sort
+            if (state.sortBy === 'price-low') filtered.sort((a, b) => a.price - b.price);
+            else if (state.sortBy === 'price-high') filtered.sort((a, b) => b.price - a.price);
+            else if (state.sortBy === 'rating') filtered.sort((a, b) => b.rating - a.rating);
+            // 'popularity' keeps original order mostly, maybe sort by reviews
+            else filtered.sort((a, b) => b.reviews - a.reviews);
+
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                grid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+            }
+        }
+
+        function createProductCard(product) {
+            const inWishlist = state.wishlist.includes(product.id);
+            return `
+                <div class="bg-white dark:bg-aroma-dark-base rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 group relative">
+                    <!-- Wishlist Btn -->
+                    <button onclick="toggleWishlistItem(${product.id}, event)" class="absolute top-3 right-3 z-10 w-8 h-8 bg-white/80 dark:bg-black/50 backdrop-blur rounded-full flex items-center justify-center transition-colors hover:text-red-500 ${inWishlist ? 'text-red-500' : 'text-gray-400'}">
+                        <i class="${inWishlist ? 'ph-fill' : 'ph'} ph-heart text-lg"></i>
+                    </button>
+                    
+                    <div class="relative h-48 overflow-hidden cursor-pointer" onclick="openQuickView(${product.id})">
+                        <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-white/90 text-black px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">Quick View</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="text-xs text-aroma-brown dark:text-aroma-gold font-bold uppercase tracking-wider mb-1">${product.category}</div>
+                        <h3 class="font-serif font-bold text-lg mb-2 dark:text-white truncate cursor-pointer hover:text-aroma-brown" onclick="openQuickView(${product.id})">${product.name}</h3>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="font-bold text-lg dark:text-white">$${product.price.toFixed(2)}</span>
+                            <button onclick="addToCart(${product.id})" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-aroma-brown hover:text-white dark:hover:bg-aroma-gold dark:hover:text-black dark:text-white transition-colors flex items-center justify-center">
+                                <i class="ph ph-plus text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFAQ() {
+            const faqs = [
+                { q: "What is your return policy?", a: "We want you to be completely satisfied. If you are not happy with your purchase, please contact us within 14 days of receipt." },
+                { q: "Do you ship internationally?", a: "Currently, we only ship coffee beans and merchandise within the country to ensure freshness." },
+                { q: "How does the rewards program work?", a: "Earn 2 stars for every $1 spent. Redeem 150 stars for a free drink. Sign up is free!" },
+                { q: "Are your beans ethically sourced?", a: "Yes, 100% of our beans are sourced from farms that adhere to fair trade and sustainable practices." },
+                { q: "Do you offer vegan options?", a: "Absolutely! We offer Oat, Almond, and Soy milk alternatives, along with several vegan bakery items." }
+            ];
+
+            const container = document.getElementById('faq-accordion');
+            container.innerHTML = faqs.map((faq, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-aroma-dark-card">
+                    <button onclick="toggleFAQ(${index})" class="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none">
+                        <span class="font-medium dark:text-white">${faq.q}</span>
+                        <i class="ph ph-caret-down transition-transform duration-300 text-gray-500" id="faq-icon-${index}"></i>
+                    </button>
+                    <div id="faq-content-${index}" class="px-6 pb-4 hidden text-gray-600 dark:text-gray-400 text-sm">
+                        ${faq.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFAQ(index) {
+            const content = document.getElementById(`faq-content-${index}`);
+            const icon = document.getElementById(`faq-icon-${index}`);
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // --- 4. Cart & Wishlist Operations ---
+
+        function addToCart(id, qty = 1) {
+            const product = productsData.find(p => p.id === id);
+            const existing = state.cart.find(item => item.id === id);
+
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                state.cart.push({ ...product, qty });
+            }
+
+            saveCart();
+            updateCartUI();
+            showToast(`${product.name} added to cart`);
+            if (!document.getElementById('cart-drawer').classList.contains('translate-x-0') && qty === 1) {
+                // Optional: open cart on add, or just let toast show
+            } else if (qty > 1) {
+                closeQuickView();
+                toggleCart();
+            }
+        }
+
+        function removeFromCart(id) {
+            state.cart = state.cart.filter(item => item.id !== id);
+            saveCart();
+            updateCartUI();
+        }
+
+        function updateCartQty(id, delta) {
+            const item = state.cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    removeFromCart(id);
+                } else {
+                    saveCart();
+                    updateCartUI();
+                }
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('aroma_cart', JSON.stringify(state.cart));
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const emptyState = document.getElementById('cart-empty');
+            const navCount = document.getElementById('nav-cart-count');
+
+            const totalItems = state.cart.reduce((sum, item) => sum + item.qty, 0);
+
+            // Update Badges
+            navCount.innerText = totalItems;
+            if (totalItems > 0) navCount.classList.remove('opacity-0');
+            else navCount.classList.add('opacity-0');
+
+            if (state.cart.length === 0) {
+                container.innerHTML = '';
+                container.appendChild(emptyState);
+                emptyState.classList.remove('hidden');
+                document.getElementById('checkout-btn').disabled = true;
+                updateCartTotals(0);
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            document.getElementById('checkout-btn').disabled = false;
+
+            let subtotal = 0;
+            container.innerHTML = state.cart.map(item => {
+                subtotal += item.price * item.qty;
+                return `
+                    <div class="flex gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+                        <img src="${item.img}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-sm dark:text-white w-4/5">${item.name}</h4>
+                                <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500"><i class="ph ph-trash"></i></button>
+                            </div>
+                            <div class="text-aroma-brown text-sm font-medium mt-1">$${item.price.toFixed(2)}</div>
+                            <div class="flex items-center gap-3 mt-2">
+                                <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center dark:text-white hover:bg-gray-200">-</button>
+                                <span class="text-sm dark:text-white">${item.qty}</span>
+                                <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center dark:text-white hover:bg-gray-200">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateCartTotals(subtotal);
+        }
+
+        function updateCartTotals(subtotal) {
+            const tax = subtotal * 0.05;
+            const total = subtotal + tax;
+            document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cart-tax').innerText = `$${tax.toFixed(2)}`;
+            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+            document.getElementById('checkout-final-total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+            const isClosed = drawer.classList.contains('translate-x-full');
+
+            if (isClosed) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Wishlist
+        function toggleWishlistItem(id, event) {
+            if (event) event.stopPropagation(); // Prevent QuickView trigger
+            const index = state.wishlist.indexOf(id);
+            if (index > -1) {
+                state.wishlist.splice(index, 1);
+                showToast('Removed from wishlist');
+            } else {
+                state.wishlist.push(id);
+                showToast('Added to wishlist');
+            }
+            localStorage.setItem('aroma_wishlist', JSON.stringify(state.wishlist));
+            renderMenu(); // Re-render to update heart icons
+            renderFeatured();
+            updateWishlistUI();
+        }
+
+        function updateWishlistUI() {
+            const container = document.getElementById('wishlist-items-container');
+            const emptyState = document.getElementById('wishlist-empty');
+            const navCount = document.getElementById('nav-wishlist-count');
+
+            navCount.innerText = state.wishlist.length;
+            if (state.wishlist.length > 0) navCount.classList.remove('opacity-0');
+            else navCount.classList.add('opacity-0');
+
+            if (state.wishlist.length === 0) {
+                container.innerHTML = '';
+                container.appendChild(emptyState);
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            const items = state.wishlist.map(id => productsData.find(p => p.id === id)).filter(Boolean);
+
+            container.innerHTML = items.map(item => `
+                <div class="flex gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <img src="${item.img}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg cursor-pointer" onclick="openQuickView(${item.id}); toggleWishlistDrawer();">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-sm dark:text-white cursor-pointer hover:text-aroma-brown" onclick="openQuickView(${item.id}); toggleWishlistDrawer();">${item.name}</h4>
+                        <div class="text-aroma-brown text-sm font-medium mt-1">$${item.price.toFixed(2)}</div>
+                        <div class="flex items-center gap-3 mt-3">
+                            <button onclick="addToCart(${item.id})" class="text-xs bg-aroma-green text-white px-3 py-1.5 rounded hover:bg-aroma-brown">Add to Cart</button>
+                            <button onclick="toggleWishlistItem(${item.id})" class="text-xs text-gray-500 hover:text-red-500 underline">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleWishlistDrawer() {
+            const drawer = document.getElementById('wishlist-drawer');
+            const overlay = document.getElementById('wishlist-overlay');
+            const isClosed = drawer.classList.contains('translate-x-full');
+
+            if (isClosed) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                document.body.style.overflow = '';
+            }
+        }
+
+        // --- 5. Quick View ---
+
+        function openQuickView(id) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+
+            state.qvId = id;
+            state.qvQty = 1;
+            document.getElementById('qv-qty').value = 1;
+
+            // Populate
+            document.getElementById('qv-img').src = product.img;
+            document.getElementById('qv-category').innerText = product.category;
+            document.getElementById('qv-title').innerText = product.name;
+            document.getElementById('qv-price').innerText = `$${product.price.toFixed(2)}`;
+            document.getElementById('qv-desc').innerText = product.desc;
+            document.getElementById('qv-ingredients').innerText = product.ingredients || 'N/A';
+            document.getElementById('qv-cal').innerText = product.cal || '-';
+            document.getElementById('qv-sugar').innerText = product.sugar || '-';
+            document.getElementById('qv-fat').innerText = product.fat || '-';
+            document.getElementById('qv-reviews').innerText = `(${product.reviews} reviews)`;
+
+            // Rating stars
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                if (product.rating >= i) starsHtml += '<i class="ph-fill ph-star"></i>';
+                else if (product.rating >= i - 0.5) starsHtml += '<i class="ph-fill ph-star-half"></i>';
+                else starsHtml += '<i class="ph ph-star"></i>';
+            }
+            document.getElementById('qv-rating').innerHTML = starsHtml;
+
+            // Update Add button
+            document.getElementById('qv-add-btn').onclick = () => addToCart(id, state.qvQty);
+
+            // Show
+            const modal = document.getElementById('qv-modal');
+            const content = document.getElementById('qv-content-box');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('qv-modal');
+            const content = document.getElementById('qv-content-box');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function updateQvQty(delta) {
+            const input = document.getElementById('qv-qty');
+            let newQty = parseInt(input.value) + delta;
+            if (newQty >= 1) {
+                state.qvQty = newQty;
+                input.value = newQty;
+            }
+        }
+
+        // --- 6. Checkout Flow ---
+
+        function openCheckout() {
+            if (state.cart.length === 0) return;
+            toggleCart(); // Close cart
+
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setCheckoutStep(1);
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function nextCheckoutStep(e, step) {
+            e.preventDefault(); // Prevent form submission
+            setCheckoutStep(step);
+        }
+
+        function setCheckoutStep(step) {
+            // Hide all
+            document.querySelectorAll('.checkout-step').forEach(el => el.classList.add('hidden'));
+            // Show target
+            document.getElementById(`checkout-step-${step}`).classList.remove('hidden');
+
+            // Update Progress UI
+            const progressBar = document.getElementById('checkout-progress-bar');
+            if (step === 1) progressBar.style.width = '0%';
+            if (step === 2) progressBar.style.width = '50%';
+            if (step === 3) progressBar.style.width = '100%';
+
+            // Update Dots
+            document.querySelectorAll('.step-dot').forEach(dot => {
+                const s = parseInt(dot.dataset.step);
+                const inner = dot.firstElementChild;
+                if (s <= step) {
+                    inner.classList.remove('bg-gray-200', 'dark:bg-gray-800', 'text-gray-500');
+                    inner.classList.add('bg-aroma-brown', 'text-white');
+                } else {
+                    inner.classList.add('bg-gray-200', 'dark:bg-gray-800', 'text-gray-500');
+                    inner.classList.remove('bg-aroma-brown', 'text-white');
+                }
+            });
+        }
+
+        function processPayment() {
+            const btn = document.getElementById('pay-btn');
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Processing...';
+            btn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                const orderId = 'AH' + Math.floor(Math.random() * 90000 + 10000);
+                document.getElementById('order-id').innerText = orderId;
+
+                // Clear cart
+                state.cart = [];
+                saveCart();
+                updateCartUI();
+
+                // Add points
+                let currentPoints = parseInt(document.getElementById('demo-stars').innerText.replace(/\D/g, ''));
+                document.getElementById('demo-stars').innerHTML = `<i class="ph-fill ph-star text-2xl"></i> ${currentPoints + 25}`;
+
+                setCheckoutStep(3);
+                btn.innerHTML = 'Pay Now';
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        function closeCheckoutAndReset() {
+            closeCheckout();
+            document.getElementById('details-form').reset();
+        }
+
+        // --- 7. Utilities & Animations ---
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-white dark:bg-aroma-dark-card border border-gray-100 dark:border-gray-800 shadow-lg rounded-xl p-4 flex items-center gap-3 transform translate-x-full transition-all duration-300 z-[150]';
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-500 flex items-center justify-center shrink-0">
+                    <i class="ph-bold ph-check"></i>
+                </div>
+                <p class="text-sm font-medium dark:text-white">${msg}</p>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full');
+            });
+
+            // Animate out
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function handleNewsletter(e) {
+            e.preventDefault();
+            const email = document.getElementById('nl-email');
+            if (email.value) {
+                showToast('Successfully subscribed to inner circle!');
+                email.value = '';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Scroll Reveal Animation Observer
+        function initScrollAnimations() {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: stop observing once revealed
+                        // observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => {
+                observer.observe(reveal);
+            });
+        }
+
+        // Simple Testimonial Slider logic
+        function moveTestimonial(index) {
+            const track = document.getElementById('testimonial-track');
+            const dots = document.querySelectorAll('.test-dot');
+
+            track.style.transform = `translateX(-${index * 100}%)`;
+
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('bg-aroma-brown');
+                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-700');
+                } else {
+                    dot.classList.remove('bg-aroma-brown');
+                    dot.classList.add('bg-gray-300', 'dark:bg-gray-700');
+                }
+            });
+        }
+
+        // Auto slide testimonials
+        let currentSlide = 0;
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 3;
+            moveTestimonial(currentSlide);
+        }, 5000);
+
+    </script>
 </body>
+
 </html>
