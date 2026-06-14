@@ -147,6 +147,656 @@
             filter: invert(90%) hue-rotate(180deg) grayscale(20%) contrast(1.1);
         }
     </style>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PAYMENT GATEWAY STYLES — scoped under .pg- prefix
+         Injected from Project B, adapted for Project A
+    ═══════════════════════════════════════════════════════ -->
+    <style>
+        /* Payment gateway root vars — uses Project A's color palette */
+        #pg-overlay {
+            --pg-green: #1a3622;
+            --pg-green-hover: #2c5a38;
+            --pg-green-light: rgba(26,54,34,0.08);
+            --pg-green-ring: rgba(26,54,34,0.15);
+            --pg-brown: #6f4e37;
+            --pg-gold: #c5a059;
+            --pg-gold-light: #f5edd9;
+            --pg-cream: #fdfbf7;
+            --pg-white: #ffffff;
+            --pg-border: rgba(0,0,0,0.10);
+            --pg-border-hover: rgba(0,0,0,0.22);
+            --pg-text-dark: #1a1a1a;
+            --pg-text-mid: #3d3d3d;
+            --pg-text-light: #767676;
+            --pg-shadow: 0 16px 48px rgba(0,0,0,0.22);
+            --pg-shadow-sm: 0 2px 12px rgba(0,0,0,0.08);
+            --pg-radius: 20px;
+            --pg-radius-sm: 10px;
+        }
+
+        /* Dark mode overrides */
+        .dark #pg-overlay {
+            --pg-green: #c5a059;
+            --pg-green-hover: #d4b06a;
+            --pg-green-light: rgba(197,160,89,0.10);
+            --pg-green-ring: rgba(197,160,89,0.20);
+            --pg-brown: #c5a059;
+            --pg-cream: #1a1d24;
+            --pg-white: #1a1d24;
+            --pg-border: rgba(255,255,255,0.10);
+            --pg-border-hover: rgba(255,255,255,0.25);
+            --pg-text-dark: #f1f1f1;
+            --pg-text-mid: #cccccc;
+            --pg-text-light: #888888;
+            --pg-shadow: 0 16px 48px rgba(0,0,0,0.55);
+        }
+
+        /* ── OVERLAY ── */
+        #pg-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9990;
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+        #pg-overlay.pg-active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            animation: pgFadeIn .25s ease;
+        }
+        @keyframes pgFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pgSlideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pgPopIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes pgSpin { to { transform: rotate(360deg); } }
+
+        /* ── MODAL WRAPPER ── */
+        .pg-modal {
+            background: var(--pg-white);
+            border-radius: var(--pg-radius);
+            width: 100%;
+            max-width: 1020px;
+            overflow: hidden;
+            box-shadow: var(--pg-shadow);
+            animation: pgSlideUp .32s cubic-bezier(0.22,1,0.36,1);
+            position: relative;
+        }
+
+        /* ── HEADER ── */
+        .pg-header {
+            background: var(--pg-green);
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pg-header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dark .pg-header {
+            background: #12151c;
+        }
+        .pg-header-sub {
+            font-family: 'Inter', sans-serif;
+            font-size: .68rem;
+            color: rgba(255,255,255,.55);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+        .pg-close-btn {
+            background: rgba(255,255,255,.12);
+            border: none;
+            color: #fff;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+        .pg-close-btn:hover { background: rgba(255,255,255,.22); }
+
+        /* ── PROGRESS BAR ── */
+        .pg-progress {
+            background: var(--pg-cream);
+            padding: 1.1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            border-bottom: 1px solid var(--pg-border);
+        }
+        .pg-step {
+            display: flex; align-items: center; gap: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: .78rem; font-weight: 600; letter-spacing: .4px;
+            color: var(--pg-text-light);
+            transition: color .3s;
+        }
+        .pg-step.pg-active { color: var(--pg-green); }
+        .pg-step.pg-done { color: var(--pg-green); }
+        .pg-step-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--pg-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .75rem; font-weight: 700;
+            color: var(--pg-text-light);
+            transition: all .3s;
+            flex-shrink: 0;
+        }
+        .pg-step.pg-active .pg-step-num {
+            background: var(--pg-green); color: #fff;
+            box-shadow: 0 0 0 4px var(--pg-green-light);
+        }
+        .pg-step.pg-done .pg-step-num { background: var(--pg-green); color: #fff; }
+        .pg-step-line {
+            width: 56px; height: 2px;
+            background: var(--pg-border);
+            margin: 0 8px;
+            transition: background .3s;
+            flex-shrink: 0;
+        }
+        .pg-step-line.pg-done { background: var(--pg-green); }
+
+        /* ── BODY GRID ── */
+        .pg-body {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+        }
+        @media (max-width: 720px) {
+            .pg-body { grid-template-columns: 1fr; }
+            .pg-sidebar { order: -1; border-right: none; border-bottom: 1px solid var(--pg-border); }
+        }
+
+        /* ── FORM AREA ── */
+        .pg-form-area {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+        @media (max-width: 600px) { .pg-form-area { padding: 1.25rem; } }
+
+        .pg-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--pg-text-dark);
+            margin-bottom: 1.2rem;
+            padding-bottom: .6rem;
+            border-bottom: 2px solid var(--pg-green-light);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pg-section-title i { color: var(--pg-green); font-size: 1rem; }
+
+        .pg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1.4rem; }
+        .pg-grid.pg-col1 { grid-template-columns: 1fr; }
+        @media (max-width: 520px) { .pg-grid { grid-template-columns: 1fr; } }
+
+        .pg-field { display: flex; flex-direction: column; gap: 5px; }
+        .pg-field.pg-span2 { grid-column: span 2; }
+        .pg-label {
+            font-family: 'Inter', sans-serif;
+            font-size: .72rem; font-weight: 600;
+            color: var(--pg-text-mid); letter-spacing: .4px; text-transform: uppercase;
+        }
+        .pg-input, .pg-select {
+            padding: 10px 13px;
+            border: 1.5px solid var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: .92rem;
+            color: var(--pg-text-dark);
+            background: var(--pg-white);
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+            width: 100%;
+        }
+        .pg-input:focus, .pg-select:focus {
+            border-color: var(--pg-green);
+            box-shadow: 0 0 0 3px var(--pg-green-ring);
+        }
+        .pg-input.pg-error { border-color: #E53935; }
+
+        /* ── PAYMENT TABS ── */
+        .pg-pay-tabs {
+            display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 1.4rem;
+        }
+        .pg-pay-tab {
+            flex: 1; min-width: 80px;
+            padding: 9px 10px;
+            border: 1.5px solid var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            background: var(--pg-white);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--pg-text-light);
+            text-align: center;
+            transition: all .2s;
+        }
+        .pg-pay-tab:hover { border-color: var(--pg-green); color: var(--pg-green); }
+        .pg-pay-tab.pg-active {
+            border-color: var(--pg-green);
+            background: var(--pg-green-light);
+            color: var(--pg-green);
+        }
+        .pg-tab-icon { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+
+        /* ── UPI ── */
+        .pg-upi-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+        .pg-upi-card {
+            flex: 1; min-width: 80px;
+            border: 1.5px solid var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            padding: 10px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: var(--pg-white);
+        }
+        .pg-upi-card:hover, .pg-upi-card.pg-sel {
+            border-color: var(--pg-green);
+            background: var(--pg-green-light);
+        }
+        .pg-upi-name { font-size: .7rem; font-weight: 700; color: var(--pg-text-mid); margin-top: 4px; font-family: 'Inter', sans-serif; }
+        .pg-upi-logo { font-size: 1.4rem; display: block; }
+
+        .pg-upi-row { display: flex; gap: 8px; align-items: flex-end; }
+        .pg-upi-row .pg-input { flex: 1; }
+        .pg-verify-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: 1.5px solid var(--pg-green);
+            color: var(--pg-green);
+            border-radius: var(--pg-radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: .8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .2s;
+        }
+        .pg-verify-btn:hover { background: var(--pg-green); color: #fff; }
+        .pg-verified {
+            display: none; align-items: center; gap: 5px;
+            font-size: .78rem; color: #2e7d32; font-weight: 700;
+            margin-top: 5px; font-family: 'Inter', sans-serif;
+        }
+        .pg-verified.pg-show { display: flex; }
+
+        .pg-qr-box {
+            border: 2px dashed var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            padding: 1.4rem;
+            text-align: center;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+        .pg-qr-box:hover { border-color: var(--pg-green); }
+        .pg-qr-box p { font-size: .78rem; color: var(--pg-text-light); margin-top: .5rem; font-family: 'Inter', sans-serif; }
+
+        /* ── CARD PREVIEW ── */
+        .pg-card-prev {
+            background: linear-gradient(135deg, #1a3622 0%, #2c5a38 50%, #3d7a4f 100%);
+            border-radius: 14px;
+            padding: 1.4rem;
+            color: white;
+            margin-bottom: 1.2rem;
+            position: relative;
+            min-height: 158px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(26,54,34,.4);
+        }
+        .dark .pg-card-prev {
+            background: linear-gradient(135deg, #12151c 0%, #1a1d24 50%, #252a35 100%);
+            box-shadow: 0 8px 24px rgba(0,0,0,.6);
+        }
+        .pg-card-prev::before {
+            content: '';
+            position: absolute; top: -40px; right: -40px;
+            width: 180px; height: 180px; border-radius: 50%;
+            background: rgba(255,255,255,.06);
+        }
+        .pg-card-logo { font-family: 'Playfair Display', serif; font-size: .85rem; opacity: .7; letter-spacing: 2px; }
+        .pg-card-chip {
+            position: absolute; top: 1.1rem; right: 1.4rem;
+            width: 34px; height: 26px;
+            background: #c5a059; border-radius: 5px; opacity: .85;
+        }
+        .pg-card-num {
+            font-size: 1.2rem; letter-spacing: 4px;
+            margin: 1rem 0 .5rem; font-weight: 300;
+        }
+        .pg-card-foot { display: flex; justify-content: space-between; align-items: flex-end; }
+        .pg-card-lbl { font-size: .6rem; opacity: .55; text-transform: uppercase; letter-spacing: 1px; }
+        .pg-card-val { font-size: .88rem; font-weight: 700; }
+
+        /* ── NET BANKING ── */
+        .pg-bank-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 8px; margin-bottom: 1.2rem;
+        }
+        .pg-bank-card {
+            border: 1.5px solid var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: var(--pg-white);
+        }
+        .pg-bank-card:hover, .pg-bank-card.pg-sel {
+            border-color: var(--pg-green);
+            background: var(--pg-green-light);
+        }
+        .pg-bank-abbr { font-size: .95rem; font-weight: 700; color: var(--pg-text-dark); font-family: 'Inter', sans-serif; }
+        .pg-bank-name { font-size: .67rem; color: var(--pg-text-light); margin-top: 2px; font-family: 'Inter', sans-serif; }
+
+        /* ── WALLETS ── */
+        .pg-wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px; margin-bottom: 1.2rem;
+        }
+        .pg-wallet-card {
+            border: 1.5px solid var(--pg-border);
+            border-radius: var(--pg-radius-sm);
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: var(--pg-white);
+        }
+        .pg-wallet-card:hover, .pg-wallet-card.pg-sel {
+            border-color: var(--pg-green);
+            background: var(--pg-green-light);
+        }
+        .pg-wallet-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+        .pg-wallet-name { font-size: .72rem; font-weight: 700; color: var(--pg-text-mid); font-family: 'Inter', sans-serif; }
+
+        /* ── COD ── */
+        .pg-cod-box {
+            background: var(--pg-cream);
+            border-radius: var(--pg-radius-sm);
+            padding: 1.2rem 1.4rem;
+            border: 1.5px solid var(--pg-border);
+        }
+        .pg-cod-icon { font-size: 1.8rem; margin-bottom: .4rem; }
+        .pg-cod-box h4 { font-size: .95rem; font-weight: 700; color: var(--pg-text-dark); margin-bottom: .2rem; font-family: 'Inter', sans-serif; }
+        .pg-cod-box p { font-size: .82rem; color: var(--pg-text-light); line-height: 1.55; font-family: 'Inter', sans-serif; }
+        .pg-cod-note {
+            margin-top: .9rem; padding: .65rem .9rem;
+            background: var(--pg-gold-light, #f5edd9);
+            border-radius: 8px; font-size: .78rem; color: #7A5C00;
+            font-weight: 700; border-left: 3px solid var(--pg-gold);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── COUPON ── */
+        .pg-coupon-row { display: flex; gap: 8px; }
+        .pg-coupon-row .pg-input { flex: 1; text-transform: uppercase; }
+        .pg-apply-btn {
+            padding: 10px 18px;
+            background: var(--pg-green);
+            color: #fff; border: none;
+            border-radius: var(--pg-radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; font-size: .85rem;
+            cursor: pointer; white-space: nowrap; transition: all .2s;
+        }
+        .pg-apply-btn:hover { background: var(--pg-green-hover); }
+        .pg-coupon-msg {
+            margin-top: .55rem; font-size: .78rem; font-weight: 600;
+            display: none; font-family: 'Inter', sans-serif;
+        }
+        .pg-coupon-msg.pg-ok { display: block; color: #2e7d32; }
+        .pg-coupon-msg.pg-err { display: block; color: #E53935; }
+
+        /* ── SECURITY ── */
+        .pg-security {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            padding: .9rem 1.4rem;
+            background: var(--pg-cream);
+            border-top: 1px solid var(--pg-border);
+            border-bottom: 1px solid var(--pg-border);
+            margin: 1.4rem -2rem;
+            justify-content: center;
+        }
+        @media (max-width: 600px) { .pg-security { margin: 1.2rem -1.25rem; } }
+        .pg-sec-badge {
+            display: flex; align-items: center; gap: 5px;
+            font-size: .7rem; color: var(--pg-text-light);
+            font-weight: 600; font-family: 'Inter', sans-serif;
+        }
+
+        /* ── NAV BUTTONS ── */
+        .pg-nav {
+            display: flex; justify-content: space-between; gap: 10px;
+            margin-top: 1.4rem; padding-top: 1.2rem;
+            border-top: 1px solid var(--pg-border);
+        }
+        .pg-btn-back {
+            padding: 12px 22px;
+            background: transparent;
+            border: 1.5px solid var(--pg-border);
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem; font-weight: 600;
+            cursor: pointer; color: var(--pg-text-mid);
+            transition: all .2s;
+        }
+        .pg-btn-back:hover { border-color: var(--pg-border-hover); }
+        .pg-btn-next {
+            padding: 12px 28px;
+            background: var(--pg-green); color: #fff;
+            border: none; border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem; font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(26,54,34,.25);
+            flex: 1; transition: all .2s;
+        }
+        .pg-btn-next:hover { background: var(--pg-green-hover); transform: translateY(-1px); }
+        .pg-btn-next:active { transform: translateY(0); }
+        .dark .pg-btn-next { box-shadow: 0 4px 14px rgba(197,160,89,.25); }
+
+        /* ── SIDEBAR ── */
+        .pg-sidebar {
+            background: var(--pg-cream);
+            border-left: 1px solid var(--pg-border);
+            padding: 1.6rem 1.4rem;
+            display: flex; flex-direction: column; gap: 1.2rem;
+            overflow-y: auto; max-height: 70vh;
+        }
+        .pg-sidebar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem; color: var(--pg-text-dark); margin-bottom: .6rem;
+        }
+        .pg-cart-item {
+            display: flex; gap: 10px; align-items: flex-start;
+            padding-bottom: .9rem; border-bottom: 1px solid var(--pg-border); margin-bottom: .9rem;
+        }
+        .pg-cart-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .pg-cart-item img {
+            width: 52px; height: 52px; border-radius: 9px; object-fit: cover; flex-shrink: 0;
+        }
+        .pg-item-info { flex: 1; min-width: 0; }
+        .pg-item-name { font-size: .85rem; font-weight: 700; color: var(--pg-text-dark); font-family: 'Inter', sans-serif; }
+        .pg-item-cat { font-size: .7rem; color: var(--pg-text-light); margin-top: 1px; }
+        .pg-item-qty { font-size: .72rem; color: var(--pg-text-light); margin-top: 3px; }
+        .pg-item-price { font-size: .9rem; font-weight: 700; color: var(--pg-green); flex-shrink: 0; font-family: 'Inter', sans-serif; }
+
+        .pg-price-rows { display: flex; flex-direction: column; gap: 7px; }
+        .pg-price-row { display: flex; justify-content: space-between; font-size: .84rem; color: var(--pg-text-mid); font-family: 'Inter', sans-serif; }
+        .pg-price-row.pg-discount { color: #2e7d32; font-weight: 700; }
+        .pg-price-row.pg-total {
+            font-size: 1.05rem; font-weight: 700; color: var(--pg-text-dark);
+            border-top: 2px solid var(--pg-green-light);
+            padding-top: 9px; margin-top: 3px;
+        }
+
+        /* ── SUCCESS SCREEN ── */
+        #pg-success {
+            display: none;
+            padding: 2.8rem 2rem;
+            text-align: center;
+            min-height: 400px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #pg-success.pg-show { display: flex; }
+        .pg-tick {
+            width: 76px; height: 76px; border-radius: 50%;
+            background: #e8f5e9;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem;
+            animation: pgPopIn .45s cubic-bezier(.175,.885,.32,1.275);
+        }
+        .dark .pg-tick { background: rgba(26,54,34,.3); }
+        .pg-tick i { font-size: 2.2rem; color: #2e7d32; }
+        .pg-success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem; color: var(--pg-text-dark); margin-bottom: .4rem;
+        }
+        .pg-success-sub { font-size: .9rem; color: var(--pg-text-light); margin-bottom: 1.4rem; font-family: 'Inter', sans-serif; }
+        .pg-order-badge {
+            display: inline-block;
+            background: var(--pg-green-light);
+            color: var(--pg-green);
+            font-weight: 700; font-size: .85rem;
+            padding: 7px 18px; border-radius: 50px;
+            margin-bottom: 1.4rem; letter-spacing: 1px;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid var(--pg-green);
+        }
+        .pg-success-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 9px; width: 100%; max-width: 460px;
+            margin: 0 auto 1.4rem;
+        }
+        @media (max-width: 480px) { .pg-success-grid { grid-template-columns: 1fr; } }
+        .pg-scard {
+            background: var(--pg-cream);
+            border-radius: 9px; padding: 12px;
+            text-align: left;
+        }
+        .pg-scard .pg-slabel { font-size: .68rem; text-transform: uppercase; letter-spacing: .4px; color: var(--pg-text-light); font-weight: 600; font-family: 'Inter', sans-serif; }
+        .pg-scard .pg-sval { font-size: .9rem; font-weight: 700; color: var(--pg-text-dark); margin-top: 2px; font-family: 'Inter', sans-serif; }
+
+        .pg-success-items {
+            background: var(--pg-cream); border-radius: 9px;
+            padding: .9rem 1.1rem; width: 100%; max-width: 460px;
+            margin: 0 auto 1.4rem; text-align: left;
+        }
+        .pg-success-items h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .4px; color: var(--pg-text-light); font-weight: 600; margin-bottom: .65rem; font-family: 'Inter', sans-serif; }
+        .pg-si { display: flex; justify-content: space-between; padding: 5px 0; font-size: .84rem; border-bottom: 1px solid var(--pg-border); color: var(--pg-text-mid); font-family: 'Inter', sans-serif; }
+        .pg-si:last-child { border-bottom: none; }
+        .pg-si-price { font-weight: 700; color: var(--pg-green); }
+
+        .pg-eta {
+            background: var(--pg-gold-light, #f5edd9);
+            color: #7A5C00; border-radius: 9px;
+            padding: .7rem 1.1rem; font-size: .84rem; font-weight: 600;
+            width: 100%; max-width: 460px;
+            margin: 0 auto 1.4rem;
+            display: flex; align-items: center; gap: 7px;
+            font-family: 'Inter', sans-serif;
+        }
+        .pg-success-btns { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; }
+        .pg-sbtn {
+            padding: 11px 20px; border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: .86rem; font-weight: 700;
+            cursor: pointer; transition: all .2s;
+        }
+        .pg-sbtn-primary { background: var(--pg-green); color: #fff; border: none; box-shadow: 0 4px 12px rgba(26,54,34,.25); }
+        .pg-sbtn-primary:hover { background: var(--pg-green-hover); }
+        .pg-sbtn-outline { background: transparent; color: var(--pg-text-dark); border: 1.5px solid var(--pg-border); }
+        .pg-sbtn-outline:hover { border-color: var(--pg-green); color: var(--pg-green); }
+
+        /* ── INVOICE ── */
+        #pg-invoice {
+            display: none;
+            padding: 2rem;
+            background: var(--pg-white);
+        }
+        #pg-invoice.pg-show { display: block; }
+        .pg-inv-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 1.8rem; padding-bottom: 1.4rem;
+            border-bottom: 2px solid var(--pg-green);
+        }
+        .pg-inv-logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--pg-text-dark); }
+        .pg-inv-logo span { color: var(--pg-green); }
+        .pg-inv-meta { text-align: right; font-size: .78rem; color: var(--pg-text-light); line-height: 1.7; font-family: 'Inter', sans-serif; }
+        .pg-inv-stitle { font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--pg-text-light); font-weight: 600; margin-bottom: .45rem; margin-top: 1.2rem; font-family: 'Inter', sans-serif; }
+        .pg-inv-table { width: 100%; border-collapse: collapse; margin: .9rem 0; }
+        .pg-inv-table th { background: var(--pg-green); color: #fff; padding: 9px 12px; font-size: .76rem; text-align: left; font-family: 'Inter', sans-serif; font-weight: 600; }
+        .dark .pg-inv-table th { background: #252a35; }
+        .pg-inv-table td { padding: 9px 12px; font-size: .82rem; border-bottom: 1px solid var(--pg-border); color: var(--pg-text-mid); font-family: 'Inter', sans-serif; }
+        .pg-inv-totals { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; margin-top: .9rem; }
+        .pg-inv-row { display: flex; gap: 1.8rem; font-size: .84rem; color: var(--pg-text-mid); font-family: 'Inter', sans-serif; }
+        .pg-inv-row.pg-disc { color: #2e7d32; font-weight: 700; }
+        .pg-inv-row.pg-grand { font-weight: 700; font-size: 1.05rem; color: var(--pg-text-dark); border-top: 2px solid var(--pg-green-light); padding-top: 7px; margin-top: 3px; }
+        .pg-inv-row .pg-v { min-width: 90px; text-align: right; }
+        .pg-inv-foot { margin-top: 1.8rem; padding-top: .9rem; border-top: 1px solid var(--pg-border); font-size: .74rem; color: var(--pg-text-light); text-align: center; font-family: 'Inter', sans-serif; }
+        .pg-inv-paid { display: inline-flex; align-items: center; gap: 5px; background: var(--pg-green-light); color: var(--pg-green); padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; font-family: 'Inter', sans-serif; border: 1px solid var(--pg-green); }
+        .pg-dl-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 11px 22px; background: var(--pg-green); color: #fff; border: none;
+            border-radius: 50px; font-family: 'Inter', sans-serif;
+            font-weight: 700; font-size: .86rem; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26,54,34,.25); transition: all .2s;
+        }
+        .pg-dl-btn:hover { background: var(--pg-green-hover); }
+
+        /* ── PROCESSING SPINNER ── */
+        #pg-processing {
+            display: none;
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,.9);
+            z-index: 20;
+            flex-direction: column;
+            align-items: center; justify-content: center; gap: 1rem;
+            border-radius: var(--pg-radius);
+        }
+        .dark #pg-processing { background: rgba(26,29,36,.92); }
+        #pg-processing.pg-show { display: flex; }
+        .pg-spinner {
+            width: 50px; height: 50px;
+            border: 4px solid rgba(26,54,34,.15);
+            border-top-color: var(--pg-green);
+            border-radius: 50%;
+            animation: pgSpin 1s linear infinite;
+        }
+        .dark .pg-spinner { border-color: rgba(197,160,89,.15); border-top-color: var(--pg-gold); }
+        .pg-proc-text { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--pg-text-dark); }
+        .pg-proc-sub { font-size: .8rem; color: var(--pg-text-light); font-family: 'Inter', sans-serif; }
+
+        /* ── PAGE VISIBILITY ── */
+        .pg-page { display: none; }
+        .pg-page.pg-active { display: block; }
+        .pg-method-content { display: none; }
+        .pg-method-content.pg-active { display: block; }
+    </style>
+
 </head>
 
 <body
@@ -1017,151 +1667,477 @@
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center px-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
 
-        <div class="relative bg-white dark:bg-aroma-dark-base rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar shadow-2xl p-8"
-            id="checkout-content">
-            <button onclick="closeCheckout()"
-                class="absolute top-4 right-4 text-gray-400 hover:text-black dark:hover:text-white">
-                <i class="ph ph-x text-xl"></i>
-            </button>
+    <!-- ═══════════════════════════════════════════════════════
+         PAYMENT GATEWAY OVERLAY — Project B integrated into Project A
+         Replaces the simple checkout modal
+    ═══════════════════════════════════════════════════════ -->
+    <div id="pg-overlay">
+      <div class="pg-modal">
 
-            <!-- Progress -->
-            <div class="flex justify-between mb-8 relative">
-                <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 z-0">
-                </div>
-                <div class="absolute top-1/2 left-0 h-0.5 bg-aroma-brown -translate-y-1/2 z-0 transition-all duration-300"
-                    id="checkout-progress-bar" style="width: 0%;"></div>
-
-                <div class="relative z-10 flex flex-col items-center step-dot" data-step="1">
-                    <div
-                        class="w-8 h-8 rounded-full bg-aroma-brown text-white flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base">
-                        1</div>
-                    <span class="text-xs mt-1 dark:text-gray-300">Details</span>
-                </div>
-                <div class="relative z-10 flex flex-col items-center step-dot" data-step="2">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base transition-colors"
-                        id="dot-2">2</div>
-                    <span class="text-xs mt-1 dark:text-gray-300">Payment</span>
-                </div>
-                <div class="relative z-10 flex flex-col items-center step-dot" data-step="3">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 flex items-center justify-center text-sm font-bold border-4 border-white dark:border-aroma-dark-base transition-colors"
-                        id="dot-3">3</div>
-                    <span class="text-xs mt-1 dark:text-gray-300">Done</span>
-                </div>
-            </div>
-
-            <!-- Step 1: Details -->
-            <div id="checkout-step-1" class="checkout-step block">
-                <h2 class="text-2xl font-serif mb-6 dark:text-white">Pickup Details</h2>
-                <form id="details-form" onsubmit="nextCheckoutStep(event, 2)" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">First Name</label>
-                            <input type="text" required
-                                class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Last Name</label>
-                            <input type="text" required
-                                class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">Email</label>
-                        <input type="email" required value="customer@example.com"
-                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:border-aroma-brown">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1">Pickup Store</label>
-                        <select
-                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-aroma-dark-card dark:text-white focus:outline-none focus:border-aroma-brown">
-                            <option>Bandra West</option>
-                            <option>Andheri Lokhandwala</option>
-                            <option>Malad Inorbit</option>
-                        </select>
-                    </div>
-                    <button type="submit"
-                        class="w-full py-3 mt-6 bg-aroma-green text-white rounded font-bold hover:bg-aroma-brown transition-colors">Continue
-                        to Payment</button>
-                </form>
-            </div>
-
-            <!-- Step 2: Payment (Demo) -->
-            <div id="checkout-step-2" class="checkout-step hidden">
-                <h2 class="text-2xl font-serif mb-6 dark:text-white">Payment Method</h2>
-                <div class="space-y-3 mb-6">
-                    <label
-                        class="flex items-center justify-between p-4 border border-aroma-brown rounded cursor-pointer bg-aroma-brown/5">
-                        <div class="flex items-center gap-3 dark:text-white">
-                            <input type="radio" name="payment" checked class="text-aroma-brown focus:ring-aroma-brown">
-                            <span>Credit / Debit Card</span>
-                        </div>
-                        <i class="ph ph-credit-card text-2xl text-gray-400"></i>
-                    </label>
-                    <label
-                        class="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:border-gray-300">
-                        <div class="flex items-center gap-3 dark:text-white">
-                            <input type="radio" name="payment" class="text-aroma-brown focus:ring-aroma-brown">
-                            <span>UPI (Google Pay, PhonePe)</span>
-                        </div>
-                        <i class="ph ph-qr-code text-2xl text-gray-400"></i>
-                    </label>
-                </div>
-
-                <!-- Fake Card Input -->
-                <div
-                    class="space-y-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-aroma-dark-card mb-6">
-                    <div class="text-xs text-red-500 mb-2"><i class="ph ph-warning-circle"></i> This is a demo. Do not
-                        enter real card details.</div>
-                    <input type="text" placeholder="Card Number (Demo: 4242 4242 4242 4242)"
-                        class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" placeholder="MM/YY"
-                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
-                        <input type="text" placeholder="CVC"
-                            class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-aroma-dark-base dark:text-white focus:outline-none text-sm">
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
-                    <span class="dark:text-white">Total to Pay:</span>
-                    <strong class="text-xl dark:text-white" id="checkout-final-total">$0.00</strong>
-                </div>
-
-                <div class="flex gap-4">
-                    <button onclick="setCheckoutStep(1)"
-                        class="w-1/3 py-3 border border-gray-300 dark:border-gray-700 rounded dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Back</button>
-                    <button onclick="processPayment()" id="pay-btn"
-                        class="w-2/3 py-3 bg-aroma-green text-white rounded font-bold hover:bg-aroma-brown transition-colors flex justify-center items-center gap-2">
-                        <span>Pay Now</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 3: Success -->
-            <div id="checkout-step-3" class="checkout-step hidden text-center py-8">
-                <div
-                    class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500 text-4xl">
-                    <i class="ph-bold ph-check"></i>
-                </div>
-                <h2 class="text-3xl font-serif mb-2 dark:text-white">Order Confirmed!</h2>
-                <p class="text-gray-500 dark:text-gray-400 mb-6">Your order #<span id="order-id"
-                        class="font-bold"></span> has been received and is being prepared.</p>
-                <div
-                    class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-8 text-sm dark:text-gray-300 text-left max-w-sm mx-auto">
-                    <p class="mb-1"><i class="ph ph-clock"></i> Estimated pickup time: <strong>10-15 mins</strong></p>
-                    <p><i class="ph ph-map-pin"></i> You will receive an email receipt shortly.</p>
-                </div>
-                <button onclick="closeCheckoutAndReset()"
-                    class="px-8 py-3 bg-aroma-brown text-white rounded-full font-medium hover:bg-aroma-green transition-colors">
-                    Back to Menu
-                </button>
-            </div>
+        <!-- PROCESSING SPINNER -->
+        <div id="pg-processing">
+          <div class="pg-spinner"></div>
+          <div class="pg-proc-text">Processing Payment…</div>
+          <div class="pg-proc-sub">Please do not close this window</div>
         </div>
-    </div>
+
+        <!-- HEADER -->
+        <div class="pg-header">
+          <div>
+            <div class="pg-header-logo">
+              <i class="ph-fill ph-coffee"></i> AROMA HOME
+            </div>
+            <div class="pg-header-sub">Secure Checkout</div>
+          </div>
+          <button class="pg-close-btn" onclick="pgClose()" aria-label="Close">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+
+        <!-- PROGRESS STEPS -->
+        <div class="pg-progress" id="pg-progress-bar">
+          <div class="pg-step pg-active" id="pg-step1">
+            <span class="pg-step-num">1</span> Details
+          </div>
+          <div class="pg-step-line" id="pg-line1"></div>
+          <div class="pg-step" id="pg-step2">
+            <span class="pg-step-num">2</span> Delivery
+          </div>
+          <div class="pg-step-line" id="pg-line2"></div>
+          <div class="pg-step" id="pg-step3">
+            <span class="pg-step-num">3</span> Payment
+          </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div id="pg-success">
+          <div class="pg-tick">
+            <i class="ph-bold ph-check"></i>
+          </div>
+          <div class="pg-success-title">Order Confirmed!</div>
+          <div class="pg-success-sub">Your handcrafted coffee is on its way ☕</div>
+          <div class="pg-order-badge" id="pg-success-order-id">ORDER #AH-XXXXXX</div>
+
+          <div class="pg-success-grid">
+            <div class="pg-scard">
+              <div class="pg-slabel">Payment Status</div>
+              <div class="pg-sval" style="color:#2e7d32">✓ Paid</div>
+            </div>
+            <div class="pg-scard">
+              <div class="pg-slabel">Customer</div>
+              <div class="pg-sval" id="pg-success-name">—</div>
+            </div>
+            <div class="pg-scard">
+              <div class="pg-slabel">Total Paid</div>
+              <div class="pg-sval" id="pg-success-total">—</div>
+            </div>
+            <div class="pg-scard">
+              <div class="pg-slabel">Payment Method</div>
+              <div class="pg-sval" id="pg-success-method">—</div>
+            </div>
+          </div>
+
+          <div class="pg-success-items">
+            <h4>Ordered Items</h4>
+            <div id="pg-success-items-list"></div>
+          </div>
+
+          <div class="pg-eta">
+            <i class="ph ph-clock"></i>
+            Estimated Delivery:
+            <span style="margin-left:auto">45 – 60 mins</span>
+          </div>
+
+          <div class="pg-success-btns">
+            <button class="pg-sbtn pg-sbtn-primary" onclick="pgCloseAndReset()">
+              <i class="ph-bold ph-storefront"></i> Continue Shopping
+            </button>
+            <button class="pg-sbtn pg-sbtn-outline" onclick="pgShowInvoice()">
+              <i class="ph ph-file-text"></i> Download Invoice
+            </button>
+            <button class="pg-sbtn pg-sbtn-outline">
+              <i class="ph ph-map-pin"></i> Track Order
+            </button>
+          </div>
+        </div>
+
+        <!-- INVOICE VIEW -->
+        <div id="pg-invoice">
+          <div class="pg-inv-top">
+            <div>
+              <div class="pg-inv-logo">AROMA <span>HOME</span></div>
+              <div style="font-size:.78rem;color:var(--pg-text-light);margin-top:4px;font-family:'Inter',sans-serif">
+                123 Coffee Lane, Bandra West<br>Mumbai MH 400050 · hello@aromahome.com
+              </div>
+            </div>
+            <div class="pg-inv-meta">
+              <div style="font-size:1.05rem;font-weight:700;color:var(--pg-text-dark);font-family:'Playfair Display',serif">TAX INVOICE</div>
+              <div id="pg-inv-order-id"></div>
+              <div id="pg-inv-date"></div>
+              <div style="margin-top:6px"><span class="pg-inv-paid">✓ Paid</span></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+            <div>
+              <div class="pg-inv-stitle">Bill To</div>
+              <div id="pg-inv-customer" style="font-size:.84rem;line-height:1.75;color:var(--pg-text-mid);font-family:'Inter',sans-serif"></div>
+            </div>
+            <div>
+              <div class="pg-inv-stitle">Deliver To</div>
+              <div id="pg-inv-address" style="font-size:.84rem;line-height:1.75;color:var(--pg-text-mid);font-family:'Inter',sans-serif"></div>
+            </div>
+          </div>
+
+          <div class="pg-inv-stitle" style="margin-top:1.4rem">Order Items</div>
+          <table class="pg-inv-table">
+            <thead>
+              <tr><th>#</th><th>Item</th><th>Category</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>
+            </thead>
+            <tbody id="pg-inv-items"></tbody>
+          </table>
+
+          <div class="pg-inv-totals">
+            <div class="pg-inv-row"><span>Subtotal</span><span class="pg-v" id="pg-inv-subtotal"></span></div>
+            <div class="pg-inv-row"><span>Tax (5% GST)</span><span class="pg-v" id="pg-inv-tax"></span></div>
+            <div class="pg-inv-row"><span>Delivery Charges</span><span class="pg-v" id="pg-inv-delivery"></span></div>
+            <div class="pg-inv-row pg-disc" id="pg-inv-disc-row" style="display:none">
+              <span>Discount</span><span class="pg-v" id="pg-inv-discount"></span>
+            </div>
+            <div class="pg-inv-row pg-grand"><span>Grand Total</span><span class="pg-v" id="pg-inv-grand"></span></div>
+          </div>
+
+          <div class="pg-inv-foot">
+            Thank you for choosing Aroma Home · Computer generated invoice · GSTIN: 27AARCA7841E1ZL
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
+            <button class="pg-dl-btn">
+              <i class="ph ph-download-simple"></i> Download PDF Invoice
+            </button>
+            <button class="pg-sbtn pg-sbtn-outline" onclick="pgCloseAndReset()">Back to Shop</button>
+          </div>
+        </div>
+
+        <!-- MAIN BODY GRID -->
+        <div class="pg-body" id="pg-main-body">
+
+          <!-- FORM AREA -->
+          <div class="pg-form-area">
+
+            <!-- PAGE 1: CUSTOMER INFO -->
+            <div class="pg-page pg-active" id="pg-page1">
+              <div class="pg-section-title">
+                <i class="ph ph-user-circle"></i> Customer Information
+              </div>
+              <div class="pg-grid">
+                <div class="pg-field">
+                  <label class="pg-label">First Name</label>
+                  <input type="text" id="pg-first" class="pg-input" placeholder="Priya">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Last Name</label>
+                  <input type="text" id="pg-last" class="pg-input" placeholder="Sharma">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Email Address</label>
+                  <input type="email" id="pg-email" class="pg-input" placeholder="priya@example.com">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Mobile Number</label>
+                  <input type="tel" id="pg-mobile" class="pg-input" placeholder="+91 98765 43210">
+                </div>
+              </div>
+
+              <!-- COUPON -->
+              <div class="pg-section-title" style="margin-top:1.2rem">
+                <i class="ph ph-tag"></i> Coupon / Promo Code
+              </div>
+              <div class="pg-coupon-row" style="margin-bottom:.5rem">
+                <input type="text" id="pg-coupon" class="pg-input" placeholder="COFFEE10 · AROMA20 · WELCOME15">
+                <button class="pg-apply-btn" onclick="pgApplyCoupon()">Apply</button>
+              </div>
+              <div class="pg-coupon-msg" id="pg-coupon-msg"></div>
+
+              <div class="pg-nav">
+                <button class="pg-btn-back" onclick="pgClose()">Cancel</button>
+                <button class="pg-btn-next" onclick="pgGoPage(2)">
+                  Continue to Delivery <i class="ph-bold ph-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- PAGE 2: DELIVERY INFO -->
+            <div class="pg-page" id="pg-page2">
+              <div class="pg-section-title">
+                <i class="ph ph-house-line"></i> Delivery Information
+              </div>
+              <div class="pg-grid pg-col1">
+                <div class="pg-field">
+                  <label class="pg-label">House / Flat Number</label>
+                  <input type="text" id="pg-flat" class="pg-input" placeholder="Apt 4B, Sea View Heights">
+                </div>
+              </div>
+              <div class="pg-grid">
+                <div class="pg-field pg-span2">
+                  <label class="pg-label">Street Address</label>
+                  <input type="text" id="pg-street" class="pg-input" placeholder="14, Linking Road">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Area / Locality</label>
+                  <input type="text" id="pg-area" class="pg-input" placeholder="Bandra West">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">City</label>
+                  <input type="text" id="pg-city" class="pg-input" placeholder="Mumbai">
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">State</label>
+                  <select id="pg-state" class="pg-select">
+                    <option value="">Select State</option>
+                    <option>Maharashtra</option><option>Delhi</option><option>Karnataka</option>
+                    <option>Tamil Nadu</option><option>Gujarat</option><option>Rajasthan</option>
+                    <option>West Bengal</option><option>Uttar Pradesh</option><option>Telangana</option>
+                    <option>Kerala</option>
+                  </select>
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Pincode</label>
+                  <input type="text" id="pg-pin" class="pg-input" placeholder="400050" maxlength="6">
+                </div>
+              </div>
+              <div class="pg-nav">
+                <button class="pg-btn-back" onclick="pgGoPage(1)">
+                  <i class="ph-bold ph-arrow-left"></i> Back
+                </button>
+                <button class="pg-btn-next" onclick="pgGoPage(3)">
+                  Continue to Payment <i class="ph-bold ph-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- PAGE 3: PAYMENT -->
+            <div class="pg-page" id="pg-page3">
+              <div class="pg-section-title">
+                <i class="ph ph-credit-card"></i> Payment Method
+              </div>
+
+              <!-- PAYMENT TABS -->
+              <div class="pg-pay-tabs">
+                <button class="pg-pay-tab pg-active" onclick="pgSwitchMethod('pg-upi',this)">
+                  <span class="pg-tab-icon">📱</span>UPI
+                </button>
+                <button class="pg-pay-tab" onclick="pgSwitchMethod('pg-card',this)">
+                  <span class="pg-tab-icon">💳</span>Card
+                </button>
+                <button class="pg-pay-tab" onclick="pgSwitchMethod('pg-netbank',this)">
+                  <span class="pg-tab-icon">🏦</span>Net Banking
+                </button>
+                <button class="pg-pay-tab" onclick="pgSwitchMethod('pg-wallet',this)">
+                  <span class="pg-tab-icon">👛</span>Wallets
+                </button>
+                <button class="pg-pay-tab" onclick="pgSwitchMethod('pg-cod',this)">
+                  <span class="pg-tab-icon">💵</span>COD
+                </button>
+              </div>
+
+              <!-- UPI -->
+              <div class="pg-method-content pg-active" id="pg-upi">
+                <div class="pg-upi-grid">
+                  <div class="pg-upi-card pg-sel" onclick="pgSelUPI(this)">
+                    <span class="pg-upi-logo">🟢</span>
+                    <div class="pg-upi-name">Google Pay</div>
+                  </div>
+                  <div class="pg-upi-card" onclick="pgSelUPI(this)">
+                    <span class="pg-upi-logo">🟣</span>
+                    <div class="pg-upi-name">PhonePe</div>
+                  </div>
+                  <div class="pg-upi-card" onclick="pgSelUPI(this)">
+                    <span class="pg-upi-logo">🔵</span>
+                    <div class="pg-upi-name">Paytm</div>
+                  </div>
+                  <div class="pg-upi-card" onclick="pgSelUPI(this)">
+                    <span class="pg-upi-logo">🇮🇳</span>
+                    <div class="pg-upi-name">BHIM UPI</div>
+                  </div>
+                </div>
+                <div class="pg-field" style="margin-bottom:10px">
+                  <label class="pg-label">UPI ID</label>
+                  <div class="pg-upi-row">
+                    <input type="text" id="pg-upi-id" class="pg-input" placeholder="yourname@okaxis">
+                    <button class="pg-verify-btn" onclick="pgVerifyUPI()">Verify</button>
+                  </div>
+                  <div class="pg-verified" id="pg-verified">
+                    <i class="ph-bold ph-check-circle"></i> UPI ID Verified
+                  </div>
+                </div>
+                <div class="pg-qr-box" id="pg-qr-box" onclick="pgRevealQR(this)">
+                  <i class="ph ph-qr-code" style="font-size:2.5rem;color:var(--pg-text-light)"></i>
+                  <p>Click to reveal QR Code</p>
+                </div>
+              </div>
+
+              <!-- CARD -->
+              <div class="pg-method-content" id="pg-card">
+                <div class="pg-card-prev">
+                  <div class="pg-card-logo">AROMA HOME</div>
+                  <div class="pg-card-chip"></div>
+                  <div class="pg-card-num" id="pg-card-num-disp">•••• •••• •••• ••••</div>
+                  <div class="pg-card-foot">
+                    <div>
+                      <div class="pg-card-lbl">Card Holder</div>
+                      <div class="pg-card-val" id="pg-card-name-disp">YOUR NAME</div>
+                    </div>
+                    <div>
+                      <div class="pg-card-lbl">Expires</div>
+                      <div class="pg-card-val" id="pg-card-exp-disp">MM/YY</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pg-grid pg-col1">
+                  <div class="pg-field">
+                    <label class="pg-label">Card Number</label>
+                    <input type="text" id="pg-card-num" class="pg-input" placeholder="1234 5678 9012 3456" maxlength="19" oninput="pgFmtCard(this)">
+                  </div>
+                </div>
+                <div class="pg-grid pg-col1">
+                  <div class="pg-field">
+                    <label class="pg-label">Cardholder Name</label>
+                    <input type="text" id="pg-card-name" class="pg-input" placeholder="PRIYA SHARMA"
+                      oninput="document.getElementById('pg-card-name-disp').textContent=this.value.toUpperCase()||'YOUR NAME'">
+                  </div>
+                </div>
+                <div class="pg-grid">
+                  <div class="pg-field">
+                    <label class="pg-label">Expiry Date</label>
+                    <input type="text" id="pg-card-exp" class="pg-input" placeholder="MM/YY" maxlength="5" oninput="pgFmtExp(this)">
+                  </div>
+                  <div class="pg-field">
+                    <label class="pg-label">CVV</label>
+                    <input type="password" id="pg-card-cvv" class="pg-input" placeholder="•••" maxlength="3">
+                  </div>
+                </div>
+                <p style="font-size:.72rem;color:var(--pg-text-light);margin-top:.4rem;font-family:'Inter',sans-serif">
+                  <i class="ph ph-lock"></i> Demo only — do not enter real card details
+                </p>
+              </div>
+
+              <!-- NET BANKING -->
+              <div class="pg-method-content" id="pg-netbank">
+                <div class="pg-bank-grid">
+                  <div class="pg-bank-card pg-sel" onclick="pgSelBank(this)">
+                    <div class="pg-bank-abbr">SBI</div>
+                    <div class="pg-bank-name">State Bank of India</div>
+                  </div>
+                  <div class="pg-bank-card" onclick="pgSelBank(this)">
+                    <div class="pg-bank-abbr">HDFC</div>
+                    <div class="pg-bank-name">HDFC Bank</div>
+                  </div>
+                  <div class="pg-bank-card" onclick="pgSelBank(this)">
+                    <div class="pg-bank-abbr">ICICI</div>
+                    <div class="pg-bank-name">ICICI Bank</div>
+                  </div>
+                  <div class="pg-bank-card" onclick="pgSelBank(this)">
+                    <div class="pg-bank-abbr">AXIS</div>
+                    <div class="pg-bank-name">Axis Bank</div>
+                  </div>
+                  <div class="pg-bank-card" onclick="pgSelBank(this)">
+                    <div class="pg-bank-abbr">KMB</div>
+                    <div class="pg-bank-name">Kotak Mahindra</div>
+                  </div>
+                </div>
+                <div class="pg-field">
+                  <label class="pg-label">Other Banks</label>
+                  <select class="pg-select">
+                    <option value="">Select another bank…</option>
+                    <option>Bank of Baroda</option>
+                    <option>Punjab National Bank</option>
+                    <option>Canara Bank</option>
+                    <option>Yes Bank</option>
+                    <option>IndusInd Bank</option>
+                    <option>IDFC First Bank</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- WALLETS -->
+              <div class="pg-method-content" id="pg-wallet">
+                <div class="pg-wallet-grid">
+                  <div class="pg-wallet-card pg-sel" onclick="pgSelWallet(this)">
+                    <span class="pg-wallet-icon">🟠</span>
+                    <div class="pg-wallet-name">Amazon Pay</div>
+                  </div>
+                  <div class="pg-wallet-card" onclick="pgSelWallet(this)">
+                    <span class="pg-wallet-icon">🔵</span>
+                    <div class="pg-wallet-name">Paytm Wallet</div>
+                  </div>
+                  <div class="pg-wallet-card" onclick="pgSelWallet(this)">
+                    <span class="pg-wallet-icon">🟣</span>
+                    <div class="pg-wallet-name">MobiKwik</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- COD -->
+              <div class="pg-method-content" id="pg-cod">
+                <div class="pg-cod-box">
+                  <div class="pg-cod-icon">💵</div>
+                  <h4>Cash on Delivery Available</h4>
+                  <p>Pay in cash when your order arrives at your doorstep. Our delivery partner will provide change as needed.</p>
+                  <div class="pg-cod-note">⚠️ Additional COD handling charge: $2.50 will be added to your order total.</div>
+                </div>
+              </div>
+
+              <!-- SECURITY STRIP -->
+              <div class="pg-security">
+                <div class="pg-sec-badge">
+                  <i class="ph-fill ph-shield-check" style="color:var(--pg-green)"></i> SSL Secured
+                </div>
+                <div class="pg-sec-badge">
+                  <i class="ph-fill ph-lock" style="color:var(--pg-green)"></i> PCI DSS Compliant
+                </div>
+                <div class="pg-sec-badge">
+                  <i class="ph-fill ph-lock-key" style="color:var(--pg-green)"></i> 256-bit Encryption
+                </div>
+                <div class="pg-sec-badge">
+                  <i class="ph-fill ph-check-circle" style="color:var(--pg-green)"></i> Secure Checkout
+                </div>
+              </div>
+
+              <div class="pg-nav">
+                <button class="pg-btn-back" onclick="pgGoPage(2)">
+                  <i class="ph-bold ph-arrow-left"></i> Back
+                </button>
+                <button class="pg-btn-next" onclick="pgProcessPayment()">
+                  Pay $<span id="pg-pay-btn-total">0.00</span>
+                  <i class="ph-bold ph-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div><!-- /pg-form-area -->
+
+          <!-- ORDER SIDEBAR -->
+          <div class="pg-sidebar">
+            <div>
+              <div class="pg-sidebar-title">Order Summary</div>
+              <div id="pg-sidebar-items"></div>
+            </div>
+            <div class="pg-price-rows">
+              <div class="pg-price-row"><span>Subtotal</span><span id="pg-pr-sub">$0.00</span></div>
+              <div class="pg-price-row"><span>Tax (5%)</span><span id="pg-pr-tax">$0.00</span></div>
+              <div class="pg-price-row"><span>Delivery</span><span id="pg-pr-del">$2.99</span></div>
+              <div class="pg-price-row pg-discount" id="pg-pr-disc-row" style="display:none">
+                <span>Discount</span><span id="pg-pr-disc">-$0.00</span>
+              </div>
+              <div class="pg-price-row pg-total"><span>Grand Total</span><span id="pg-pr-total">$0.00</span></div>
+            </div>
+          </div>
+
+        </div><!-- /pg-body -->
+      </div><!-- /pg-modal -->
+    </div><!-- /pg-overlay -->
 
 
     <script>
@@ -1534,7 +2510,7 @@
             document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)}`;
             document.getElementById('cart-tax').innerText = `$${tax.toFixed(2)}`;
             document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
-            document.getElementById('checkout-final-total').innerText = `$${total.toFixed(2)}`;
+            // checkout-final-total removed — pg-pay-btn-total is in payment gateway
         }
 
         function toggleCart() {
@@ -1694,83 +2670,20 @@
 
         // --- 6. Checkout Flow ---
 
-        function openCheckout() {
-            if (state.cart.length === 0) return;
-            toggleCart(); // Close cart
+        // openCheckout() is now handled by the Payment Gateway (pg* namespace)
+        // See pg* functions injected at bottom of script
 
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            setCheckoutStep(1);
-        }
+        // closeCheckout() delegated to pgClose() — see payment gateway section
 
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+        // nextCheckoutStep() removed — handled by pg* payment gateway
 
-        function nextCheckoutStep(e, step) {
-            e.preventDefault(); // Prevent form submission
-            setCheckoutStep(step);
-        }
+        // setCheckoutStep() removed — pg* payment gateway handles step progression
 
-        function setCheckoutStep(step) {
-            // Hide all
-            document.querySelectorAll('.checkout-step').forEach(el => el.classList.add('hidden'));
-            // Show target
-            document.getElementById(`checkout-step-${step}`).classList.remove('hidden');
+        // processPayment() delegated to pgProcessPayment() — see payment gateway
 
-            // Update Progress UI
-            const progressBar = document.getElementById('checkout-progress-bar');
-            if (step === 1) progressBar.style.width = '0%';
-            if (step === 2) progressBar.style.width = '50%';
-            if (step === 3) progressBar.style.width = '100%';
+                // closeCheckoutAndReset() delegated to pgCloseAndReset()
 
-            // Update Dots
-            document.querySelectorAll('.step-dot').forEach(dot => {
-                const s = parseInt(dot.dataset.step);
-                const inner = dot.firstElementChild;
-                if (s <= step) {
-                    inner.classList.remove('bg-gray-200', 'dark:bg-gray-800', 'text-gray-500');
-                    inner.classList.add('bg-aroma-brown', 'text-white');
-                } else {
-                    inner.classList.add('bg-gray-200', 'dark:bg-gray-800', 'text-gray-500');
-                    inner.classList.remove('bg-aroma-brown', 'text-white');
-                }
-            });
-        }
-
-        function processPayment() {
-            const btn = document.getElementById('pay-btn');
-            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Processing...';
-            btn.disabled = true;
-
-            // Simulate API call
-            setTimeout(() => {
-                const orderId = 'AH' + Math.floor(Math.random() * 90000 + 10000);
-                document.getElementById('order-id').innerText = orderId;
-
-                // Clear cart
-                state.cart = [];
-                saveCart();
-                updateCartUI();
-
-                // Add points
-                let currentPoints = parseInt(document.getElementById('demo-stars').innerText.replace(/\D/g, ''));
-                document.getElementById('demo-stars').innerHTML = `<i class="ph-fill ph-star text-2xl"></i> ${currentPoints + 25}`;
-
-                setCheckoutStep(3);
-                btn.innerHTML = 'Pay Now';
-                btn.disabled = false;
-            }, 1500);
-        }
-
-        function closeCheckoutAndReset() {
-            closeCheckout();
-            document.getElementById('details-form').reset();
-        }
-
-        // --- 7. Utilities & Animations ---
+                // --- 7. Utilities & Animations ---
 
         function showToast(msg) {
             const container = document.getElementById('toast-container');
@@ -1857,6 +2770,409 @@
             currentSlide = (currentSlide + 1) % 3;
             moveTestimonial(currentSlide);
         }, 5000);
+
+
+        // ═══════════════════════════════════════════════════════
+        // PAYMENT GATEWAY JAVASCRIPT — pg* namespace
+        // Wired to Project A's state.cart, saveCart(), updateCartUI()
+        // ═══════════════════════════════════════════════════════
+
+        var pg = {
+            discount: 0,
+            couponApplied: false,
+            currentPage: 1,
+            payMethod: 'pg-upi',
+            DELIVERY: 2.99,
+            COD_FEE: 2.50,
+            COUPONS: { 'COFFEE10': 0.10, 'AROMA20': 0.20, 'WELCOME15': 0.15 },
+            orderData: null
+        };
+
+        // ── OPEN / CLOSE ──────────────────────────────────────
+        function openCheckout() {
+            if (state.cart.length === 0) return;
+            toggleCart(); // close cart drawer first
+
+            // Reset state
+            pg.discount = 0;
+            pg.couponApplied = false;
+            pg.payMethod = 'pg-upi';
+
+            // Reset form fields
+            ['pg-first','pg-last','pg-email','pg-mobile',
+             'pg-flat','pg-street','pg-area','pg-city','pg-pin',
+             'pg-upi-id','pg-card-num','pg-card-name','pg-card-exp','pg-card-cvv'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            var stEl = document.getElementById('pg-state');
+            if (stEl) stEl.value = '';
+
+            // Reset coupon
+            document.getElementById('pg-coupon').value = '';
+            var msg = document.getElementById('pg-coupon-msg');
+            msg.className = 'pg-coupon-msg';
+            msg.textContent = '';
+
+            // Reset discount row
+            document.getElementById('pg-pr-disc-row').style.display = 'none';
+
+            // Reset card preview
+            document.getElementById('pg-card-num-disp').textContent = '•••• •••• •••• ••••';
+            document.getElementById('pg-card-name-disp').textContent = 'YOUR NAME';
+            document.getElementById('pg-card-exp-disp').textContent = 'MM/YY';
+
+            // Reset verified badge
+            document.getElementById('pg-verified').classList.remove('pg-show');
+
+            // Reset QR box
+            document.getElementById('pg-qr-box').innerHTML =
+                '<i class="ph ph-qr-code" style="font-size:2.5rem;color:var(--pg-text-light)"></i><p>Click to reveal QR Code</p>';
+
+            // Reset payment tabs - activate UPI
+            document.querySelectorAll('.pg-pay-tab').forEach(function(t) { t.classList.remove('pg-active'); });
+            document.querySelectorAll('.pg-pay-tab')[0].classList.add('pg-active');
+            document.querySelectorAll('.pg-method-content').forEach(function(c) { c.classList.remove('pg-active'); });
+            document.getElementById('pg-upi').classList.add('pg-active');
+
+            // Render cart & prices
+            pgRenderSidebar();
+            pgUpdatePrices();
+
+            // Go to page 1, show main body
+            pgGoPage(1);
+            pgShowMain();
+
+            // Show overlay
+            document.getElementById('pg-overlay').classList.add('pg-active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function pgClose() {
+            document.getElementById('pg-overlay').classList.remove('pg-active');
+            document.body.style.overflow = '';
+        }
+
+        function pgCloseAndReset() {
+            pgClose();
+        }
+
+        function pgShowMain() {
+            document.getElementById('pg-main-body').style.display = '';
+            document.getElementById('pg-success').classList.remove('pg-show');
+            document.getElementById('pg-invoice').classList.remove('pg-show');
+            document.getElementById('pg-progress-bar').style.display = '';
+        }
+
+        // ── SIDEBAR / CART RENDER ─────────────────────────────
+        function pgRenderSidebar() {
+            var html = '';
+            state.cart.forEach(function(item) {
+                html += '<div class="pg-cart-item">' +
+                    '<img src="' + item.img + '" alt="' + item.name + '">' +
+                    '<div class="pg-item-info">' +
+                        '<div class="pg-item-name">' + item.name + '</div>' +
+                        '<div class="pg-item-cat">' + item.category + '</div>' +
+                        '<div class="pg-item-qty">Qty: ' + item.qty + '</div>' +
+                    '</div>' +
+                    '<div class="pg-item-price">$' + (item.price * item.qty).toFixed(2) + '</div>' +
+                '</div>';
+            });
+            document.getElementById('pg-sidebar-items').innerHTML = html;
+        }
+
+        // ── PRICE CALCULATIONS ────────────────────────────────
+        function pgGetSubtotal() {
+            return state.cart.reduce(function(sum, item) { return sum + (item.price * item.qty); }, 0);
+        }
+        function pgGetTax() { return pgGetSubtotal() * 0.05; }
+        function pgGetDelivery() {
+            return pg.payMethod === 'pg-cod' ? pg.DELIVERY + pg.COD_FEE : pg.DELIVERY;
+        }
+        function pgGetGrand() {
+            return pgGetSubtotal() + pgGetTax() + pgGetDelivery() - pg.discount;
+        }
+
+        function pgUpdatePrices() {
+            var sub = pgGetSubtotal();
+            var tax = pgGetTax();
+            var del = pgGetDelivery();
+            var total = pgGetGrand();
+
+            document.getElementById('pg-pr-sub').textContent   = '$' + sub.toFixed(2);
+            document.getElementById('pg-pr-tax').textContent   = '$' + tax.toFixed(2);
+            document.getElementById('pg-pr-del').textContent   = '$' + del.toFixed(2);
+            document.getElementById('pg-pr-total').textContent = '$' + total.toFixed(2);
+            document.getElementById('pg-pay-btn-total').textContent = total.toFixed(2);
+
+            if (pg.discount > 0) {
+                document.getElementById('pg-pr-disc-row').style.display = 'flex';
+                document.getElementById('pg-pr-disc').textContent = '-$' + pg.discount.toFixed(2);
+            }
+
+            // Also keep the old cart drawer totals in sync (Project A's updateCartTotals)
+            updateCartTotals(sub);
+        }
+
+        // ── COUPON ────────────────────────────────────────────
+        function pgApplyCoupon() {
+            if (pg.couponApplied) return;
+            var code = document.getElementById('pg-coupon').value.trim().toUpperCase();
+            var msg = document.getElementById('pg-coupon-msg');
+            if (!code) {
+                msg.className = 'pg-coupon-msg pg-err';
+                msg.textContent = 'Please enter a coupon code.';
+                return;
+            }
+            if (pg.COUPONS[code]) {
+                pg.discount = pgGetSubtotal() * pg.COUPONS[code];
+                pg.couponApplied = true;
+                msg.className = 'pg-coupon-msg pg-ok';
+                msg.textContent = '🎉 ' + code + ' applied! You save $' + pg.discount.toFixed(2) +
+                    ' (' + Math.round(pg.COUPONS[code] * 100) + '% off)';
+                pgUpdatePrices();
+            } else {
+                msg.className = 'pg-coupon-msg pg-err';
+                msg.textContent = '✕ Invalid code. Try COFFEE10, AROMA20 or WELCOME15.';
+            }
+        }
+
+        // ── PAGE NAVIGATION ───────────────────────────────────
+        function pgGoPage(n) {
+            // Validate page 1 before advancing
+            if (n > 1) {
+                var fn = document.getElementById('pg-first').value.trim();
+                var em = document.getElementById('pg-email').value.trim();
+                if (!fn || !em) {
+                    document.getElementById('pg-first').classList.toggle('pg-error', !fn);
+                    document.getElementById('pg-email').classList.toggle('pg-error', !em);
+                    if (!fn || !em) return;
+                }
+                // Clear error classes
+                document.getElementById('pg-first').classList.remove('pg-error');
+                document.getElementById('pg-email').classList.remove('pg-error');
+            }
+
+            for (var i = 1; i <= 3; i++) {
+                document.getElementById('pg-page' + i).classList.toggle('pg-active', i === n);
+                var stepEl = document.getElementById('pg-step' + i);
+                stepEl.classList.remove('pg-active', 'pg-done');
+                if (i < n) stepEl.classList.add('pg-done');
+                else if (i === n) stepEl.classList.add('pg-active');
+                if (i < 3) {
+                    document.getElementById('pg-line' + i).classList.toggle('pg-done', i < n);
+                }
+            }
+            pg.currentPage = n;
+
+            // Scroll form area to top
+            var fa = document.querySelector('.pg-form-area');
+            if (fa) fa.scrollTop = 0;
+        }
+
+        // ── PAYMENT METHOD SWITCHING ──────────────────────────
+        function pgSwitchMethod(methodId, btn) {
+            document.querySelectorAll('.pg-pay-tab').forEach(function(t) { t.classList.remove('pg-active'); });
+            btn.classList.add('pg-active');
+            document.querySelectorAll('.pg-method-content').forEach(function(c) { c.classList.remove('pg-active'); });
+            document.getElementById(methodId).classList.add('pg-active');
+            pg.payMethod = methodId;
+            pgUpdatePrices();
+        }
+
+        function pgSelUPI(el) {
+            document.querySelectorAll('.pg-upi-card').forEach(function(c) { c.classList.remove('pg-sel'); });
+            el.classList.add('pg-sel');
+        }
+        function pgSelBank(el) {
+            document.querySelectorAll('.pg-bank-card').forEach(function(c) { c.classList.remove('pg-sel'); });
+            el.classList.add('pg-sel');
+        }
+        function pgSelWallet(el) {
+            document.querySelectorAll('.pg-wallet-card').forEach(function(c) { c.classList.remove('pg-sel'); });
+            el.classList.add('pg-sel');
+        }
+
+        // ── UPI VERIFY ────────────────────────────────────────
+        function pgVerifyUPI() {
+            var val = document.getElementById('pg-upi-id').value.trim();
+            var badge = document.getElementById('pg-verified');
+            if (val && val.includes('@')) {
+                badge.classList.add('pg-show');
+            } else {
+                badge.classList.remove('pg-show');
+                showToast('Please enter a valid UPI ID (e.g. name@okaxis)');
+            }
+        }
+
+        function pgRevealQR(box) {
+            box.innerHTML = '<svg width="96" height="96" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+                '<rect width="100" height="100" rx="8" fill="#E8F5E9"/>' +
+                '<rect x="10" y="10" width="30" height="30" rx="3" fill="#1a3622"/>' +
+                '<rect x="60" y="10" width="30" height="30" rx="3" fill="#1a3622"/>' +
+                '<rect x="10" y="60" width="30" height="30" rx="3" fill="#1a3622"/>' +
+                '<rect x="15" y="15" width="20" height="20" rx="2" fill="#fff"/>' +
+                '<rect x="65" y="15" width="20" height="20" rx="2" fill="#fff"/>' +
+                '<rect x="15" y="65" width="20" height="20" rx="2" fill="#fff"/>' +
+                '<rect x="60" y="60" width="8" height="8" fill="#1a3622"/>' +
+                '<rect x="72" y="60" width="8" height="8" fill="#1a3622"/>' +
+                '<rect x="60" y="72" width="8" height="8" fill="#1a3622"/>' +
+                '<rect x="72" y="72" width="8" height="8" fill="#1a3622"/>' +
+                '</svg>' +
+                '<p style="margin-top:.5rem;font-size:.78rem;color:var(--pg-text-light);font-family:Inter,sans-serif">Scan with any UPI app to pay</p>';
+        }
+
+        // ── CARD FORMATTING ───────────────────────────────────
+        function pgFmtCard(input) {
+            var v = input.value.replace(/\D/g,'').substring(0,16);
+            input.value = v.replace(/(.{4})/g,'$1 ').trim();
+            var disp = v.padEnd(16,'•');
+            document.getElementById('pg-card-num-disp').textContent =
+                disp.substring(0,4) + ' ' + disp.substring(4,8) + ' ' +
+                disp.substring(8,12) + ' ' + disp.substring(12,16);
+        }
+        function pgFmtExp(input) {
+            var v = input.value.replace(/\D/g,'');
+            if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+            input.value = v;
+            document.getElementById('pg-card-exp-disp').textContent = input.value || 'MM/YY';
+        }
+
+        // ── PAYMENT PROCESSING ────────────────────────────────
+        function pgProcessPayment() {
+            document.getElementById('pg-processing').classList.add('pg-show');
+
+            setTimeout(function() {
+                document.getElementById('pg-processing').classList.remove('pg-show');
+                pgShowSuccess();
+            }, 2200);
+        }
+
+        function pgGetMethodLabel() {
+            var labels = {
+                'pg-upi': 'UPI',
+                'pg-card': 'Credit / Debit Card',
+                'pg-netbank': 'Net Banking',
+                'pg-wallet': 'Wallet',
+                'pg-cod': 'Cash on Delivery'
+            };
+            return labels[pg.payMethod] || pg.payMethod;
+        }
+
+        function pgShowSuccess() {
+            var fn = document.getElementById('pg-first').value.trim() || 'Guest';
+            var ln = document.getElementById('pg-last').value.trim();
+            var orderId = 'AH-' + Math.floor(100000 + Math.random() * 900000);
+            var grand = pgGetGrand();
+
+            document.getElementById('pg-success-order-id').textContent = 'ORDER #' + orderId;
+            document.getElementById('pg-success-name').textContent = fn + (ln ? ' ' + ln : '');
+            document.getElementById('pg-success-total').textContent = '$' + grand.toFixed(2);
+            document.getElementById('pg-success-method').textContent = pgGetMethodLabel();
+
+            // Build success items list
+            var itemsHtml = '';
+            state.cart.forEach(function(item) {
+                itemsHtml += '<div class="pg-si">' +
+                    '<span>' + item.name + ' × ' + item.qty + '</span>' +
+                    '<span class="pg-si-price">$' + (item.price * item.qty).toFixed(2) + '</span>' +
+                '</div>';
+            });
+            document.getElementById('pg-success-items-list').innerHTML = itemsHtml;
+
+            // Store order data for invoice
+            pg.orderData = {
+                orderId: orderId,
+                fn: fn, ln: ln,
+                email: document.getElementById('pg-email').value,
+                mobile: document.getElementById('pg-mobile').value,
+                flat: document.getElementById('pg-flat').value,
+                street: document.getElementById('pg-street').value,
+                area: document.getElementById('pg-area').value,
+                city: document.getElementById('pg-city').value,
+                state: document.getElementById('pg-state').value,
+                pin: document.getElementById('pg-pin').value,
+                subtotal: pgGetSubtotal(),
+                tax: pgGetTax(),
+                delivery: pgGetDelivery(),
+                discount: pg.discount,
+                grand: grand,
+                method: pgGetMethodLabel(),
+                cartSnapshot: state.cart.map(function(i) {
+                    return { name: i.name, category: i.category, qty: i.qty, price: i.price };
+                })
+            };
+
+            // Clear cart (Project A's mechanism)
+            state.cart = [];
+            saveCart();
+            updateCartUI();
+
+            // Reward stars (Project A's demo rewards card)
+            var starsEl = document.getElementById('demo-stars');
+            if (starsEl) {
+                var pts = parseInt(starsEl.innerText.replace(/\D/g,'')) || 124;
+                starsEl.innerHTML = '<i class="ph-fill ph-star text-2xl"></i> ' + (pts + 25);
+            }
+
+            // Show success
+            document.getElementById('pg-main-body').style.display = 'none';
+            document.getElementById('pg-progress-bar').style.display = 'none';
+            document.getElementById('pg-success').classList.add('pg-show');
+
+            // Toast
+            showToast('Order confirmed! 🎉 Thank you for your purchase.');
+        }
+
+        // ── INVOICE ───────────────────────────────────────────
+        function pgShowInvoice() {
+            var d = pg.orderData;
+            if (!d) return;
+
+            document.getElementById('pg-success').classList.remove('pg-show');
+            document.getElementById('pg-invoice').classList.add('pg-show');
+
+            document.getElementById('pg-inv-order-id').textContent = '#' + d.orderId;
+            document.getElementById('pg-inv-date').textContent =
+                new Date().toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+            document.getElementById('pg-inv-customer').innerHTML =
+                '<strong>' + d.fn + ' ' + d.ln + '</strong><br>' + d.email + '<br>' + d.mobile;
+            document.getElementById('pg-inv-address').innerHTML =
+                d.flat + '<br>' + d.street + '<br>' + d.area + ', ' + d.city + ' - ' + d.pin + '<br>' + d.state;
+
+            // Items table
+            var rows = '';
+            d.cartSnapshot.forEach(function(item, idx) {
+                rows += '<tr><td>' + (idx+1) + '</td><td>' + item.name + '</td><td>' + item.category +
+                    '</td><td>' + item.qty + '</td><td>$' + item.price.toFixed(2) +
+                    '</td><td>$' + (item.price * item.qty).toFixed(2) + '</td></tr>';
+            });
+            document.getElementById('pg-inv-items').innerHTML = rows;
+
+            document.getElementById('pg-inv-subtotal').textContent = '$' + d.subtotal.toFixed(2);
+            document.getElementById('pg-inv-tax').textContent     = '$' + d.tax.toFixed(2);
+            document.getElementById('pg-inv-delivery').textContent = '$' + d.delivery.toFixed(2);
+            document.getElementById('pg-inv-grand').textContent   = '$' + d.grand.toFixed(2);
+
+            if (d.discount > 0) {
+                document.getElementById('pg-inv-disc-row').style.display = 'flex';
+                document.getElementById('pg-inv-discount').textContent = '-$' + d.discount.toFixed(2);
+            }
+        }
+
+        // ── CLOSE ON BACKDROP CLICK ───────────────────────────
+        document.getElementById('pg-overlay').addEventListener('click', function(e) {
+            if (e.target === this) pgClose();
+        });
+
+        // ── PATCH: keep old updateCartTotals in sync with pg-pay-btn ──
+        // Override the original updateCartTotals to also update pg pay button
+        var _origUpdateCartTotals = updateCartTotals;
+        updateCartTotals = function(subtotal) {
+            _origUpdateCartTotals(subtotal);
+            // Remove old checkout-final-total reference (no longer in DOM)
+        };
+
 
     </script>
 </body>
